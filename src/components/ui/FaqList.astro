@@ -1,0 +1,69 @@
+---
+interface FaqItem {
+	question: string;
+	answer: string;
+}
+
+interface Props {
+	items: FaqItem[];
+}
+
+const { items }: Props = Astro.props;
+---
+
+<div class="faq-list">
+	{
+		items.map((item) => (
+			<details class="faq-list__item">
+				<summary>{item.question}</summary>
+				<p>{item.answer}</p>
+			</details>
+		))
+	}
+</div>
+
+<style>
+	.faq-list {
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.faq-list__item {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: var(--space-4) var(--space-5);
+	}
+
+	summary {
+		cursor: pointer;
+		font-family: var(--font-display);
+		font-size: 1rem;
+		font-weight: 600;
+		list-style: none;
+	}
+
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
+	summary::after {
+		color: var(--color-primary);
+		content: '+';
+		float: right;
+		font-family: var(--font-label);
+	}
+
+	details[open] summary::after {
+		content: '−';
+	}
+
+	p {
+		color: var(--color-muted);
+		font-size: 0.95rem;
+		line-height: 1.6;
+		margin-top: var(--space-3);
+		padding-top: var(--space-3);
+		border-top: 1px solid var(--color-border);
+	}
+</style>

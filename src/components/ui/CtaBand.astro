@@ -1,0 +1,104 @@
+---
+import Button from '@/components/ui/Button.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	primaryLabel: string;
+	primaryHref: string;
+	secondaryLabel?: string;
+	secondaryHref?: string;
+	external?: boolean;
+	secondaryExternal?: boolean;
+}
+
+const {
+	title,
+	description,
+	primaryLabel,
+	primaryHref,
+	secondaryLabel,
+	secondaryHref,
+	external = true,
+	secondaryExternal
+}: Props = Astro.props;
+
+const secondaryIsExternal = secondaryExternal ?? external;
+---
+
+<section class="cta-band">
+	<div class="container cta-band__inner">
+		<div class="cta-band__copy">
+			<h2>{title}</h2>
+			{description && <p>{description}</p>}
+		</div>
+		<div class="cta-band__actions">
+			<Button href={primaryHref} label={primaryLabel} variant="primary" external={external} />
+			{
+				secondaryLabel && secondaryHref && (
+					<Button
+						href={secondaryHref}
+						label={secondaryLabel}
+						variant="secondary"
+						external={secondaryIsExternal}
+					/>
+				)
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.cta-band {
+		background: linear-gradient(
+			180deg,
+			var(--color-surface-soft) 0%,
+			rgba(60, 232, 97, 0.06) 100%
+		);
+		border-block: 1px solid var(--color-border);
+		padding-block: clamp(2.5rem, 7vw, 4rem);
+	}
+
+	.cta-band__inner {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+		text-align: center;
+	}
+
+	.cta-band__copy {
+		display: grid;
+		gap: var(--space-3);
+		max-width: 38rem;
+	}
+
+	h2 {
+		font-size: clamp(1.5rem, 4vw, 2rem);
+	}
+
+	p {
+		color: var(--color-muted-strong);
+		line-height: 1.6;
+	}
+
+	.cta-band__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: center;
+	}
+
+	@media (min-width: 768px) {
+		.cta-band__inner {
+			flex-direction: row;
+			justify-content: space-between;
+			text-align: left;
+		}
+
+		.cta-band__actions {
+			flex-shrink: 0;
+			justify-content: flex-end;
+		}
+	}
+</style>

@@ -1,0 +1,125 @@
+---
+import AppLink from '@/components/site/AppLink.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { footerMarketingLinks } from '@/data/nav';
+import { SITE } from '@/data/site';
+---
+
+<footer class="site-footer">
+	<div class="container site-footer__grid">
+		<div class="site-footer__brand">
+			<p class="site-footer__name">{SITE.name}</p>
+			<p class="site-footer__tagline">
+				Practical scene infrastructure for Australia&rsquo;s underground music and events
+				community.
+			</p>
+		</div>
+
+		<div>
+			<p class="site-footer__label">Website</p>
+			<ul class="site-footer__links">
+				{
+					footerMarketingLinks.map((item) => (
+						<li>
+							<a href={item.href}>{item.label}</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<div>
+			<p class="site-footer__label">App</p>
+			<ul class="site-footer__links">
+				<li><AppLink href={APP_LINKS.events} label="Explore Events" /></li>
+				<li><AppLink href={APP_LINKS.theScene} label="The Scene" /></li>
+				<li><AppLink href={APP_LINKS.opportunities} label="Opportunities" /></li>
+				<li><AppLink href={APP_LINKS.join} label="Join PartyLine" /></li>
+				<li><AppLink href={APP_LINKS.dashboard} label="Dashboard" /></li>
+			</ul>
+		</div>
+
+		<div>
+			<p class="site-footer__label">Support</p>
+			<ul class="site-footer__links">
+				<li><a href="/contact">Contact</a></li>
+				<li><AppLink href={APP_LINKS.feedback} label="Send Feedback" /></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container site-footer__bottom">
+		<p>&copy; {new Date().getFullYear()} {SITE.name}. Australia-wide underground scene.</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 1px solid var(--color-border);
+		margin-top: auto;
+		padding-block: clamp(2.5rem, 7vw, 4rem) var(--space-6);
+	}
+
+	.site-footer__grid {
+		display: grid;
+		gap: var(--space-8);
+		grid-template-columns: 1fr;
+	}
+
+	@media (min-width: 640px) {
+		.site-footer__grid {
+			grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.site-footer__name {
+		font-family: var(--font-display);
+		font-size: 1.05rem;
+		font-weight: 700;
+		margin-bottom: var(--space-3);
+	}
+
+	.site-footer__tagline {
+		color: var(--color-muted);
+		font-size: 0.95rem;
+		line-height: 1.6;
+		max-width: 22rem;
+	}
+
+	.site-footer__label {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: 0.7rem;
+		letter-spacing: var(--tracking-label);
+		margin-bottom: var(--space-3);
+		text-transform: uppercase;
+	}
+
+	.site-footer__links {
+		display: grid;
+		gap: var(--space-2);
+		list-style: none;
+	}
+
+	.site-footer__links a {
+		color: var(--color-muted-strong);
+		font-size: 0.9rem;
+		text-decoration: none;
+	}
+
+	.site-footer__links a:hover,
+	.site-footer__links a:focus-visible {
+		color: var(--color-primary);
+	}
+
+	.site-footer__bottom {
+		border-top: 1px solid var(--color-border);
+		margin-top: var(--space-8);
+		padding-top: var(--space-5);
+	}
+
+	.site-footer__bottom p {
+		color: var(--color-muted);
+		font-size: 0.85rem;
+	}
+</style>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://partylinecollective.com/sitemap-index.xml

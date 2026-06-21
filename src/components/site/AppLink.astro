@@ -1,0 +1,30 @@
+---
+interface Props {
+	href: string;
+	label: string;
+	external?: boolean;
+	class?: string;
+}
+
+const { href, label, external = true, class: className = '' }: Props = Astro.props;
+---
+
+<a
+	href={href}
+	class:list={['app-link', className]}
+	{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+>
+	{label}
+</a>
+
+<style>
+	.app-link {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.app-link:hover,
+	.app-link:focus-visible {
+		text-decoration: underline;
+	}
+</style>

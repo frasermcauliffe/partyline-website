@@ -1,0 +1,72 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Callout from '@/components/ui/Callout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.events;
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Events · PartyLine Collective</p>
+			<h1>Discover underground events across Australia</h1>
+			<p class="lede">
+				Club nights, warehouse parties, day parties, showcases and community-led events —
+				browse live listings in the PartyLine app.
+			</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.events} label="Explore Events" variant="primary" external />
+				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="secondary" external />
+			</div>
+		</div>
+	</section>
+
+	<Section>
+		<SectionHeader
+			title="Event discovery built for the underground"
+			lede="PartyLine Collective brings together nights from organisers, venues and crews across Australia. Browse by city, date and type in the app."
+		/>
+		<ul class="list-check">
+			<li>Club nights, warehouses, day parties and open air</li>
+			<li>Posters, lineups and linked venue or artist profiles</li>
+			<li>External ticket links where organisers provide them</li>
+			<li>Save and RSVP from your dashboard calendar</li>
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<Callout title="Not a ticketing platform">
+			<p>
+				PartyLine Collective is focused on discovery and connection. Ticketing stays with
+				organisers — through their own links and systems. PartyLine helps people find the
+				night; you keep control of how tickets are sold.
+			</p>
+		</Callout>
+	</Section>
+
+	<Section>
+		<SectionHeader
+			title="Hosting something?"
+			lede="Submit your event in the app — link organiser, venue and lineup profiles, upload a poster, and share ticket information."
+		/>
+		<div class="button-row">
+			<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="primary" external />
+			<Button href={APP_LINKS.join} label="Join PartyLine" variant="secondary" external />
+		</div>
+	</Section>
+
+	<CtaBand
+		title="See what's on"
+		description="Browse live events in the PartyLine app — updated by organisers and venues across the scene."
+		primaryLabel="Explore Events"
+		primaryHref={APP_LINKS.events}
+		secondaryLabel="Submit Event"
+		secondaryHref={APP_LINKS.submitEvent}
+	/>
+</BaseLayout>

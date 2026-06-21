@@ -1,0 +1,62 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	ctaLabel?: string;
+	ctaHref?: string;
+	external?: boolean;
+}
+
+const { title, description, ctaLabel, ctaHref, external = false }: Props = Astro.props;
+---
+
+<article class="audience-card">
+	<h3>{title}</h3>
+	<p>{description}</p>
+	{
+		ctaLabel && ctaHref && (
+			<a
+				href={ctaHref}
+				class="audience-card__link"
+				{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+			>
+				{ctaLabel} →
+			</a>
+		)
+	}
+</article>
+
+<style>
+	.audience-card {
+		background: var(--color-surface-soft);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		display: grid;
+		gap: var(--space-3);
+		min-width: 0;
+		padding: var(--space-5);
+	}
+
+	h3 {
+		font-size: 1.05rem;
+	}
+
+	p {
+		color: var(--color-muted);
+		font-size: 0.95rem;
+		line-height: 1.55;
+	}
+
+	.audience-card__link {
+		color: var(--color-primary);
+		font-size: 0.875rem;
+		font-weight: 600;
+		text-decoration: none;
+		width: fit-content;
+	}
+
+	.audience-card__link:hover,
+	.audience-card__link:focus-visible {
+		text-decoration: underline;
+	}
+</style>

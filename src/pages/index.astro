@@ -1,17 +1,294 @@
 ---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import FeatureGrid from '@/components/ui/FeatureGrid.astro';
+import AudienceCard from '@/components/ui/AudienceCard.astro';
+import FaqList from '@/components/ui/FaqList.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import Card from '@/components/ui/Card.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO, organizationJsonLd, websiteJsonLd } from '@/lib/seo';
 
+const seo = PAGE_SEO.home;
+
+const platformFeatures = [
+	{
+		title: 'Events',
+		description:
+			'Discover club nights, warehouse parties, day parties and underground events across Australia — browse live listings in the app.'
+	},
+	{
+		title: 'The Scene profiles',
+		description:
+			'Public profiles for artists, venues, organisers, production, media and performers — your place in the network.'
+	},
+	{
+		title: 'Opportunities',
+		description:
+			'DJs wanted, open decks, residencies and more — posted by organisers and venues. Apply with your published profile.'
+	},
+	{
+		title: 'Enquiries & bookings',
+		description:
+			'Reach out with general enquiries or structured booking requests when you are ready to take things further.'
+	},
+	{
+		title: 'Submit & manage',
+		description:
+			'Submit events, create listings, review applications, and manage your dashboard, calendar and account settings.'
+	},
+	{
+		title: 'Save & follow',
+		description:
+			'Save events, follow profiles, and build a personal feed of what matters across the scene.'
+	}
+];
+
+const audiences = [
+	{
+		title: 'Fans',
+		description: 'Find nights, save events, follow profiles and stay close to what\u2019s happening.',
+		ctaLabel: 'Explore Events',
+		ctaHref: APP_LINKS.events
+	},
+	{
+		title: 'Artists & DJs',
+		description: 'Build a profile, apply to opportunities, and connect with organisers and venues.',
+		ctaLabel: 'Create Listing',
+		ctaHref: APP_LINKS.createListing
+	},
+	{
+		title: 'Organisers',
+		description: 'Submit events, post opportunities, and build a visible presence for your crew.',
+		ctaLabel: 'Submit Event',
+		ctaHref: APP_LINKS.submitEvent
+	},
+	{
+		title: 'Venues',
+		description: 'Showcase your space, link events, and connect with the people who fill the room.',
+		ctaLabel: 'Create Listing',
+		ctaHref: APP_LINKS.createListing
+	},
+	{
+		title: 'Suppliers & media',
+		description:
+			'Production, photographers, videographers and performers — be discoverable across the scene.',
+		ctaLabel: 'Browse The Scene',
+		ctaHref: APP_LINKS.theScene
+	}
+];
+
+const howItWorks = [
+	{
+		title: 'Join',
+		description: 'Create a free PartyLine account — for fans, artists, organisers and venues.'
+	},
+	{
+		title: 'Build presence',
+		description: 'Save events, create a listing, or submit your first event depending on your path.'
+	},
+	{
+		title: 'Connect through the scene',
+		description: 'Discover, enquire, apply and collaborate across Australia\u2019s underground network.'
+	}
+];
+
+const exploreCards = [
+	{
+		title: 'Events',
+		description: 'Browse upcoming underground events across Australia.',
+		href: APP_LINKS.events
+	},
+	{
+		title: 'The Scene',
+		description: 'Search artists, venues, organisers and crews on the network.',
+		href: APP_LINKS.theScene
+	},
+	{
+		title: 'Opportunities',
+		description: 'Find DJ calls — DJs wanted, open decks, residencies and more.',
+		href: APP_LINKS.opportunities
+	}
+];
+
+const faqItems = [
+	{
+		question: 'Is PartyLine only for one city?',
+		answer:
+			'No. PartyLine Collective is built Australia-wide — for events, profiles and scenes across the country.'
+	},
+	{
+		question: 'Is PartyLine a ticketing platform?',
+		answer:
+			'Not primarily. PartyLine focuses on discovery, profiles and connection. Ticketing stays with organisers via external links where provided.'
+	},
+	{
+		question: 'Who can join?',
+		answer:
+			'Fans, artists, DJs, organisers, venues, production crews, media and performers. You can join with a simple account or create a public listing.'
+	},
+	{
+		question: 'Does an accepted DJ application mean a confirmed booking?',
+		answer:
+			'No. Accepted applications are a workflow status in the app — not an automatic confirmed booking. Connection continues from there.'
+	},
+	{
+		question: 'Where is the app?',
+		answer: `Accounts, events, profiles and dashboards live in the PartyLine app. Use Open the app from any page CTA, or go directly from the header and footer links.`
+	}
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+	title={seo.title}
+	description={seo.description}
+	canonicalPath={seo.canonicalPath}
+	jsonLd={[organizationJsonLd(), websiteJsonLd()]}
+>
+	<section class="hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">PartyLine Collective</p>
+			<h1>Find your line into Australia&rsquo;s underground scene.</h1>
+			<p class="lede">
+				Discovery, scene profiles, DJ opportunities and practical connection — built for
+				underground music and events across Australia.
+			</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
+				<Button href={APP_LINKS.events} label="Explore Events" variant="secondary" external />
+			</div>
+		</div>
+	</section>
+
+	<Section>
+		<SectionHeader
+			eyebrow="What it is"
+			title="Scene infrastructure for connection"
+			lede="PartyLine Collective helps DJs, organisers, venues, suppliers and fans find each other more easily — without replacing your existing relationships. Everything interactive lives in the app."
+		/>
+		<FeatureGrid items={platformFeatures} columns={3} />
+	</Section>
+
+	<Section narrow>
+		<SectionHeader
+			eyebrow="Who it's for"
+			title="Built for the people who make nights happen"
+		/>
+		<div class="audience-grid">
+			{audiences.map((item) => <AudienceCard {...item} external />)}
+		</div>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader eyebrow="How it works" title="Three steps into the network" />
+		<ol class="steps">
+			{
+				howItWorks.map((step) => (
+					<li>
+						<h3>{step.title}</h3>
+						<p>{step.description}</p>
+					</li>
+				))
+			}
+		</ol>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader
+			eyebrow="Why PartyLine"
+			title="Built for underground culture"
+			lede="Australia-wide, community-first, and practical for a fragmented scene."
+		/>
+		<ul class="list-check list-check--compact">
+			<li>Your relationships stay yours — PartyLine supports connection, not replacement</li>
+			<li>Discovery and profiles alongside DJ opportunities and applicant review</li>
+			<li>Enquiries and structured booking requests when you want to go further</li>
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader eyebrow="Explore" title="Open the PartyLine app" align="center" />
+		<div class="explore-grid">
+			{exploreCards.map((card) => <Card {...card} external />)}
+		</div>
+		<div class="explore-actions">
+			<Button href={APP_LINKS.join} label="Open the app" variant="primary" external />
+		</div>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader eyebrow="FAQ" title="Common questions" />
+		<FaqList items={faqItems} />
+		<p class="faq-app-link">
+			<Button href={APP_LINKS.join} label="Open the app" variant="secondary" external />
+		</p>
+	</Section>
+
+	<CtaBand
+		title="Ready to join the network?"
+		description="Create your account and start exploring events, profiles and opportunities across Australia."
+		primaryLabel="Join PartyLine"
+		primaryHref={APP_LINKS.join}
+		secondaryLabel="Explore Events"
+		secondaryHref={APP_LINKS.events}
+	/>
+</BaseLayout>
+
+<style>
+	.hero {
+		padding-block: clamp(3rem, 10vw, 5.5rem);
+	}
+
+	.hero h1 {
+		font-size: clamp(2.25rem, 8vw, 3.75rem);
+		max-width: 16ch;
+	}
+
+	.audience-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+
+	@media (min-width: 640px) {
+		.audience-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.audience-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.explore-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+		margin-bottom: var(--space-5);
+	}
+
+	@media (min-width: 768px) {
+		.explore-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.explore-actions {
+		display: flex;
+		justify-content: center;
+	}
+
+	.faq-app-link {
+		display: flex;
+		justify-content: center;
+		margin-top: var(--space-5);
+	}
+
+	.list-check--compact {
+		max-width: 40rem;
+	}
+</style>

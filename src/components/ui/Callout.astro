@@ -1,0 +1,39 @@
+---
+interface Props {
+	title: string;
+	class?: string;
+}
+
+const { title, class: className = '' }: Props = Astro.props;
+---
+
+<aside class:list={['callout', className]}>
+	<h2>{title}</h2>
+	<div class="callout__body">
+		<slot />
+	</div>
+</aside>
+
+<style>
+	.callout {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: var(--space-6);
+	}
+
+	h2 {
+		font-size: 1.25rem;
+		margin-bottom: var(--space-3);
+	}
+
+	.callout__body :global(p) {
+		color: var(--color-muted-strong);
+		line-height: 1.65;
+		margin: 0;
+	}
+
+	.callout__body :global(p + p) {
+		margin-top: var(--space-3);
+	}
+</style>

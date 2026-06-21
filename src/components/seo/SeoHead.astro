@@ -1,0 +1,39 @@
+---
+import { absoluteUrl } from '@/lib/seo';
+import { SITE } from '@/data/site';
+
+interface Props {
+	title: string;
+	description: string;
+	canonicalPath: string;
+	ogImage?: string;
+}
+
+const { title, description, canonicalPath, ogImage = '/og-default.svg' }: Props = Astro.props;
+
+const canonicalUrl = absoluteUrl(canonicalPath);
+const imageUrl = absoluteUrl(ogImage);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:locale" content={SITE.locale} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />

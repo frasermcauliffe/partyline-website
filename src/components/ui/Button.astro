@@ -1,0 +1,90 @@
+---
+interface Props {
+	href: string;
+	label: string;
+	variant?: 'primary' | 'secondary' | 'ghost';
+	external?: boolean;
+	class?: string;
+}
+
+const {
+	href,
+	label,
+	variant = 'primary',
+	external = false,
+	class: className = ''
+}: Props = Astro.props;
+---
+
+<a
+	href={href}
+	class:list={['button', `button--${variant}`, className]}
+	{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+>
+	{label}
+</a>
+
+<style>
+	.button {
+		align-items: center;
+		border: 1px solid transparent;
+		border-radius: var(--radius-pill);
+		display: inline-flex;
+		font-family: var(--font-body);
+		font-size: 0.875rem;
+		font-weight: 600;
+		justify-content: center;
+		line-height: 1.2;
+		min-height: 2.75rem;
+		padding: 0.65rem 1.15rem;
+		text-decoration: none;
+		text-align: center;
+		transition:
+			border-color 0.15s ease,
+			background 0.15s ease,
+			color 0.15s ease;
+		white-space: nowrap;
+	}
+
+	@media (max-width: 479px) {
+		.button {
+			white-space: normal;
+		}
+	}
+
+	.button--primary {
+		background: var(--color-primary);
+		border-color: var(--color-primary);
+		color: var(--color-bg);
+	}
+
+	.button--primary:hover,
+	.button--primary:focus-visible {
+		background: #34d856;
+		border-color: #34d856;
+	}
+
+	.button--secondary {
+		background: transparent;
+		border-color: var(--color-border);
+		color: var(--color-muted-strong);
+	}
+
+	.button--secondary:hover,
+	.button--secondary:focus-visible {
+		border-color: var(--color-primary);
+		color: var(--color-text);
+	}
+
+	.button--ghost {
+		background: transparent;
+		border-color: transparent;
+		color: var(--color-muted-strong);
+		padding-inline: 0.5rem;
+	}
+
+	.button--ghost:hover,
+	.button--ghost:focus-visible {
+		color: var(--color-primary);
+	}
+</style>

@@ -1,0 +1,100 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import Callout from '@/components/ui/Callout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.about;
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">About · PartyLine Collective</p>
+			<h1>Scene infrastructure for underground music and events</h1>
+			<p class="lede">
+				PartyLine Collective exists because Australia&rsquo;s underground scene is rich,
+				fragmented and hard to navigate — scattered info, missed connections, and no single
+				place that serves the whole network.
+			</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
+				<Button href="/contact" label="Contact" variant="secondary" />
+			</div>
+		</div>
+	</section>
+
+	<Section>
+		<div class="prose">
+			<h2>Why PartyLine exists</h2>
+			<p>
+				Underground music and events run on relationships — between DJs and organisers, venues
+				and crews, fans and the nights they love. But discovery is scattered. Event info lives
+				in DMs, Instagram stories and word of mouth. Profiles are hard to find. Opportunities
+				get posted in closed groups.
+			</p>
+			<p>
+				PartyLine Collective brings structure to that chaos — a shared directory and connection
+				layer that helps people find each other more easily, without pretending to be a
+				corporate marketplace or sitting in the middle of your existing relationships.
+			</p>
+
+			<h2>What PartyLine is</h2>
+			<ul class="list-check">
+				<li>An Australia-wide events directory</li>
+				<li>Public scene profiles — The Scene</li>
+				<li>DJ opportunities and applicant review</li>
+				<li>Enquiries and structured booking requests</li>
+				<li>A dashboard for the people who use the network daily</li>
+			</ul>
+
+			<h2>What PartyLine is not</h2>
+			<ul class="list-check">
+				<li>Not a replacement for your ticketing stack</li>
+				<li>Not a layer between you and your regular partners</li>
+				<li>Not a corporate marketplace chasing volume over community</li>
+				<li>Not limited to one city — built Australia-wide from the start</li>
+			</ul>
+		</div>
+	</Section>
+
+	<Section narrow>
+		<Callout title="Building in the open">
+			<p>
+				PartyLine Collective is in closed alpha — actively tested with a small invited group.
+				The app handles accounts, events, profiles, opportunities and bookings. This website
+				explains PartyLine and links you into the app.
+			</p>
+		</Callout>
+	</Section>
+
+	<CtaBand
+		title="Join the network"
+		description="Create your account and explore events, profiles and opportunities across Australia."
+		primaryLabel="Join PartyLine"
+		primaryHref={APP_LINKS.join}
+		secondaryLabel="Contact"
+		secondaryHref="/contact"
+		secondaryExternal={false}
+	/>
+</BaseLayout>
+
+<style>
+	.prose {
+		display: grid;
+		gap: var(--space-6);
+		max-width: 42rem;
+	}
+
+	.prose h2 {
+		font-size: clamp(1.25rem, 3vw, 1.5rem);
+	}
+
+	.prose p {
+		color: var(--color-muted-strong);
+		line-height: 1.7;
+	}
+</style>

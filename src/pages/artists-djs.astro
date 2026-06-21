@@ -1,0 +1,67 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Callout from '@/components/ui/Callout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.artistsDjs;
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Artists &amp; DJs · PartyLine Collective</p>
+			<h1>Get discovered across the underground scene</h1>
+			<p class="lede">
+				Create a public Artist or DJ profile, apply to opportunities, and connect with
+				organisers and venues who are looking for your sound.
+			</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.createListing} label="Create Listing" variant="primary" external />
+				<Button
+					href={APP_LINKS.opportunities}
+					label="Browse Opportunities"
+					variant="secondary"
+					external
+				/>
+			</div>
+		</div>
+	</section>
+
+	<Section>
+		<SectionHeader
+			title="Your profile on The Scene"
+			lede="Publish once, get found across the network, and manage applications from your dashboard."
+		/>
+		<ul class="list-check">
+			<li>Publish a profile on The Scene with bio, genres, media and links</li>
+			<li>Get found by organisers and venues searching the network</li>
+			<li>Apply to DJs wanted, open decks, residencies and more</li>
+			<li>Receive enquiries and structured booking requests through your profile</li>
+			<li>Manage applications and activity from your dashboard</li>
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<Callout title="Applying to opportunities">
+			<p>
+				You need a published Artist / DJ profile to apply. Browse open calls in the app,
+				submit your application, and track status on the opportunity page. Accepted does not
+				automatically mean a confirmed booking — it&rsquo;s the start of the conversation.
+			</p>
+		</Callout>
+	</Section>
+
+	<CtaBand
+		title="Build your profile"
+		description="Create your listing in the app and start connecting with organisers, venues and the wider scene."
+		primaryLabel="Create Listing"
+		primaryHref={APP_LINKS.createListing}
+		secondaryLabel="Join PartyLine"
+		secondaryHref={APP_LINKS.join}
+	/>
+</BaseLayout>

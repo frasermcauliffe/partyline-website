@@ -1,0 +1,49 @@
+---
+import SiteFooter from '@/components/site/SiteFooter.astro';
+import SiteHeader from '@/components/site/SiteHeader.astro';
+import SeoHead from '@/components/seo/SeoHead.astro';
+import '@/styles/global.css';
+import { SITE } from '@/data/site';
+
+interface Props {
+	title: string;
+	description: string;
+	canonicalPath: string;
+	ogImage?: string;
+	jsonLd?: string[];
+}
+
+const { title, description, canonicalPath, ogImage, jsonLd = [] }: Props = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.locale}>
+	<head>
+		<SeoHead
+			title={title}
+			description={description}
+			canonicalPath={canonicalPath}
+			ogImage={ogImage}
+		/>
+		{
+			jsonLd.map((schema) => (
+				<script type="application/ld+json" set:html={schema} />
+			))
+		}
+	</head>
+	<body>
+		<a href="#main-content" class="skip-link">Skip to content</a>
+		<SiteHeader />
+		<main id="main-content">
+			<slot />
+		</main>
+		<SiteFooter />
+	</body>
+</html>
+
+<style is:global>
+	body {
+		display: flex;
+		flex-direction: column;
+	}
+</style>

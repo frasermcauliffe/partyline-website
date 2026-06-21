@@ -1,0 +1,158 @@
+---
+import Button from '@/components/ui/Button.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { marketingNav } from '@/data/nav';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+	<div class="container site-header__bar">
+		<a href="/" class="brand" aria-label="PartyLine Collective home">
+			<img
+				src="/partyline-logo-header.png"
+				alt="PartyLine Collective"
+				class="brand__logo"
+				width="206"
+				height="61"
+				decoding="async"
+			/>
+		</a>
+
+		<nav class="site-nav" aria-label="Main navigation">
+			<ul class="site-nav__list">
+				{
+					marketingNav.map((item) => (
+						<li>
+							<a
+								href={item.href}
+								class:list={['site-nav__link', currentPath === item.href && 'is-active']}
+							>
+								{item.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<div class="site-header__actions">
+			<Button
+				href={APP_LINKS.events}
+				label="Explore Events"
+				variant="ghost"
+				external
+				class="site-header__ghost-cta"
+			/>
+			<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
+		</div>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		border-bottom: 1px solid var(--color-border);
+		padding-block: var(--space-3);
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: rgba(5, 5, 5, 0.92);
+		backdrop-filter: blur(8px);
+	}
+
+	.site-header__bar {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3) var(--space-4);
+		justify-content: space-between;
+	}
+
+	.brand {
+		display: inline-flex;
+		flex-shrink: 0;
+		line-height: 0;
+		text-decoration: none;
+	}
+
+	.brand__logo {
+		height: 32px;
+		max-width: min(11rem, 46vw);
+		object-fit: contain;
+		width: auto;
+	}
+
+	.site-nav {
+		flex: 1 1 100%;
+		min-width: 0;
+		order: 3;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.site-nav__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1);
+		list-style: none;
+	}
+
+	.site-nav__link {
+		align-items: center;
+		border: 1px solid transparent;
+		border-radius: var(--radius-pill);
+		color: var(--color-muted);
+		display: inline-flex;
+		font-size: 0.8rem;
+		min-height: 2.75rem;
+		padding: 0.45rem 0.75rem;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.site-nav__link:hover,
+	.site-nav__link:focus-visible,
+	.site-nav__link.is-active {
+		border-color: var(--color-border);
+		color: var(--color-text);
+	}
+
+	.site-nav__link.is-active {
+		border-color: var(--color-primary);
+		color: var(--color-primary);
+	}
+
+	.site-header__actions {
+		align-items: center;
+		display: flex;
+		flex-shrink: 0;
+		gap: var(--space-2);
+		margin-left: auto;
+	}
+
+	@media (max-width: 479px) {
+		:global(.site-header__ghost-cta) {
+			display: none;
+		}
+	}
+
+	@media (min-width: 960px) {
+		.site-nav {
+			flex: 1;
+			order: 0;
+		}
+
+		.site-header__bar {
+			flex-wrap: nowrap;
+		}
+
+		.brand__logo {
+			height: 36px;
+		}
+
+		.site-nav__link {
+			font-size: 0.875rem;
+			padding: 0.45rem 0.75rem;
+		}
+	}
+</style>

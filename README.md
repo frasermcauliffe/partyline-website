@@ -1,43 +1,71 @@
-# Astro Starter Kit: Minimal
+# PartyLine Collective — Marketing Website
 
-```sh
-npm create astro@latest -- --template minimal
+Static Astro marketing site for **PartyLine Collective** (`https://partylinecollective.com`). This project explains PartyLine and routes visitors into the separate SvelteKit app — it does not serve live app data, auth, or backend forms.
+
+**App (accounts, events, profiles, dashboards):** configured in `src/data/app-links.ts` (currently the hosted preview at `https://partyline-webapp.vercel.app`).
+
+## Stack
+
+- [Astro](https://astro.build) 6
+- TypeScript
+- Static-first — no live app data, no auth, no forms backend
+
+## Project structure
+
+```
+src/
+├── components/   # Site header/footer, UI primitives, SEO
+├── data/         # App URLs, nav, site constants
+├── layouts/      # BaseLayout.astro
+├── lib/          # SEO helpers
+├── pages/        # Marketing routes (8 pages)
+└── styles/       # Design tokens + global CSS
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+**App URL constants** live in `src/data/app-links.ts` — update `APP_URL` when the production app subdomain is ready.
 
-## 🚀 Project Structure
+**Marketing site origin** lives in `src/data/site.ts` (`SITE_URL`) and must stay in sync with `astro.config.mjs`. Confirm DNS before launch; preview deploys may use a Vercel URL until then.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Commands
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # static output in dist/
+npm run preview  # preview production build
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Pages
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Route | Purpose |
+|-------|---------|
+| `/` | Homepage |
+| `/events` | Event discovery landing → app |
+| `/artists-djs` | Artist/DJ profiles landing |
+| `/organisers` | Organiser landing |
+| `/venues` | Venue landing |
+| `/opportunities` | DJ opportunities landing |
+| `/about` | Mission and positioning |
+| `/contact` | Email + in-app feedback |
 
-Any static assets, like images, can be placed in the `public/` directory.
+Contact: `hello@partylinecollective.com`
 
-## 🧞 Commands
+## Configuration & assets
 
-All commands are run from the root of the project, from a terminal:
+- **`src/data/site.ts`** — `SITE_URL`, contact email, site name
+- **`astro.config.mjs`** — site URL + `@astrojs/sitemap` (keep in sync with `site.ts`)
+- **`public/robots.txt`** — sitemap URL
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+**TODO before launch:**
 
-## 👀 Want to learn more?
+- Branded OG image (currently `public/og-default.svg` placeholder)
+- Final production favicon
+- Self-hosted fonts (optional)
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Deploy
+
+Build outputs static files to `dist/`. Deploy to Vercel or any static host. Keep the marketing domain separate from the app preview URL until DNS and app subdomain are configured.
+
+## Related repo
+
+The main PartyLine app is **`partyline-webapp`** (SvelteKit + Supabase).

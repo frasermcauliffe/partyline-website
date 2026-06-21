@@ -1,0 +1,69 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Callout from '@/components/ui/Callout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.organisers;
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Organisers · PartyLine Collective</p>
+			<h1>Put your events and crew on the radar</h1>
+			<p class="lede">
+				Submit events, build your organiser presence, post DJ opportunities, and review
+				applicants — practical tools for promoters, collectives and event crews.
+			</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="primary" external />
+				<Button
+					href={APP_LINKS.postOpportunity}
+					label="Post Opportunity"
+					variant="secondary"
+					external
+				/>
+			</div>
+		</div>
+	</section>
+
+	<Section>
+		<SectionHeader
+			title="Tools for promoters and crews"
+			lede="List events, link profiles, and review DJ applications — all in the PartyLine app."
+		/>
+		<ul class="list-check">
+			<li>Submit club nights, day parties, warehouses, showcases and community events</li>
+			<li>Link venue, organiser and lineup profiles — or add names manually</li>
+			<li>Upload posters, gallery images and media embeds</li>
+			<li>Post DJ opportunities from your dashboard or when submitting an event</li>
+			<li>Review applications — mark viewed, shortlist, accept or request more info</li>
+			<li>Build a visible organiser profile on The Scene</li>
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<Callout title="Your stack, your relationships">
+			<p>
+				PartyLine Collective supports discovery and connection — it doesn&rsquo;t replace
+				your ticketing, your promo channels or the relationships you&rsquo;ve built. Use
+				external ticket links, keep your existing connections, and let PartyLine help new
+				people find you.
+			</p>
+		</Callout>
+	</Section>
+
+	<CtaBand
+		title="Start listing your events"
+		description="Submit your first event or create an organiser profile in the PartyLine app."
+		primaryLabel="Submit Event"
+		primaryHref={APP_LINKS.submitEvent}
+		secondaryLabel="Post Opportunity"
+		secondaryHref={APP_LINKS.postOpportunity}
+	/>
+</BaseLayout>

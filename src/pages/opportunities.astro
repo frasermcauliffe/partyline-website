@@ -1,0 +1,82 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Callout from '@/components/ui/Callout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.opportunities;
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Opportunities · PartyLine Collective</p>
+			<h1>DJ calls across the underground scene</h1>
+			<p class="lede">
+				DJs wanted, open decks, warm-up slots, guest mixes and residencies — posted by
+				organisers and venues looking for the right fit. Browse and apply in the app.
+			</p>
+			<div class="button-row">
+				<Button
+					href={APP_LINKS.opportunities}
+					label="Browse Opportunities"
+					variant="primary"
+					external
+				/>
+				<Button
+					href={APP_LINKS.postOpportunity}
+					label="Post Opportunity"
+					variant="secondary"
+					external
+				/>
+			</div>
+		</div>
+	</section>
+
+	<Section>
+		<SectionHeader
+			title="Open calls for DJs"
+			lede="Filter by city, type, payment and genre — then apply with a published Artist / DJ profile you own."
+		/>
+		<ul class="list-check">
+			<li>DJs wanted for club nights, showcases and one-off events</li>
+			<li>Open decks and warm-up slots for emerging selectors</li>
+			<li>Guest mixes and residency opportunities</li>
+			<li>Organisers review applicants from their dashboard</li>
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<Callout title="Accepted is not a confirmed booking">
+			<p>
+				When an organiser accepts your application, that&rsquo;s a workflow status — not an
+				automatic confirmed booking. PartyLine helps you find each other; the details continue
+				from there through enquiries, booking requests or your existing channels.
+			</p>
+		</Callout>
+	</Section>
+
+	<Section>
+		<SectionHeader
+			title="Posting opportunities"
+			lede="Organisers can post from the dashboard or enable &ldquo;Looking for DJs?&rdquo; when submitting an event."
+		/>
+		<div class="button-row">
+			<Button href={APP_LINKS.postOpportunity} label="Post Opportunity" variant="primary" external />
+			<Button href={APP_LINKS.join} label="Join PartyLine" variant="secondary" external />
+		</div>
+	</Section>
+
+	<CtaBand
+		title="Find your next slot"
+		description="Browse open calls or post an opportunity in the PartyLine app."
+		primaryLabel="Browse Opportunities"
+		primaryHref={APP_LINKS.opportunities}
+		secondaryLabel="Post Opportunity"
+		secondaryHref={APP_LINKS.postOpportunity}
+	/>
+</BaseLayout>

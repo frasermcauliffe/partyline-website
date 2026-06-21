@@ -1,0 +1,62 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Callout from '@/components/ui/Callout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.venues;
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Venues · PartyLine Collective</p>
+			<h1>Showcase your space on the network</h1>
+			<p class="lede">
+				Create a venue or event space profile, connect with organisers and artists, receive
+				enquiries, and link events hosted at your space.
+			</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.createListing} label="Create Listing" variant="primary" external />
+				<Button href={APP_LINKS.theScene} label="Browse The Scene" variant="secondary" external />
+			</div>
+		</div>
+	</section>
+
+	<Section>
+		<SectionHeader
+			title="Your venue on The Scene"
+			lede="Clubs, warehouses, bars and alternative spaces — discoverable alongside the events and people that move through them."
+		/>
+		<ul class="list-check">
+			<li>Public profiles for clubs, warehouses, bars and alternative event spaces</li>
+			<li>Connect with organisers, artists, production and media on the scene</li>
+			<li>Receive enquiries and structured booking requests</li>
+			<li>Link to events happening at your venue</li>
+			<li>Set availability and collaboration notes on your profile</li>
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<Callout title="Your space, your relationships">
+			<p>
+				Venues are central to underground culture. PartyLine Collective helps your space be
+				discoverable alongside the events and people that move through it — without
+				inserting itself between you and your regular partners.
+			</p>
+		</Callout>
+	</Section>
+
+	<CtaBand
+		title="List your venue"
+		description="Create your venue profile in the app and connect with organisers and artists across Australia."
+		primaryLabel="Create Listing"
+		primaryHref={APP_LINKS.createListing}
+		secondaryLabel="Browse The Scene"
+		secondaryHref={APP_LINKS.theScene}
+	/>
+</BaseLayout>

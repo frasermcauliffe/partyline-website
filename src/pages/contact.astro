@@ -1,0 +1,112 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import AppLink from '@/components/site/AppLink.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { SITE } from '@/data/site';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.contact;
+const mailtoHref = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent('PartyLine Collective enquiry')}`;
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Contact · PartyLine Collective</p>
+			<h1>Get in touch</h1>
+			<p class="lede">
+				Partnerships, venue enquiries, organiser questions, or general interest in PartyLine
+				Collective — we&rsquo;d like to hear from you.
+			</p>
+		</div>
+	</section>
+
+	<Section>
+		<div class="contact-grid">
+			<div class="contact-card">
+				<h2>Email</h2>
+				<p>For partnerships, venue enquiries, organiser questions or general interest.</p>
+				<a href={mailtoHref} class="contact-link">{SITE.contactEmail}</a>
+				<Button href={mailtoHref} label="Email us" variant="primary" />
+			</div>
+
+			<div class="contact-card">
+				<h2>App feedback</h2>
+				<p>
+					Found a bug, confusing flow, or missing event during closed alpha? Use the in-app
+					feedback form — it helps us triage issues quickly.
+				</p>
+				<AppLink href={APP_LINKS.feedback} label="Send Feedback" />
+			</div>
+
+			<div class="contact-card">
+				<h2>Join the network</h2>
+				<p>
+					Ready to explore events, create a profile, or submit an event? Head to the PartyLine
+					app.
+				</p>
+				<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
+			</div>
+		</div>
+	</Section>
+
+	<Section narrow>
+		<p class="footer-note muted">
+			Email us directly, or use in-app feedback for bugs during closed alpha.
+		</p>
+	</Section>
+</BaseLayout>
+
+<style>
+	.contact-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+
+	@media (min-width: 768px) {
+		.contact-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.contact-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		display: grid;
+		gap: var(--space-3);
+		min-width: 0;
+		padding: var(--space-6);
+	}
+
+	.contact-card h2 {
+		font-size: 1.15rem;
+	}
+
+	.contact-card p {
+		color: var(--color-muted);
+		font-size: 0.95rem;
+		line-height: 1.6;
+	}
+
+	.contact-link {
+		color: var(--color-primary);
+		font-weight: 600;
+		text-decoration: none;
+		word-break: break-word;
+	}
+
+	.contact-link:hover,
+	.contact-link:focus-visible {
+		text-decoration: underline;
+	}
+
+	.footer-note {
+		font-size: 0.9rem;
+		line-height: 1.6;
+		text-align: center;
+	}
+</style>
