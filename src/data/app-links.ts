@@ -33,3 +33,7 @@ export function eventUrl(slug: string): string {
 export function profileUrl(slug: string): string {
 	return `${APP_URL}/profiles/${slug}`;
 }
+
+export function opportunityUrl(slug: string): string {
+	return `${APP_URL}/opportunities/${slug}`;
+}

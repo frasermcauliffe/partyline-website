@@ -1,0 +1,86 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import PublicOpportunityPreviewCard from '@/components/previews/PublicOpportunityPreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
+import type { PublicOpportunityPreview } from '@/lib/app-preview-types';
+
+interface Props {
+	eyebrow?: string;
+	title: string;
+	lede?: string;
+	opportunities: PublicOpportunityPreview[];
+	unavailable?: boolean;
+	emptyMessage: string;
+	ctaLabel: string;
+	emptyCtaLabel?: string;
+	ctaHref: string;
+	narrow?: boolean;
+}
+
+const {
+	eyebrow,
+	title,
+	lede,
+	opportunities,
+	unavailable = false,
+	emptyMessage,
+	ctaLabel,
+	emptyCtaLabel = ctaLabel,
+	ctaHref,
+	narrow = true
+} = Astro.props;
+---
+
+<Section narrow={narrow}>
+	<SectionHeader eyebrow={eyebrow} title={title} lede={lede} />
+	{
+		opportunities.length > 0 ? (
+			<>
+				<div class="opportunity-preview-grid">
+					{opportunities.map((opportunity) => (
+						<PublicOpportunityPreviewCard opportunity={opportunity} />
+					))}
+				</div>
+				<div class="opportunity-preview-actions">
+					<Button href={ctaHref} label={ctaLabel} variant="secondary" external />
+				</div>
+			</>
+		) : (
+			<EmptyPreviewState
+				message={emptyMessage}
+				ctaHref={ctaHref}
+				ctaLabel={emptyCtaLabel}
+				unavailable={unavailable}
+			/>
+		)
+	}
+</Section>
+
+<style>
+	.opportunity-preview-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
+		margin-bottom: var(--space-5);
+	}
+
+	@media (min-width: 640px) {
+		.opportunity-preview-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.opportunity-preview-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.opportunity-preview-actions {
+		display: flex;
+		justify-content: center;
+	}
+</style>

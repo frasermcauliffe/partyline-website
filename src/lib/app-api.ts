@@ -4,7 +4,9 @@ import type {
 	PublicEventsFetchResult,
 	PublicListingPreview,
 	PublicListingsFetchResult,
-	PublicListingType
+	PublicListingType,
+	PublicOpportunityPreview,
+	PublicOpportunitiesFetchResult
 } from '@/lib/app-preview-types';
 
 const FETCH_TIMEOUT_MS = 10_000;
@@ -115,5 +117,73 @@ export async function fetchPublicListings(
 		return { listings, unavailable: false };
 	} catch {
 		return { listings: [], unavailable: true };
+	}
+}
+
+function isPublicOpportunityPreview(value: unknown): value is PublicOpportunityPreview {
+	if (!value || typeof value !== 'object') {
+		return false;
+	}
+
+	const row = value as Record<string, unknown>;
+
+	return (
+		typeof row.id === 'string' &&
+		typeof row.slug === 'string' &&
+		typeof row.title === 'string' &&
+		typeof row.opportunityType === 'string' &&
+		typeof row.city === 'string' &&
+		typeof row.dateLabel === 'string' &&
+		Array.isArray(row.genres) &&
+		typeof row.appUrl === 'string' &&
+		(row.imageUrl === null ||
+			row.imageUrl === undefined ||
+			typeof row.imageUrl === 'string') &&
+		(row.deadlineLabel === undefined || typeof row.deadlineLabel === 'string') &&
+		(row.paymentLabel === null ||
+			row.paymentLabel === undefined ||
+			typeof row.paymentLabel === 'string') &&
+		(row.organiserName === null ||
+			row.organiserName === undefined ||
+			typeof row.organiserName === 'string') &&
+		(row.linkedEventTitle === null ||
+			row.linkedEventTitle === undefined ||
+			typeof row.linkedEventTitle === 'string')
+	);
+}
+
+export async function fetchPublicOpportunities(
+	limit: number
+): Promise<PublicOpportunitiesFetchResult> {
+	const baseUrl = getAppApiBaseUrl();
+	const url = `${baseUrl}/api/public/opportunities?limit=${encodeURIComponent(String(limit))}`;
+
+	try {
+		const response = await fetch(url, {
+			headers: { Accept: 'application/json' },
+			signal: AbortSignal.timeout(FETCH_TIMEOUT_MS)
+		});
+
+		if (!response.ok) {
+			return { opportunities: [], unavailable: true };
+		}
+
+		const payload: unknown = await response.json();
+
+		if (
+			!payload ||
+			typeof payload !== 'object' ||
+			!Array.isArray((payload as { opportunities?: unknown }).opportunities)
+		) {
+			return { opportunities: [], unavailable: true };
+		}
+
+		const opportunities = (payload as { opportunities: unknown[] }).opportunities.filter(
+			isPublicOpportunityPreview
+		);
+
+		return { opportunities, unavailable: false };
+	} catch {
+		return { opportunities: [], unavailable: true };
 	}
 }

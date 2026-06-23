@@ -1,0 +1,168 @@
+---
+import type { PublicOpportunityPreview } from '@/lib/app-preview-types';
+import { opportunityUrl } from '@/data/app-links';
+
+interface Props {
+	opportunity: PublicOpportunityPreview;
+}
+
+const { opportunity } = Astro.props;
+const href = opportunityUrl(opportunity.slug);
+const metaParts = [opportunity.opportunityType, opportunity.city].filter(Boolean);
+const genreLabel = opportunity.genres.slice(0, 4).join(' · ');
+const contextParts = [opportunity.organiserName, opportunity.linkedEventTitle].filter(Boolean);
+---
+
+<article class="opportunity-preview-card">
+	{
+		opportunity.imageUrl && (
+			<a
+				href={href}
+				class="opportunity-preview-card__media"
+				target="_blank"
+				rel="noopener noreferrer"
+				tabindex="-1"
+				aria-hidden="true"
+			>
+				<img
+					src={opportunity.imageUrl}
+					alt=""
+					loading="lazy"
+					decoding="async"
+				/>
+			</a>
+		)
+	}
+	<div class="opportunity-preview-card__body">
+		<p class="opportunity-preview-card__meta">
+			{metaParts.length > 0 && <span>{metaParts.join(' · ')}</span>}
+		</p>
+		<h2 class="opportunity-preview-card__title">
+			<a href={href} target="_blank" rel="noopener noreferrer">
+				{opportunity.title}
+			</a>
+		</h2>
+		<p class="opportunity-preview-card__schedule">{opportunity.dateLabel}</p>
+		{
+			opportunity.deadlineLabel && (
+				<p class="opportunity-preview-card__deadline">{opportunity.deadlineLabel}</p>
+			)
+		}
+		{
+			contextParts.length > 0 && (
+				<p class="opportunity-preview-card__context">{contextParts.join(' · ')}</p>
+			)
+		}
+		{
+			genreLabel && (
+				<p class="opportunity-preview-card__genres">{genreLabel}</p>
+			)
+		}
+		{
+			opportunity.paymentLabel && (
+				<p class="opportunity-preview-card__payment">{opportunity.paymentLabel}</p>
+			)
+		}
+		<a href={href} class="opportunity-preview-card__link" target="_blank" rel="noopener noreferrer">
+			View in app →
+		</a>
+	</div>
+</article>
+
+<style>
+	.opportunity-preview-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		display: grid;
+		height: 100%;
+		min-width: 0;
+		overflow: hidden;
+		transition:
+			border-color 0.15s ease,
+			transform 0.15s ease;
+	}
+
+	.opportunity-preview-card:hover,
+	.opportunity-preview-card:focus-within {
+		border-color: var(--color-primary);
+		transform: translateY(-2px);
+	}
+
+	.opportunity-preview-card__media {
+		aspect-ratio: 16 / 9;
+		background: var(--color-surface-soft);
+		display: block;
+		overflow: hidden;
+	}
+
+	.opportunity-preview-card__media img {
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		width: 100%;
+	}
+
+	.opportunity-preview-card__body {
+		display: grid;
+		gap: var(--space-3);
+		padding: var(--space-5);
+	}
+
+	.opportunity-preview-card__meta {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: 0.7rem;
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.opportunity-preview-card__title {
+		font-size: 1.1rem;
+		line-height: 1.35;
+		overflow-wrap: anywhere;
+	}
+
+	.opportunity-preview-card__title a {
+		color: inherit;
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		text-decoration: none;
+	}
+
+	.opportunity-preview-card__title a:hover,
+	.opportunity-preview-card__title a:focus-visible {
+		color: var(--color-primary);
+	}
+
+	.opportunity-preview-card__schedule,
+	.opportunity-preview-card__deadline,
+	.opportunity-preview-card__context,
+	.opportunity-preview-card__genres,
+	.opportunity-preview-card__payment {
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		line-height: 1.5;
+		overflow-wrap: anywhere;
+	}
+
+	.opportunity-preview-card__genres {
+		font-size: 0.85rem;
+	}
+
+	.opportunity-preview-card__link {
+		color: var(--color-primary);
+		font-size: 0.9rem;
+		font-weight: 600;
+		margin-top: auto;
+		text-decoration: none;
+		width: fit-content;
+	}
+
+	.opportunity-preview-card__link:hover,
+	.opportunity-preview-card__link:focus-visible {
+		text-decoration: underline;
+	}
+</style>

@@ -38,3 +38,24 @@ export type PublicListingsFetchResult = {
 	listings: PublicListingPreview[];
 	unavailable: boolean;
 };
+
+export type PublicOpportunityPreview = {
+	id: string;
+	slug: string;
+	title: string;
+	opportunityType: string;
+	city: string;
+	dateLabel: string;
+	deadlineLabel?: string;
+	genres: string[];
+	paymentLabel?: string | null;
+	organiserName?: string | null;
+	linkedEventTitle?: string | null;
+	imageUrl?: string | null;
+	appUrl: string;
+};
+
+export type PublicOpportunitiesFetchResult = {
+	opportunities: PublicOpportunityPreview[];
+	unavailable: boolean;
+};

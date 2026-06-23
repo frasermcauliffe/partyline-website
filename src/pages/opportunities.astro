@@ -5,10 +5,13 @@ import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import Callout from '@/components/ui/Callout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
+import OpportunityLivePreviewSection from '@/components/previews/OpportunityLivePreviewSection.astro';
+import { fetchPublicOpportunities } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.opportunities;
+const opportunitiesResult = await fetchPublicOpportunities(6);
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -37,6 +40,18 @@ const seo = PAGE_SEO.opportunities;
 			</div>
 		</div>
 	</section>
+
+	<OpportunityLivePreviewSection
+		eyebrow="Live opportunities"
+		title="Open opportunities across Australia"
+		lede="DJ calls, open decks, warm-up slots and residencies from the PartyLine app — open the app to apply with your Artist / DJ profile."
+		opportunities={opportunitiesResult.opportunities}
+		unavailable={opportunitiesResult.unavailable}
+		emptyMessage="No public opportunities are available here yet. Browse the app for the latest DJ calls, open decks and residencies."
+		ctaHref={APP_LINKS.opportunities}
+		ctaLabel="Browse all opportunities"
+		emptyCtaLabel="Browse opportunities in the app"
+	/>
 
 	<Section>
 		<SectionHeader
