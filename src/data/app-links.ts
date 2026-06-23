@@ -29,3 +29,7 @@ export type AppLinkKey = keyof typeof APP_LINKS;
 export function eventUrl(slug: string): string {
 	return `${APP_URL}/events/${slug}`;
 }
+
+export function profileUrl(slug: string): string {
+	return `${APP_URL}/profiles/${slug}`;
+}

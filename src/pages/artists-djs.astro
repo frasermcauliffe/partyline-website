@@ -5,10 +5,13 @@ import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import Callout from '@/components/ui/Callout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
+import ProfileLivePreviewSection from '@/components/previews/ProfileLivePreviewSection.astro';
+import { fetchPublicListings } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.artistsDjs;
+const artistProfilesResult = await fetchPublicListings('artist_dj', 6);
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -36,6 +39,17 @@ const seo = PAGE_SEO.artistsDjs;
 			</div>
 		</div>
 	</section>
+
+	<ProfileLivePreviewSection
+		eyebrow="Live profiles"
+		title="Artists and DJs across Australia"
+		lede="Public Artist and DJ profiles from the PartyLine app — open the app for full bios, mixes, media and opportunities."
+		profiles={artistProfilesResult.listings}
+		unavailable={artistProfilesResult.unavailable}
+		emptyMessage="No public Artist/DJ profiles are available here yet. Explore The Scene in the app."
+		ctaHref={APP_LINKS.artists}
+		ctaLabel="Explore all artists and DJs"
+	/>
 
 	<Section>
 		<SectionHeader

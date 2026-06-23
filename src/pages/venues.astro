@@ -5,10 +5,13 @@ import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import Callout from '@/components/ui/Callout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
+import ProfileLivePreviewSection from '@/components/previews/ProfileLivePreviewSection.astro';
+import { fetchPublicListings } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.venues;
+const venueProfilesResult = await fetchPublicListings('venue', 6);
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -26,6 +29,17 @@ const seo = PAGE_SEO.venues;
 			</div>
 		</div>
 	</section>
+
+	<ProfileLivePreviewSection
+		eyebrow="Live profiles"
+		title="Venues across Australia"
+		lede="Public venue profiles from the PartyLine app — open the app for capacity, facilities, events and full details."
+		profiles={venueProfilesResult.listings}
+		unavailable={venueProfilesResult.unavailable}
+		emptyMessage="No public venue profiles are available here yet. Explore venues in the app."
+		ctaHref={APP_LINKS.venues}
+		ctaLabel="Explore all venues"
+	/>
 
 	<Section>
 		<SectionHeader

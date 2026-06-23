@@ -1,0 +1,84 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import PublicProfilePreviewCard from '@/components/previews/PublicProfilePreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
+import type { PublicListingPreview } from '@/lib/app-preview-types';
+
+interface Props {
+	eyebrow?: string;
+	title: string;
+	lede?: string;
+	profiles: PublicListingPreview[];
+	unavailable?: boolean;
+	emptyMessage: string;
+	ctaLabel: string;
+	ctaHref: string;
+	narrow?: boolean;
+}
+
+const {
+	eyebrow,
+	title,
+	lede,
+	profiles,
+	unavailable = false,
+	emptyMessage,
+	ctaLabel,
+	ctaHref,
+	narrow = true
+} = Astro.props;
+---
+
+<Section narrow={narrow}>
+	<SectionHeader eyebrow={eyebrow} title={title} lede={lede} />
+	{
+		profiles.length > 0 ? (
+			<>
+				<div class="profile-preview-grid">
+					{profiles.map((profile) => (
+						<PublicProfilePreviewCard profile={profile} />
+					))}
+				</div>
+				<div class="profile-preview-actions">
+					<Button href={ctaHref} label={ctaLabel} variant="secondary" external />
+				</div>
+			</>
+		) : (
+			<EmptyPreviewState
+				message={emptyMessage}
+				ctaHref={ctaHref}
+				ctaLabel={ctaLabel}
+				unavailable={unavailable}
+			/>
+		)
+	}
+</Section>
+
+<style>
+	.profile-preview-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
+		margin-bottom: var(--space-5);
+	}
+
+	@media (min-width: 640px) {
+		.profile-preview-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.profile-preview-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.profile-preview-actions {
+		display: flex;
+		justify-content: center;
+	}
+</style>

@@ -3,16 +3,21 @@ import Button from '@/components/ui/Button.astro';
 
 interface Props {
 	ctaHref: string;
+	message?: string;
+	ctaLabel?: string;
 	unavailable?: boolean;
 }
 
-const { ctaHref, unavailable = false } = Astro.props;
+const {
+	ctaHref,
+	message = 'No upcoming public events are available here yet. Explore the app for the latest listings.',
+	ctaLabel = 'Explore events in the app',
+	unavailable = false
+} = Astro.props;
 ---
 
 <div class="empty-preview">
-	<p>
-		No upcoming public events are available here yet. Explore the app for the latest listings.
-	</p>
+	<p>{message}</p>
 	{
 		unavailable && (
 			<p class="empty-preview__note">
@@ -21,7 +26,7 @@ const { ctaHref, unavailable = false } = Astro.props;
 			</p>
 		)
 	}
-	<Button href={ctaHref} label="Explore events in the app" variant="primary" external />
+	<Button href={ctaHref} label={ctaLabel} variant="primary" external />
 </div>
 
 <style>
