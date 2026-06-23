@@ -17,14 +17,19 @@ const seo = PAGE_SEO.artistsDjs;
 			<p class="eyebrow">Artists &amp; DJs · PartyLine Collective</p>
 			<h1>Get discovered across the underground scene</h1>
 			<p class="lede">
-				Create a public Artist or DJ profile, apply to opportunities, and connect with
-				organisers and venues who are looking for your sound.
+				Create a public Artist or DJ profile, apply to opportunities, receive booking
+				enquiries, and connect with organisers and venues who are looking for your sound.
 			</p>
 			<div class="button-row">
-				<Button href={APP_LINKS.createListing} label="Create Listing" variant="primary" external />
+				<Button
+					href={APP_LINKS.createListing}
+					label="Create Artist/DJ profile"
+					variant="primary"
+					external
+				/>
 				<Button
 					href={APP_LINKS.opportunities}
-					label="Browse Opportunities"
+					label="Browse opportunities"
 					variant="secondary"
 					external
 				/>
@@ -38,9 +43,10 @@ const seo = PAGE_SEO.artistsDjs;
 			lede="Publish once, get found across the network, and manage applications from your dashboard."
 		/>
 		<ul class="list-check">
-			<li>Publish a profile on The Scene with bio, genres, media and links</li>
+			<li>Publish a profile with bio, genres, mixes, social links and media embeds</li>
+			<li>Show availability, rates and EPK-style details when you are ready</li>
 			<li>Get found by organisers and venues searching the network</li>
-			<li>Apply to DJs wanted, open decks, residencies and more</li>
+			<li>Apply to DJs wanted, open decks, residencies and community showcases</li>
 			<li>Receive enquiries and structured booking requests through your profile</li>
 			<li>Manage applications and activity from your dashboard</li>
 		</ul>
@@ -56,12 +62,46 @@ const seo = PAGE_SEO.artistsDjs;
 		</Callout>
 	</Section>
 
+	<Section narrow>
+		<SectionHeader title="Explore more" lede="Related pages and directories in the PartyLine app." />
+		<ul class="related-links">
+			<li><a href="/opportunities">DJ opportunities on PartyLine</a></li>
+			<li><a href="/organisers">For organisers posting opportunities</a></li>
+			<li><a href="/venues">For venues looking for resident DJs</a></li>
+			<li>
+				<a href={APP_LINKS.artists} target="_blank" rel="noopener noreferrer">
+					Explore Artists &amp; DJs in the app
+				</a>
+			</li>
+		</ul>
+	</Section>
+
 	<CtaBand
 		title="Build your profile"
-		description="Create your listing in the app and start connecting with organisers, venues and the wider scene."
-		primaryLabel="Create Listing"
+		description="Create your Artist or DJ listing in the app and start connecting with organisers, venues and the wider scene."
+		primaryLabel="Create Artist/DJ profile"
 		primaryHref={APP_LINKS.createListing}
-		secondaryLabel="Join PartyLine"
-		secondaryHref={APP_LINKS.join}
+		secondaryLabel="Browse opportunities"
+		secondaryHref={APP_LINKS.opportunities}
 	/>
 </BaseLayout>
+
+<style>
+	.related-links {
+		display: grid;
+		gap: var(--space-2);
+		list-style: none;
+	}
+
+	.related-links a {
+		color: var(--color-primary);
+		font-size: 0.95rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.related-links a:hover,
+	.related-links a:focus-visible {
+		text-decoration: underline;
+	}
+</style>

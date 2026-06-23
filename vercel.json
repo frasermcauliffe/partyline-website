@@ -1,0 +1,414 @@
+{
+  "redirects": [
+    {
+      "source": "/%f0%9f%8e%a7-track-of-the-week-nextjen-drops-red-flags-reigns-over-perths-hardcore-scene",
+      "destination": "/blog/🎧-track-of-the-week-nextjen-drops-red-flags-reigns-over-perths-hardcore-scene",
+      "permanent": true
+    },
+    {
+      "source": "/%f0%9f%8e%a7-track-of-the-week-nextjen-drops-red-flags-reigns-over-perths-hardcore-scene/",
+      "destination": "/blog/🎧-track-of-the-week-nextjen-drops-red-flags-reigns-over-perths-hardcore-scene",
+      "permanent": true
+    },
+    {
+      "source": "/11-years-deep-how-good-karma-music-built-a-db-legacy-in-perth",
+      "destination": "/blog/11-years-deep-how-good-karma-music-built-a-db-legacy-in-perth",
+      "permanent": true
+    },
+    {
+      "source": "/11-years-deep-how-good-karma-music-built-a-db-legacy-in-perth/",
+      "destination": "/blog/11-years-deep-how-good-karma-music-built-a-db-legacy-in-perth",
+      "permanent": true
+    },
+    {
+      "source": "/bpm-blogs",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/bpm-blogs/",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/from-6am-kickons-to-rewriting-the-rules-inside-the-mind-of-filth",
+      "destination": "/blog/from-6am-kickons-to-rewriting-the-rules-inside-the-mind-of-filth",
+      "permanent": true
+    },
+    {
+      "source": "/from-6am-kickons-to-rewriting-the-rules-inside-the-mind-of-filth/",
+      "destination": "/blog/from-6am-kickons-to-rewriting-the-rules-inside-the-mind-of-filth",
+      "permanent": true
+    },
+    {
+      "source": "/in-the-age-of-the-2-million-follower-dj-authenticity-is-an-expensive-habit",
+      "destination": "/blog/in-the-age-of-the-2-million-follower-dj-authenticity-is-an-expensive-habit",
+      "permanent": true
+    },
+    {
+      "source": "/in-the-age-of-the-2-million-follower-dj-authenticity-is-an-expensive-habit/",
+      "destination": "/blog/in-the-age-of-the-2-million-follower-dj-authenticity-is-an-expensive-habit",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-after-dark-music-the-140bpm-architects",
+      "destination": "/blog/industry-insiiide-after-dark-music-the-140bpm-architects",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-after-dark-music-the-140bpm-architects/",
+      "destination": "/blog/industry-insiiide-after-dark-music-the-140bpm-architects",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-ascension-the-persistence-of-hard-dance",
+      "destination": "/blog/industry-insiiide-ascension-the-persistence-of-hard-dance",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-ascension-the-persistence-of-hard-dance/",
+      "destination": "/blog/industry-insiiide-ascension-the-persistence-of-hard-dance",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-backroom-network-the-19-year-olds-rebuilding-the-open-deck",
+      "destination": "/blog/industry-insiiide-backroom-network-the-19-year-olds-rebuilding-the-open-deck",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-backroom-network-the-19-year-olds-rebuilding-the-open-deck/",
+      "destination": "/blog/industry-insiiide-backroom-network-the-19-year-olds-rebuilding-the-open-deck",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-dark-under-bringing-argentine-passion-to-perth-warehouses",
+      "destination": "/blog/industry-insiiide-dark-under-bringing-argentine-passion-to-perth-warehouses",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-dark-under-bringing-argentine-passion-to-perth-warehouses/",
+      "destination": "/blog/industry-insiiide-dark-under-bringing-argentine-passion-to-perth-warehouses",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-garbagetv-for-the-minorities-not-the-majorities",
+      "destination": "/blog/industry-insiiide-garbagetv-for-the-minorities-not-the-majorities",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-garbagetv-for-the-minorities-not-the-majorities/",
+      "destination": "/blog/industry-insiiide-garbagetv-for-the-minorities-not-the-majorities",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-houseology-the-study-of-uk-house-and-the-power-of-community",
+      "destination": "/blog/industry-insiiide-houseology-the-study-of-uk-house-and-the-power-of-community",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-houseology-the-study-of-uk-house-and-the-power-of-community/",
+      "destination": "/blog/industry-insiiide-houseology-the-study-of-uk-house-and-the-power-of-community",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-impulse-music-first-transparency-and-the-truth-about-perth-ukg",
+      "destination": "/blog/industry-insiiide-impulse-music-first-transparency-and-the-truth-about-perth-ukg",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-impulse-music-first-transparency-and-the-truth-about-perth-ukg/",
+      "destination": "/blog/industry-insiiide-impulse-music-first-transparency-and-the-truth-about-perth-ukg",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-lee-majors-bringing-breaks-back-on-vinyl",
+      "destination": "/blog/industry-insiiide-lee-majors-bringing-breaks-back-on-vinyl",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-lee-majors-bringing-breaks-back-on-vinyl/",
+      "destination": "/blog/industry-insiiide-lee-majors-bringing-breaks-back-on-vinyl",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-raindance-cultural-labour-and-the-fight-against-beige",
+      "destination": "/blog/industry-insiiide-raindance-cultural-labour-and-the-fight-against-beige",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-raindance-cultural-labour-and-the-fight-against-beige/",
+      "destination": "/blog/industry-insiiide-raindance-cultural-labour-and-the-fight-against-beige",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-restless-australia-participation-over-everything",
+      "destination": "/blog/industry-insiiide-restless-australia-participation-over-everything",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-restless-australia-participation-over-everything/",
+      "destination": "/blog/industry-insiiide-restless-australia-participation-over-everything",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-ritual-breaking-the-perth-bubble-and-the-temple-of-house-music",
+      "destination": "/blog/industry-insiiide-ritual-breaking-the-perth-bubble-and-the-temple-of-house-music",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-ritual-breaking-the-perth-bubble-and-the-temple-of-house-music/",
+      "destination": "/blog/industry-insiiide-ritual-breaking-the-perth-bubble-and-the-temple-of-house-music",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-s-u-b-s-p-e-c-t-r-a-live-174bpm-sunset-subs-and-the-audio-spectrum",
+      "destination": "/blog/industry-insiiide-s-u-b-s-p-e-c-t-r-a-live-174bpm-sunset-subs-and-the-audio-spectrum",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-s-u-b-s-p-e-c-t-r-a-live-174bpm-sunset-subs-and-the-audio-spectrum/",
+      "destination": "/blog/industry-insiiide-s-u-b-s-p-e-c-t-r-a-live-174bpm-sunset-subs-and-the-audio-spectrum",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-techn0de-bringing-real-techno-back-to-perth",
+      "destination": "/blog/industry-insiiide-techn0de-bringing-real-techno-back-to-perth",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-techn0de-bringing-real-techno-back-to-perth/",
+      "destination": "/blog/industry-insiiide-techn0de-bringing-real-techno-back-to-perth",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-the-industry-link-event-networking-knowledge-and-the-7-year-music-cycle",
+      "destination": "/blog/industry-insiiide-the-industry-link-event-networking-knowledge-and-the-7-year-music-cycle",
+      "permanent": true
+    },
+    {
+      "source": "/industry-insiiide-the-industry-link-event-networking-knowledge-and-the-7-year-music-cycle/",
+      "destination": "/blog/industry-insiiide-the-industry-link-event-networking-knowledge-and-the-7-year-music-cycle",
+      "permanent": true
+    },
+    {
+      "source": "/licknbeat-engineering-the-immersive-dancefloor",
+      "destination": "/blog/licknbeat-engineering-the-immersive-dancefloor",
+      "permanent": true
+    },
+    {
+      "source": "/licknbeat-engineering-the-immersive-dancefloor/",
+      "destination": "/blog/licknbeat-engineering-the-immersive-dancefloor",
+      "permanent": true
+    },
+    {
+      "source": "/sub-bass-a-storm-at-raindance-and-the-art-of-the-label-hack",
+      "destination": "/blog/sub-bass-a-storm-at-raindance-and-the-art-of-the-label-hack",
+      "permanent": true
+    },
+    {
+      "source": "/sub-bass-a-storm-at-raindance-and-the-art-of-the-label-hack/",
+      "destination": "/blog/sub-bass-a-storm-at-raindance-and-the-art-of-the-label-hack",
+      "permanent": true
+    },
+    {
+      "source": "/sunsets-sub-frequencies-the-swan-how-fvded-is-keeping-perth-underground-music-afloat",
+      "destination": "/blog/sunsets-sub-frequencies-the-swan-how-fvded-is-keeping-perth-underground-music-afloat",
+      "permanent": true
+    },
+    {
+      "source": "/sunsets-sub-frequencies-the-swan-how-fvded-is-keeping-perth-underground-music-afloat/",
+      "destination": "/blog/sunsets-sub-frequencies-the-swan-how-fvded-is-keeping-perth-underground-music-afloat",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-aaron-m-the-tech-trance-revival",
+      "destination": "/blog/track-of-the-week-aaron-m-the-tech-trance-revival",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-aaron-m-the-tech-trance-revival/",
+      "destination": "/blog/track-of-the-week-aaron-m-the-tech-trance-revival",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-bromad-ps2-nostalgia-chinese-restaurant-raves-and-the-death-of-drop-to-drop-mixing",
+      "destination": "/blog/track-of-the-week-bromad-ps2-nostalgia-chinese-restaurant-raves-and-the-death-of-drop-to-drop-mixing",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-bromad-ps2-nostalgia-chinese-restaurant-raves-and-the-death-of-drop-to-drop-mixing/",
+      "destination": "/blog/track-of-the-week-bromad-ps2-nostalgia-chinese-restaurant-raves-and-the-death-of-drop-to-drop-mixing",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-cornah-from-macclesfield-to-the-vault-via-the-helsinki-bus",
+      "destination": "/blog/track-of-the-week-cornah-from-macclesfield-to-the-vault-via-the-helsinki-bus",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-cornah-from-macclesfield-to-the-vault-via-the-helsinki-bus/",
+      "destination": "/blog/track-of-the-week-cornah-from-macclesfield-to-the-vault-via-the-helsinki-bus",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-flashcult-futuristic-warehouse-raves-dan-brown-and-the-art-of-the-breather",
+      "destination": "/blog/track-of-the-week-flashcult-futuristic-warehouse-raves-dan-brown-and-the-art-of-the-breather",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-flashcult-futuristic-warehouse-raves-dan-brown-and-the-art-of-the-breather/",
+      "destination": "/blog/track-of-the-week-flashcult-futuristic-warehouse-raves-dan-brown-and-the-art-of-the-breather",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-fraulein-noir-from-berlin-to-the-bush",
+      "destination": "/blog/track-of-the-week-fraulein-noir-from-berlin-to-the-bush",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-fraulein-noir-from-berlin-to-the-bush/",
+      "destination": "/blog/track-of-the-week-fraulein-noir-from-berlin-to-the-bush",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-hvia-nenshin-the-survivor-and-the-samurai",
+      "destination": "/blog/track-of-the-week-hvia-nenshin-the-survivor-and-the-samurai",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-hvia-nenshin-the-survivor-and-the-samurai/",
+      "destination": "/blog/track-of-the-week-hvia-nenshin-the-survivor-and-the-samurai",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-ikigai-anime-remxies-defqon-1-energy-and-the-reason-for-being",
+      "destination": "/blog/track-of-the-week-ikigai-anime-remxies-defqon-1-energy-and-the-reason-for-being",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-ikigai-anime-remxies-defqon-1-energy-and-the-reason-for-being/",
+      "destination": "/blog/track-of-the-week-ikigai-anime-remxies-defqon-1-energy-and-the-reason-for-being",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-irma-global-grooves-and-rabbit-holes",
+      "destination": "/blog/track-of-the-week-irma-global-grooves-and-rabbit-holes",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-irma-global-grooves-and-rabbit-holes/",
+      "destination": "/blog/track-of-the-week-irma-global-grooves-and-rabbit-holes",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-katharsis-from-tomorrowland-to-the-vault",
+      "destination": "/blog/track-of-the-week-katharsis-from-tomorrowland-to-the-vault",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-katharsis-from-tomorrowland-to-the-vault/",
+      "destination": "/blog/track-of-the-week-katharsis-from-tomorrowland-to-the-vault",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-lust-high-speed-dnb-and-the-pursuit-of-perfection",
+      "destination": "/blog/track-of-the-week-lust-high-speed-dnb-and-the-pursuit-of-perfection",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-lust-high-speed-dnb-and-the-pursuit-of-perfection/",
+      "destination": "/blog/track-of-the-week-lust-high-speed-dnb-and-the-pursuit-of-perfection",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-lynch-from-the-front-left-to-the-festival-stage",
+      "destination": "/blog/track-of-the-week-lynch-from-the-front-left-to-the-festival-stage",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-lynch-from-the-front-left-to-the-festival-stage/",
+      "destination": "/blog/track-of-the-week-lynch-from-the-front-left-to-the-festival-stage",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-manikin-1970s-punk-to-170-bpm",
+      "destination": "/blog/track-of-the-week-manikin-1970s-punk-to-170-bpm",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-manikin-1970s-punk-to-170-bpm/",
+      "destination": "/blog/track-of-the-week-manikin-1970s-punk-to-170-bpm",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-pardeaux-melodic-electronic-boiler-room-burnout-and-the-beauty-of-a-sizzler-buffet",
+      "destination": "/blog/track-of-the-week-pardeaux-melodic-electronic-boiler-room-burnout-and-the-beauty-of-a-sizzler-buffet",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-pardeaux-melodic-electronic-boiler-room-burnout-and-the-beauty-of-a-sizzler-buffet/",
+      "destination": "/blog/track-of-the-week-pardeaux-melodic-electronic-boiler-room-burnout-and-the-beauty-of-a-sizzler-buffet",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-pha2e-architecture-ukg-and-basement-raves",
+      "destination": "/blog/track-of-the-week-pha2e-architecture-ukg-and-basement-raves",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-pha2e-architecture-ukg-and-basement-raves/",
+      "destination": "/blog/track-of-the-week-pha2e-architecture-ukg-and-basement-raves",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-senditt-building-dnb-from-the-warehouse-floor",
+      "destination": "/blog/track-of-the-week-senditt-building-dnb-from-the-warehouse-floor",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-senditt-building-dnb-from-the-warehouse-floor/",
+      "destination": "/blog/track-of-the-week-senditt-building-dnb-from-the-warehouse-floor",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-shellaz-high-tension-dnb",
+      "destination": "/blog/track-of-the-week-shellaz-high-tension-dnb",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-shellaz-high-tension-dnb/",
+      "destination": "/blog/track-of-the-week-shellaz-high-tension-dnb",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-the-nayler-method-how-a-calculated-move-to-perth-built-a-neuro-funk-weapon",
+      "destination": "/blog/track-of-the-week-the-nayler-method-how-a-calculated-move-to-perth-built-a-neuro-funk-weapon",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-the-nayler-method-how-a-calculated-move-to-perth-built-a-neuro-funk-weapon/",
+      "destination": "/blog/track-of-the-week-the-nayler-method-how-a-calculated-move-to-perth-built-a-neuro-funk-weapon",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-trmv-from-the-broome-bush-to-perth-warehouses",
+      "destination": "/blog/track-of-the-week-trmv-from-the-broome-bush-to-perth-warehouses",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-trmv-from-the-broome-bush-to-perth-warehouses/",
+      "destination": "/blog/track-of-the-week-trmv-from-the-broome-bush-to-perth-warehouses",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-von-tek-the-blade-bloodrave-schranz-and-the-last-shot-at-music",
+      "destination": "/blog/track-of-the-week-von-tek-the-blade-bloodrave-schranz-and-the-last-shot-at-music",
+      "permanent": true
+    },
+    {
+      "source": "/track-of-the-week-von-tek-the-blade-bloodrave-schranz-and-the-last-shot-at-music/",
+      "destination": "/blog/track-of-the-week-von-tek-the-blade-bloodrave-schranz-and-the-last-shot-at-music",
+      "permanent": true
+    }
+  ]
+}

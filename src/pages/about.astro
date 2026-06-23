@@ -22,7 +22,7 @@ const seo = PAGE_SEO.about;
 			</p>
 			<div class="button-row">
 				<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
-				<Button href="/contact" label="Contact" variant="secondary" />
+				<Button href="/how-it-works" label="How It Works" variant="secondary" />
 			</div>
 		</div>
 	</section>
@@ -42,6 +42,20 @@ const seo = PAGE_SEO.about;
 				corporate marketplace or sitting in the middle of your existing relationships.
 			</p>
 
+			<h2>Who PartyLine supports</h2>
+			<ul class="list-check">
+				<li>Fans discovering nights and following the scene</li>
+				<li>Artists and DJs building public profiles and applying to opportunities</li>
+				<li>Organisers and collectives submitting events and reviewing applicants</li>
+				<li>Venues and event spaces connecting with crews and resident selectors</li>
+				<li>Production, media and performers listed on The Scene</li>
+			</ul>
+			<p>
+				Explore audience pages: <a href="/artists-djs">Artists &amp; DJs</a>,
+				<a href="/organisers">Organisers</a>, <a href="/venues">Venues</a>,
+				<a href="/opportunities">Opportunities</a>.
+			</p>
+
 			<h2>What PartyLine is</h2>
 			<ul class="list-check">
 				<li>An Australia-wide events directory</li>
@@ -57,6 +71,7 @@ const seo = PAGE_SEO.about;
 				<li>Not a layer between you and your regular partners</li>
 				<li>Not a corporate marketplace chasing volume over community</li>
 				<li>Not limited to one city — built Australia-wide from the start</li>
+				<li>Not paid editorial coverage — editorial lives on the <a href="/blog">blog</a> separately from partnerships</li>
 			</ul>
 		</div>
 	</Section>
@@ -76,8 +91,8 @@ const seo = PAGE_SEO.about;
 		description="Create your account and explore events, profiles and opportunities across Australia."
 		primaryLabel="Join PartyLine"
 		primaryHref={APP_LINKS.join}
-		secondaryLabel="Contact"
-		secondaryHref="/contact"
+		secondaryLabel="How It Works"
+		secondaryHref="/how-it-works"
 		secondaryExternal={false}
 	/>
 </BaseLayout>
@@ -96,5 +111,15 @@ const seo = PAGE_SEO.about;
 	.prose p {
 		color: var(--color-muted-strong);
 		line-height: 1.7;
+	}
+
+	.prose a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
 	}
 </style>

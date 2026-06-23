@@ -8,10 +8,17 @@ import AudienceCard from '@/components/ui/AudienceCard.astro';
 import FaqList from '@/components/ui/FaqList.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import Card from '@/components/ui/Card.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import LivePreviewSection from '@/components/previews/LivePreviewSection.astro';
+import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '@/lib/blog';
+import { fetchPublicEvents } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO, organizationJsonLd, websiteJsonLd } from '@/lib/seo';
 
 const seo = PAGE_SEO.home;
+const latestPosts = getPublishedPosts(await getCollection('blog')).slice(0, 3);
+const upcomingEventsResult = await fetchPublicEvents(6);
 
 const platformFeatures = [
 	{
@@ -51,32 +58,43 @@ const audiences = [
 		title: 'Fans',
 		description: 'Find nights, save events, follow profiles and stay close to what\u2019s happening.',
 		ctaLabel: 'Explore Events',
-		ctaHref: APP_LINKS.events
+		ctaHref: APP_LINKS.events,
+		learnMoreLabel: 'Events on PartyLine',
+		learnMoreHref: '/events'
 	},
 	{
 		title: 'Artists & DJs',
-		description: 'Build a profile, apply to opportunities, and connect with organisers and venues.',
-		ctaLabel: 'Create Listing',
-		ctaHref: APP_LINKS.createListing
+		description:
+			'Build a public profile, apply to opportunities, and connect with organisers and venues.',
+		ctaLabel: 'Create Artist/DJ profile',
+		ctaHref: APP_LINKS.createListing,
+		learnMoreLabel: 'For Artists & DJs',
+		learnMoreHref: '/artists-djs'
 	},
 	{
 		title: 'Organisers',
 		description: 'Submit events, post opportunities, and build a visible presence for your crew.',
-		ctaLabel: 'Submit Event',
-		ctaHref: APP_LINKS.submitEvent
+		ctaLabel: 'Submit an event',
+		ctaHref: APP_LINKS.submitEvent,
+		learnMoreLabel: 'For Organisers',
+		learnMoreHref: '/organisers'
 	},
 	{
 		title: 'Venues',
 		description: 'Showcase your space, link events, and connect with the people who fill the room.',
-		ctaLabel: 'Create Listing',
-		ctaHref: APP_LINKS.createListing
+		ctaLabel: 'Add your venue',
+		ctaHref: APP_LINKS.createListing,
+		learnMoreLabel: 'For Venues',
+		learnMoreHref: '/venues'
 	},
 	{
 		title: 'Suppliers & media',
 		description:
 			'Production, photographers, videographers and performers — be discoverable across the scene.',
 		ctaLabel: 'Browse The Scene',
-		ctaHref: APP_LINKS.theScene
+		ctaHref: APP_LINKS.theScene,
+		learnMoreLabel: 'About PartyLine',
+		learnMoreHref: '/about'
 	}
 ];
 
@@ -136,7 +154,8 @@ const faqItems = [
 	},
 	{
 		question: 'Where is the app?',
-		answer: `Accounts, events, profiles and dashboards live in the PartyLine app. Use Open the app from any page CTA, or go directly from the header and footer links.`
+		answer:
+			'Accounts, events, profiles and dashboards live in the PartyLine app. Use Open the app from any page CTA, or go directly from the header and footer links.'
 	}
 ];
 ---
@@ -152,8 +171,8 @@ const faqItems = [
 			<p class="eyebrow">PartyLine Collective</p>
 			<h1>Find your line into Australia&rsquo;s underground scene.</h1>
 			<p class="lede">
-				Discovery, scene profiles, DJ opportunities and practical connection — built for
-				underground music and events across Australia.
+				Australia&rsquo;s underground music and events platform — discovery, scene profiles, DJ
+				opportunities and practical connection built for the people who make nights happen.
 			</p>
 			<div class="button-row">
 				<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
@@ -171,6 +190,16 @@ const faqItems = [
 		<FeatureGrid items={platformFeatures} columns={3} />
 	</Section>
 
+	<LivePreviewSection
+		eyebrow="Events"
+		title="Upcoming events across Australia"
+		lede="A snapshot of public listings in the PartyLine app — open the app for full discovery, filters and details."
+		events={upcomingEventsResult.events}
+		unavailable={upcomingEventsResult.unavailable}
+		ctaHref={APP_LINKS.events}
+		ctaLabel="Explore events across Australia"
+	/>
+
 	<Section narrow>
 		<SectionHeader
 			eyebrow="Who it's for"
@@ -180,6 +209,26 @@ const faqItems = [
 			{audiences.map((item) => <AudienceCard {...item} external />)}
 		</div>
 	</Section>
+
+	{
+		latestPosts.length > 0 && (
+			<Section narrow>
+				<SectionHeader
+					eyebrow="From the blog"
+					title="Latest from the blog"
+					lede="Track of the Week, Industry Insiiide features, and underground stories from across Australia."
+				/>
+				<div class="blog-preview-grid">
+					{latestPosts.map((post) => (
+						<BlogCard post={post} />
+					))}
+				</div>
+				<div class="blog-preview-actions">
+					<Button href="/blog" label="Read all articles" variant="secondary" />
+				</div>
+			</Section>
+		)
+	}
 
 	<Section narrow>
 		<SectionHeader eyebrow="How it works" title="Three steps into the network" />
@@ -193,6 +242,9 @@ const faqItems = [
 				))
 			}
 		</ol>
+		<p class="how-it-works-link">
+			<a href="/how-it-works">See the full PartyLine flow →</a>
+		</p>
 	</Section>
 
 	<Section narrow>
@@ -262,6 +314,48 @@ const faqItems = [
 		.audience-grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
+	}
+
+	.blog-preview-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
+		margin-bottom: var(--space-5);
+	}
+
+	@media (min-width: 640px) {
+		.blog-preview-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.blog-preview-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.blog-preview-actions {
+		display: flex;
+		justify-content: center;
+	}
+
+	.how-it-works-link {
+		margin-top: var(--space-5);
+		text-align: center;
+	}
+
+	.how-it-works-link a {
+		color: var(--color-primary);
+		font-size: 0.95rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.how-it-works-link a:hover,
+	.how-it-works-link a:focus-visible {
+		text-decoration: underline;
 	}
 
 	.explore-grid {

@@ -7,9 +7,20 @@ interface Props {
 	description: string;
 	canonicalPath: string;
 	ogImage?: string;
+	ogType?: 'website' | 'article';
+	publishedAt?: Date;
+	updatedAt?: Date;
 }
 
-const { title, description, canonicalPath, ogImage = '/og-default.svg' }: Props = Astro.props;
+const {
+	title,
+	description,
+	canonicalPath,
+	ogImage = '/og-default.svg',
+	ogType = 'website',
+	publishedAt,
+	updatedAt
+}: Props = Astro.props;
 
 const canonicalUrl = absoluteUrl(canonicalPath);
 const imageUrl = absoluteUrl(ogImage);
@@ -25,13 +36,23 @@ const imageUrl = absoluteUrl(ogImage);
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:image" content={imageUrl} />
 <meta property="og:locale" content={SITE.locale} />
+{
+	ogType === 'article' && publishedAt && (
+		<meta property="article:published_time" content={publishedAt.toISOString()} />
+	)
+}
+{
+	ogType === 'article' && updatedAt && (
+		<meta property="article:modified_time" content={updatedAt.toISOString()} />
+	)
+}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />

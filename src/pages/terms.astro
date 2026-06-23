@@ -1,0 +1,131 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+import { CONTACT_SUBJECTS, mailtoHref } from '@/data/contact';
+import { SITE } from '@/data/site';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.terms;
+const lastUpdated = 'June 2026';
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Legal · PartyLine Collective</p>
+			<h1>Terms of Use</h1>
+			<p class="lede">
+				Baseline terms for using PartyLine Collective and the PartyLine app during closed
+				alpha. This is practical guidance — not legal advice.
+			</p>
+			<p class="legal-meta">Last updated: {lastUpdated}</p>
+		</div>
+	</section>
+
+	<Section>
+		<div class="prose">
+			<h2>Agreement</h2>
+			<p>
+				By using the PartyLine Collective website or app, you agree to these terms. If you do
+				not agree, please do not use the platform.
+			</p>
+
+			<h2>What PartyLine provides</h2>
+			<p>
+				PartyLine provides discovery, public listings, event submission, opportunities,
+				enquiries, booking request workflows and dashboards for Australia&rsquo;s underground
+				music and events community. Features may change during closed alpha.
+			</p>
+
+			<h2>Your responsibilities</h2>
+			<ul class="list-check">
+				<li>Provide accurate information in listings, events and opportunity posts</li>
+				<li>Only publish content you have the right to share</li>
+				<li>Respect other users and follow our <a href="/community-guidelines">Community Guidelines</a></li>
+				<li>Keep account credentials secure</li>
+				<li>Use the platform lawfully and in good faith</li>
+			</ul>
+
+			<h2>Listings and events</h2>
+			<p>
+				You are responsible for the accuracy of profiles, events and opportunities you
+				publish. PartyLine may review, hide or remove content that is misleading, harmful or
+				inconsistent with community standards.
+			</p>
+
+			<h2>Opportunities and bookings</h2>
+			<ul class="list-check">
+				<li>
+					Accepted opportunity applications are a workflow status — not an automatic confirmed
+					booking
+				</li>
+				<li>
+					PartyLine does not guarantee gigs, payments, ticket sales or outcomes between users
+				</li>
+				<li>
+					Agreements, fees, deposits and cancellations remain between the parties involved unless
+					a separate PartyLine booking or payment feature explicitly applies
+				</li>
+			</ul>
+
+			<h2>Ticketing</h2>
+			<p>
+				PartyLine is not a primary ticketing platform. External ticket links remain the
+				responsibility of organisers unless a separate ticket partnership is agreed. PartyLine
+				is not liable for third-party ticketing issues.
+			</p>
+
+			<h2>Alpha disclaimer</h2>
+			<p>
+				PartyLine is in closed alpha. The service may be interrupted, incomplete or changed
+				without notice. Use the platform at your own discretion during this period.
+			</p>
+
+			<h2>Limitation of liability</h2>
+			<p>
+				To the extent permitted by law, PartyLine Collective is not liable for indirect,
+				incidental or consequential losses arising from use of the platform, user interactions
+				or third-party services linked from listings and events.
+			</p>
+
+			<h2>Contact</h2>
+			<p>
+				Questions about these terms:
+				<a href={mailtoHref(CONTACT_SUBJECTS.general)}>{SITE.contactEmail}</a>.
+			</p>
+		</div>
+	</Section>
+</BaseLayout>
+
+<style>
+	.legal-meta {
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		margin-top: var(--space-3);
+	}
+
+	.prose {
+		display: grid;
+		gap: var(--space-6);
+		max-width: 42rem;
+	}
+
+	.prose h2 {
+		font-size: clamp(1.15rem, 3vw, 1.4rem);
+	}
+
+	.prose p {
+		color: var(--color-muted-strong);
+		line-height: 1.7;
+	}
+
+	.prose a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+</style>

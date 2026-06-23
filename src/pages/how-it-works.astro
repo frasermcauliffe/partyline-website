@@ -1,0 +1,179 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Callout from '@/components/ui/Callout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.howItWorks;
+
+const steps = [
+	{
+		title: 'Discover events and profiles',
+		description:
+			'Browse underground events across Australia, search The Scene for artists, venues, organisers and crews, and save nights that matter to you.',
+		links: [
+			{ label: 'Events landing', href: '/events' },
+			{ label: 'Explore Events in the app', href: APP_LINKS.events, external: true }
+		]
+	},
+	{
+		title: 'Join and create the right profile',
+		description:
+			'Create a free PartyLine account. Fans can save and follow without a public listing. Artists, venues, organisers, production, media and performers can publish a listing on The Scene.',
+		links: [
+			{ label: 'Artists & DJs', href: '/artists-djs' },
+			{ label: 'Organisers', href: '/organisers' },
+			{ label: 'Venues', href: '/venues' },
+			{ label: 'Join PartyLine', href: APP_LINKS.join, external: true }
+		]
+	},
+	{
+		title: 'Submit events and post opportunities',
+		description:
+			'Organisers submit club nights, warehouses, showcases and community events. Post DJ calls — DJs wanted, open decks, warm-ups, guest mixes and residencies — from the dashboard or when submitting an event.',
+		links: [
+			{ label: 'Opportunities', href: '/opportunities' },
+			{ label: 'Submit an event', href: APP_LINKS.submitEvent, external: true },
+			{ label: 'Post an opportunity', href: APP_LINKS.postOpportunity, external: true }
+		]
+	},
+	{
+		title: 'Save, RSVP, enquire and apply',
+		description:
+			'Save events to your calendar, RSVP where available, send enquiries or structured booking requests through profiles, and apply to opportunities with a published Artist / DJ profile.',
+		links: [
+			{ label: 'Browse opportunities', href: APP_LINKS.opportunities, external: true },
+			{ label: 'Create Artist/DJ profile', href: APP_LINKS.createListing, external: true }
+		]
+	},
+	{
+		title: 'Manage from your dashboard',
+		description:
+			'Review opportunity applications, track engagement signals on events where available, manage listings and account settings, and keep your scene activity in one place.',
+		links: [{ label: 'Open dashboard', href: APP_LINKS.dashboard, external: true }]
+	}
+];
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">How It Works · PartyLine Collective</p>
+			<h1>How PartyLine works</h1>
+			<p class="lede">
+				A simple flow from discovery to connection — events, profiles, opportunities and
+				dashboards in the PartyLine app. This website explains the network; the app is where
+				you take action.
+			</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
+				<Button href={APP_LINKS.events} label="Explore Events" variant="secondary" external />
+			</div>
+		</div>
+	</section>
+
+	<Section narrow>
+		<ol class="flow-steps">
+			{
+				steps.map((step, index) => (
+					<li class="flow-step">
+						<p class="flow-step__number">Step {index + 1}</p>
+						<h2>{step.title}</h2>
+						<p>{step.description}</p>
+						<ul class="flow-step__links">
+							{step.links.map((link) => (
+								<li>
+									<a
+										href={link.href}
+										{...(link.external
+											? { target: '_blank', rel: 'noopener noreferrer' }
+											: {})}
+									>
+										{link.label} →
+									</a>
+								</li>
+							))}
+						</ul>
+					</li>
+				))
+			}
+		</ol>
+	</Section>
+
+	<Section narrow>
+		<Callout title="What stays outside PartyLine">
+			<p>
+				PartyLine is not a replacement ticketing platform. Ticketing stays with organisers
+				through their own links unless a separate ticket partnership is set up. Accepted
+				opportunity applications are a workflow status — not an automatic confirmed booking.
+				Your existing relationships stay yours.
+			</p>
+		</Callout>
+	</Section>
+
+	<CtaBand
+		title="Ready to get started?"
+		description="Create your account and explore events, profiles and opportunities across Australia."
+		primaryLabel="Join PartyLine"
+		primaryHref={APP_LINKS.join}
+		secondaryLabel="Create a profile"
+		secondaryHref={APP_LINKS.createListing}
+	/>
+</BaseLayout>
+
+<style>
+	.flow-steps {
+		display: grid;
+		gap: var(--space-6);
+		list-style: none;
+	}
+
+	.flow-step {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		display: grid;
+		gap: var(--space-3);
+		padding: var(--space-6);
+	}
+
+	.flow-step__number {
+		color: var(--color-primary);
+		font-family: var(--font-label);
+		font-size: 0.7rem;
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.flow-step h2 {
+		font-size: clamp(1.15rem, 3vw, 1.35rem);
+	}
+
+	.flow-step > p {
+		color: var(--color-muted-strong);
+		line-height: 1.65;
+	}
+
+	.flow-step__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		list-style: none;
+	}
+
+	.flow-step__links a {
+		color: var(--color-primary);
+		font-size: 0.875rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.flow-step__links a:hover,
+	.flow-step__links a:focus-visible {
+		text-decoration: underline;
+	}
+</style>

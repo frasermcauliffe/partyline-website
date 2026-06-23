@@ -1,6 +1,6 @@
 # PartyLine Collective — Marketing Website
 
-Static Astro marketing site for **PartyLine Collective** (`https://partylinecollective.com`). This project explains PartyLine and routes visitors into the separate SvelteKit app — it does not serve live app data, auth, or backend forms.
+Static Astro marketing site for **PartyLine Collective** (`https://partylinecollective.com`). This project explains PartyLine and routes visitors into the separate SvelteKit app. It includes read-only **event preview cards** fetched from the app at build time — no auth, forms backend, or direct Supabase access.
 
 **App (accounts, events, profiles, dashboards):** configured in `src/data/app-links.ts` (currently the hosted preview at `https://partyline-webapp.vercel.app`).
 
@@ -8,21 +8,28 @@ Static Astro marketing site for **PartyLine Collective** (`https://partylinecoll
 
 - [Astro](https://astro.build) 6
 - TypeScript
-- Static-first — no live app data, no auth, no forms backend
+- Markdown content collections (blog)
+- Static-first — build-time fetch of public event previews from the SvelteKit app API
 
 ## Project structure
 
 ```
 src/
-├── components/   # Site header/footer, UI primitives, SEO
+├── components/   # Site header/footer, UI primitives, SEO, blog
+├── content/      # Blog posts (Markdown)
 ├── data/         # App URLs, nav, site constants
-├── layouts/      # BaseLayout.astro
-├── lib/          # SEO helpers
-├── pages/        # Marketing routes (8 pages)
+├── layouts/      # BaseLayout, BlogPostLayout
+├── lib/          # SEO helpers, blog utilities, app API fetch
+├── pages/        # Marketing routes + /blog
 └── styles/       # Design tokens + global CSS
+imports/          # WordPress WXR export (not deployed)
+public/blog/media/ # Migrated blog images
+scripts/          # WordPress import script
 ```
 
 **App URL constants** live in `src/data/app-links.ts` — update `APP_URL` when the production app subdomain is ready.
+
+**Public app API** (event previews): set `PUBLIC_APP_API_URL` to the SvelteKit app origin (see `.env.example`). At build time, Astro calls `GET /api/public/events?limit=N` on that origin. If the API is unavailable, the build still succeeds and pages show an empty-state CTA. Previews refresh on the next deploy/build — scheduled rebuilds or deploy hooks can be added later for fresher listings.
 
 **Marketing site origin** lives in `src/data/site.ts` (`SITE_URL`) and must stay in sync with `astro.config.mjs`. Confirm DNS before launch; preview deploys may use a Vercel URL until then.
 
@@ -33,6 +40,7 @@ npm install
 npm run dev      # http://localhost:4321
 npm run build    # static output in dist/
 npm run preview  # preview production build
+npm run import:wordpress   # migrate WordPress XML → Markdown
 ```
 
 ## Pages
@@ -40,20 +48,79 @@ npm run preview  # preview production build
 | Route | Purpose |
 |-------|---------|
 | `/` | Homepage |
+| `/blog` | Blog index |
+| `/blog/[slug]` | Individual articles |
 | `/events` | Event discovery landing → app |
 | `/artists-djs` | Artist/DJ profiles landing |
 | `/organisers` | Organiser landing |
 | `/venues` | Venue landing |
 | `/opportunities` | DJ opportunities landing |
 | `/about` | Mission and positioning |
-| `/contact` | Email + in-app feedback |
+| `/how-it-works` | End-to-end PartyLine flow |
+| `/partners` | Ticket partnerships and affiliate setup |
+| `/contact` | Email, feedback and enquiry routes |
+| `/privacy` | Privacy policy (alpha baseline) |
+| `/terms` | Terms of use (alpha baseline) |
+| `/community-guidelines` | Community standards |
 
 Contact: `hello@partylinecollective.com`
+
+## Blog workflow
+
+### Adding a new post manually
+
+Create a file in `src/content/blog/your-post-slug.md`:
+
+```yaml
+---
+title: "Your post title"
+description: "Short excerpt for cards and SEO (150–160 chars)."
+slug: your-post-slug
+publishedAt: 2026-06-22
+author: PartyLine Collective
+category: Artist Features
+tags:
+  - Track of the Week
+featuredImage: /blog/media/your-post-slug/hero.jpg
+featuredImageAlt: Description of hero image
+draft: false
+---
+
+Your Markdown content here.
+```
+
+- Set `draft: true` to hide from `/blog` and skip static generation
+- `slug` is optional if the filename matches the desired URL
+- Images go in `public/blog/media/your-post-slug/`
+
+### Migrating from WordPress
+
+1. Export posts from WordPress (Tools → Export → Posts)
+2. Save the XML to `imports/partylinecollective.WordPress.2026-06-22.xml` (or pass a custom path)
+3. Run:
+
+```bash
+npm run import:wordpress
+```
+
+This will:
+
+- Write Markdown files to `src/content/blog/`
+- Download images to `public/blog/media/[slug]/`
+- Generate `redirects.wordpress.json` and `vercel.json`
+- Write `imports/import-report.json` with stats and cleanup flags
+
+**Test redirects before domain cutover** — verify old WordPress URLs resolve correctly on preview:
+
+- `/bpm-blogs/` → `/blog`
+- `/old-post-slug/` → `/blog/old-post-slug`
 
 ## Configuration & assets
 
 - **`src/data/site.ts`** — `SITE_URL`, contact email, site name
+- **`src/content.config.ts`** — blog content collection schema (Astro 6)
 - **`astro.config.mjs`** — site URL + `@astrojs/sitemap` (keep in sync with `site.ts`)
+- **`vercel.json`** — WordPress → Astro redirects (generated by import script)
 - **`public/robots.txt`** — sitemap URL
 
 **TODO before launch:**

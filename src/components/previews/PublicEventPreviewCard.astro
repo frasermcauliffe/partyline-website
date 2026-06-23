@@ -1,0 +1,166 @@
+---
+import type { PublicEventPreview } from '@/lib/app-preview-types';
+import { eventUrl } from '@/data/app-links';
+
+interface Props {
+	event: PublicEventPreview;
+}
+
+const { event } = Astro.props;
+const href = eventUrl(event.slug);
+const metaParts = [event.date, event.time, event.city].filter(Boolean);
+const genreLabel = event.genres.slice(0, 4).join(' · ');
+---
+
+<article class="event-preview-card">
+	{
+		event.heroImageUrl && (
+			<a
+				href={href}
+				class="event-preview-card__media"
+				target="_blank"
+				rel="noopener noreferrer"
+				tabindex="-1"
+				aria-hidden="true"
+			>
+				<img
+					src={event.heroImageUrl}
+					alt=""
+					loading="lazy"
+					decoding="async"
+				/>
+			</a>
+		)
+	}
+	<div class="event-preview-card__body">
+		<p class="event-preview-card__meta">
+			{event.eventType && <span class="event-preview-card__type">{event.eventType}</span>}
+			{metaParts.length > 0 && <span>{metaParts.join(' · ')}</span>}
+		</p>
+		<h2 class="event-preview-card__title">
+			<a href={href} target="_blank" rel="noopener noreferrer">
+				{event.title}
+			</a>
+		</h2>
+		<p class="event-preview-card__venue">{event.venue}</p>
+		{
+			genreLabel && (
+				<p class="event-preview-card__genres">{genreLabel}</p>
+			)
+		}
+		{
+			event.price && (
+				<p class="event-preview-card__price">{event.price}</p>
+			)
+		}
+		<a href={href} class="event-preview-card__link" target="_blank" rel="noopener noreferrer">
+			View in app →
+		</a>
+	</div>
+</article>
+
+<style>
+	.event-preview-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		display: grid;
+		height: 100%;
+		min-width: 0;
+		overflow: hidden;
+		transition:
+			border-color 0.15s ease,
+			transform 0.15s ease;
+	}
+
+	.event-preview-card:hover,
+	.event-preview-card:focus-within {
+		border-color: var(--color-primary);
+		transform: translateY(-2px);
+	}
+
+	.event-preview-card__media {
+		aspect-ratio: 16 / 9;
+		background: var(--color-surface-soft);
+		display: block;
+		overflow: hidden;
+	}
+
+	.event-preview-card__media img {
+		height: 100%;
+		object-fit: cover;
+		object-position: top center;
+		width: 100%;
+	}
+
+	.event-preview-card__body {
+		display: grid;
+		gap: var(--space-3);
+		padding: var(--space-5);
+	}
+
+	.event-preview-card__meta {
+		align-items: center;
+		color: var(--color-muted);
+		display: flex;
+		flex-wrap: wrap;
+		font-family: var(--font-label);
+		font-size: 0.7rem;
+		gap: var(--space-2) var(--space-3);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.event-preview-card__type {
+		color: var(--color-primary);
+	}
+
+	.event-preview-card__title {
+		font-size: 1.1rem;
+		line-height: 1.35;
+		overflow-wrap: anywhere;
+	}
+
+	.event-preview-card__title a {
+		color: inherit;
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		text-decoration: none;
+	}
+
+	.event-preview-card__title a:hover,
+	.event-preview-card__title a:focus-visible {
+		color: var(--color-primary);
+	}
+
+	.event-preview-card__venue {
+		color: var(--color-muted);
+		font-size: 0.95rem;
+		line-height: 1.5;
+		overflow-wrap: anywhere;
+	}
+
+	.event-preview-card__genres,
+	.event-preview-card__price {
+		color: var(--color-muted);
+		font-size: 0.85rem;
+		line-height: 1.45;
+		overflow-wrap: anywhere;
+	}
+
+	.event-preview-card__link {
+		color: var(--color-primary);
+		font-size: 0.9rem;
+		font-weight: 600;
+		margin-top: auto;
+		text-decoration: none;
+		width: fit-content;
+	}
+
+	.event-preview-card__link:hover,
+	.event-preview-card__link:focus-visible {
+		text-decoration: underline;
+	}
+</style>

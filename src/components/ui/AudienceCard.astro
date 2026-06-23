@@ -5,25 +5,44 @@ interface Props {
 	ctaLabel?: string;
 	ctaHref?: string;
 	external?: boolean;
+	learnMoreLabel?: string;
+	learnMoreHref?: string;
 }
 
-const { title, description, ctaLabel, ctaHref, external = false }: Props = Astro.props;
+const {
+	title,
+	description,
+	ctaLabel,
+	ctaHref,
+	external = false,
+	learnMoreLabel,
+	learnMoreHref
+}: Props = Astro.props;
 ---
 
 <article class="audience-card">
 	<h3>{title}</h3>
 	<p>{description}</p>
-	{
-		ctaLabel && ctaHref && (
-			<a
-				href={ctaHref}
-				class="audience-card__link"
-				{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-			>
-				{ctaLabel} →
-			</a>
-		)
-	}
+	<div class="audience-card__actions">
+		{
+			ctaLabel && ctaHref && (
+				<a
+					href={ctaHref}
+					class="audience-card__link"
+					{...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+				>
+					{ctaLabel} →
+				</a>
+			)
+		}
+		{
+			learnMoreLabel && learnMoreHref && (
+				<a href={learnMoreHref} class="audience-card__link audience-card__link--secondary">
+					{learnMoreLabel} →
+				</a>
+			)
+		}
+	</div>
 </article>
 
 <style>
@@ -47,12 +66,22 @@ const { title, description, ctaLabel, ctaHref, external = false }: Props = Astro
 		line-height: 1.55;
 	}
 
+	.audience-card__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+	}
+
 	.audience-card__link {
 		color: var(--color-primary);
 		font-size: 0.875rem;
 		font-weight: 600;
 		text-decoration: none;
 		width: fit-content;
+	}
+
+	.audience-card__link--secondary {
+		color: var(--color-muted-strong);
 	}
 
 	.audience-card__link:hover,

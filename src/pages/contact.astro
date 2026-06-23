@@ -4,11 +4,53 @@ import Button from '@/components/ui/Button.astro';
 import Section from '@/components/ui/Section.astro';
 import AppLink from '@/components/site/AppLink.astro';
 import { APP_LINKS } from '@/data/app-links';
+import { CONTACT_SUBJECTS, mailtoHref } from '@/data/contact';
 import { SITE } from '@/data/site';
 import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.contact;
-const mailtoHref = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent('PartyLine Collective enquiry')}`;
+
+const enquiryCards = [
+	{
+		title: 'General enquiry',
+		description: 'Partnerships, venue questions, organiser interest, or anything else about PartyLine Collective.',
+		href: mailtoHref(CONTACT_SUBJECTS.general),
+		label: 'Email us',
+		external: false
+	},
+	{
+		title: 'Ticket partnership',
+		description:
+			'Request a tracked PartyLine ticket link, affiliate setup, or partner event support. This is not paid editorial coverage.',
+		href: mailtoHref(CONTACT_SUBJECTS.partnership),
+		label: 'Request ticket partnership',
+		external: false
+	},
+	{
+		title: 'Profile or event correction',
+		description:
+			'Spotted an incorrect listing, outdated event detail, or profile issue? Let us know so we can review it.',
+		href: mailtoHref(CONTACT_SUBJECTS.correction),
+		label: 'Report a correction',
+		external: false
+	},
+	{
+		title: 'App feedback',
+		description:
+			'Found a bug, confusing flow, or missing event during closed alpha? Use the in-app feedback form — it helps us triage issues quickly.',
+		href: APP_LINKS.feedback,
+		label: 'Send feedback',
+		external: true
+	},
+	{
+		title: 'Join the network',
+		description:
+			'Ready to explore events, create a profile, or submit an event? Head to the PartyLine app.',
+		href: APP_LINKS.join,
+		label: 'Join PartyLine',
+		external: true
+	}
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -17,56 +59,72 @@ const mailtoHref = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent('Pa
 			<p class="eyebrow">Contact · PartyLine Collective</p>
 			<h1>Get in touch</h1>
 			<p class="lede">
-				Partnerships, venue enquiries, organiser questions, or general interest in PartyLine
-				Collective — we&rsquo;d like to hear from you.
+				General enquiries, ticket partnerships, profile corrections, or app feedback during
+				closed alpha — choose the route that fits below.
+			</p>
+			<p class="contact-email">
+				<a href={mailtoHref(CONTACT_SUBJECTS.general)}>{SITE.contactEmail}</a>
 			</p>
 		</div>
 	</section>
 
 	<Section>
 		<div class="contact-grid">
-			<div class="contact-card">
-				<h2>Email</h2>
-				<p>For partnerships, venue enquiries, organiser questions or general interest.</p>
-				<a href={mailtoHref} class="contact-link">{SITE.contactEmail}</a>
-				<Button href={mailtoHref} label="Email us" variant="primary" />
-			</div>
-
-			<div class="contact-card">
-				<h2>App feedback</h2>
-				<p>
-					Found a bug, confusing flow, or missing event during closed alpha? Use the in-app
-					feedback form — it helps us triage issues quickly.
-				</p>
-				<AppLink href={APP_LINKS.feedback} label="Send Feedback" />
-			</div>
-
-			<div class="contact-card">
-				<h2>Join the network</h2>
-				<p>
-					Ready to explore events, create a profile, or submit an event? Head to the PartyLine
-					app.
-				</p>
-				<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
-			</div>
+			{
+				enquiryCards.map((card) => (
+					<div class="contact-card">
+						<h2>{card.title}</h2>
+						<p>{card.description}</p>
+						{card.external ? (
+							<AppLink href={card.href} label={card.label} />
+						) : (
+							<Button href={card.href} label={card.label} variant="primary" />
+						)}
+					</div>
+				))
+			}
 		</div>
 	</Section>
 
 	<Section narrow>
 		<p class="footer-note muted">
-			Email us directly, or use in-app feedback for bugs during closed alpha.
+			For ticket partnerships, see also our <a href="/partners">Partners</a> page. Legal
+			questions: <a href="/privacy">Privacy</a>, <a href="/terms">Terms</a>,
+			<a href="/community-guidelines">Community Guidelines</a>.
 		</p>
 	</Section>
 </BaseLayout>
 
 <style>
+	.contact-email {
+		margin-top: var(--space-4);
+	}
+
+	.contact-email a {
+		color: var(--color-primary);
+		font-size: 1.05rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.contact-email a:hover,
+	.contact-email a:focus-visible {
+		text-decoration: underline;
+	}
+
 	.contact-grid {
 		display: grid;
 		gap: var(--space-4);
 		grid-template-columns: 1fr;
 	}
 
-	@media (min-width: 768px) {
+	@media (min-width: 640px) {
+		.contact-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
 		.contact-grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
@@ -92,21 +150,19 @@ const mailtoHref = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent('Pa
 		line-height: 1.6;
 	}
 
-	.contact-link {
-		color: var(--color-primary);
-		font-weight: 600;
-		text-decoration: none;
-		word-break: break-word;
-	}
-
-	.contact-link:hover,
-	.contact-link:focus-visible {
-		text-decoration: underline;
-	}
-
 	.footer-note {
 		font-size: 0.9rem;
 		line-height: 1.6;
 		text-align: center;
+	}
+
+	.footer-note a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.footer-note a:hover,
+	.footer-note a:focus-visible {
+		text-decoration: underline;
 	}
 </style>

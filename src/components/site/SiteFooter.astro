@@ -1,7 +1,11 @@
 ---
 import AppLink from '@/components/site/AppLink.astro';
 import { APP_LINKS } from '@/data/app-links';
-import { footerMarketingLinks } from '@/data/nav';
+import {
+	footerForYouLinks,
+	footerLegalLinks,
+	footerPlatformLinks
+} from '@/data/nav';
 import { SITE } from '@/data/site';
 ---
 
@@ -19,7 +23,20 @@ import { SITE } from '@/data/site';
 			<p class="site-footer__label">Website</p>
 			<ul class="site-footer__links">
 				{
-					footerMarketingLinks.map((item) => (
+					footerPlatformLinks.map((item) => (
+						<li>
+							<a href={item.href}>{item.label}</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<div>
+			<p class="site-footer__label">For you</p>
+			<ul class="site-footer__links">
+				{
+					footerForYouLinks.map((item) => (
 						<li>
 							<a href={item.href}>{item.label}</a>
 						</li>
@@ -33,17 +50,24 @@ import { SITE } from '@/data/site';
 			<ul class="site-footer__links">
 				<li><AppLink href={APP_LINKS.events} label="Explore Events" /></li>
 				<li><AppLink href={APP_LINKS.theScene} label="The Scene" /></li>
-				<li><AppLink href={APP_LINKS.opportunities} label="Opportunities" /></li>
+				<li><AppLink href={APP_LINKS.opportunities} label="Browse Opportunities" /></li>
 				<li><AppLink href={APP_LINKS.join} label="Join PartyLine" /></li>
 				<li><AppLink href={APP_LINKS.dashboard} label="Dashboard" /></li>
 			</ul>
 		</div>
 
 		<div>
-			<p class="site-footer__label">Support</p>
+			<p class="site-footer__label">Support &amp; legal</p>
 			<ul class="site-footer__links">
 				<li><a href="/contact">Contact</a></li>
 				<li><AppLink href={APP_LINKS.feedback} label="Send Feedback" /></li>
+				{
+					footerLegalLinks.map((item) => (
+						<li>
+							<a href={item.href}>{item.label}</a>
+						</li>
+					))
+				}
 			</ul>
 		</div>
 	</div>
@@ -68,7 +92,13 @@ import { SITE } from '@/data/site';
 
 	@media (min-width: 640px) {
 		.site-footer__grid {
-			grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+			grid-template-columns: 1.4fr repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 960px) {
+		.site-footer__grid {
+			grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr));
 		}
 	}
 

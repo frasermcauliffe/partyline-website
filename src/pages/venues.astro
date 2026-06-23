@@ -18,11 +18,11 @@ const seo = PAGE_SEO.venues;
 			<h1>Showcase your space on the network</h1>
 			<p class="lede">
 				Create a venue or event space profile, connect with organisers and artists, receive
-				enquiries, and link events hosted at your space.
+				hire and booking enquiries, and link events hosted at your space.
 			</p>
 			<div class="button-row">
-				<Button href={APP_LINKS.createListing} label="Create Listing" variant="primary" external />
-				<Button href={APP_LINKS.theScene} label="Browse The Scene" variant="secondary" external />
+				<Button href={APP_LINKS.createListing} label="Add your venue" variant="primary" external />
+				<Button href={APP_LINKS.venues} label="Explore venues" variant="secondary" external />
 			</div>
 		</div>
 	</section>
@@ -34,10 +34,12 @@ const seo = PAGE_SEO.venues;
 		/>
 		<ul class="list-check">
 			<li>Public profiles for clubs, warehouses, bars and alternative event spaces</li>
+			<li>Show location, capacity, facilities and collaboration notes on your profile</li>
+			<li>Floorplans and deeper venue tooling may come later as the platform grows</li>
 			<li>Connect with organisers, artists, production and media on the scene</li>
 			<li>Receive enquiries and structured booking requests</li>
-			<li>Link to events happening at your venue</li>
-			<li>Set availability and collaboration notes on your profile</li>
+			<li>Link to events happening at your venue and promote recurring nights</li>
+			<li>Find resident DJs and open decks through <a href="/opportunities">opportunities</a></li>
 		</ul>
 	</Section>
 
@@ -51,12 +53,56 @@ const seo = PAGE_SEO.venues;
 		</Callout>
 	</Section>
 
+	<Section narrow>
+		<SectionHeader title="Explore more" lede="Related pages and directories in the PartyLine app." />
+		<ul class="related-links">
+			<li><a href="/organisers">For organisers listing events at your venue</a></li>
+			<li><a href="/artists-djs">For artists and DJs</a></li>
+			<li><a href="/opportunities">Post a residency or open decks opportunity</a></li>
+			<li>
+				<a href={APP_LINKS.venues} target="_blank" rel="noopener noreferrer">
+					Explore venues in the app
+				</a>
+			</li>
+		</ul>
+	</Section>
+
 	<CtaBand
 		title="List your venue"
 		description="Create your venue profile in the app and connect with organisers and artists across Australia."
-		primaryLabel="Create Listing"
+		primaryLabel="Add your venue"
 		primaryHref={APP_LINKS.createListing}
-		secondaryLabel="Browse The Scene"
-		secondaryHref={APP_LINKS.theScene}
+		secondaryLabel="Post an opportunity"
+		secondaryHref={APP_LINKS.postOpportunity}
 	/>
 </BaseLayout>
+
+<style>
+	.list-check a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.list-check a:hover,
+	.list-check a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.related-links {
+		display: grid;
+		gap: var(--space-2);
+		list-style: none;
+	}
+
+	.related-links a {
+		color: var(--color-primary);
+		font-size: 0.95rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.related-links a:hover,
+	.related-links a:focus-visible {
+		text-decoration: underline;
+	}
+</style>

@@ -1,0 +1,136 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+import { CONTACT_SUBJECTS, mailtoHref } from '@/data/contact';
+import { SITE } from '@/data/site';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.privacy;
+const lastUpdated = 'June 2026';
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Legal · PartyLine Collective</p>
+			<h1>Privacy Policy</h1>
+			<p class="lede">
+				How PartyLine Collective handles information during closed alpha. This is a practical
+				baseline policy — not legal advice.
+			</p>
+			<p class="legal-meta">Last updated: {lastUpdated}</p>
+		</div>
+	</section>
+
+	<Section>
+		<div class="prose">
+			<h2>Overview</h2>
+			<p>
+				PartyLine Collective operates a marketing website and a separate PartyLine app. This
+				policy covers both during closed alpha. We collect only what we need to run the
+				platform, respond to enquiries, and improve the product.
+			</p>
+
+			<h2>Information we may collect</h2>
+			<ul class="list-check">
+				<li>
+					<strong>Account data</strong> — email address, display name and profile details you
+					choose to provide in the app
+				</li>
+				<li>
+					<strong>Listing and event data</strong> — bios, images, event details, opportunity posts
+					and related content you submit
+				</li>
+				<li>
+					<strong>Contact and feedback</strong> — messages sent to {SITE.contactEmail}, in-app feedback
+					submissions, and partnership enquiries
+				</li>
+				<li>
+					<strong>Usage and analytics</strong> — basic site and app usage data (such as page views,
+					general interaction patterns and error logs) to understand how the platform is used during
+					alpha
+				</li>
+				<li>
+					<strong>Technical data</strong> — browser type, device information and IP address in standard
+					server logs
+				</li>
+			</ul>
+
+			<h2>How we use information</h2>
+			<ul class="list-check">
+				<li>Provide accounts, listings, events, opportunities and dashboards</li>
+				<li>Respond to enquiries, corrections and partnership requests</li>
+				<li>Improve reliability, security and usability during alpha</li>
+				<li>Send operational messages related to your account or submissions where needed</li>
+			</ul>
+
+			<h2>What we do not do</h2>
+			<ul class="list-check">
+				<li>We do not sell your personal information</li>
+				<li>We do not claim ownership of your creative content — you remain responsible for what you publish</li>
+				<li>We do not use editorial blog content as a paid placement product</li>
+			</ul>
+
+			<h2>Sharing</h2>
+			<p>
+				We use infrastructure providers (hosting, database, email and analytics) to operate
+				PartyLine. Public listings, events and blog content are visible on the website and in
+				the app as intended. We may disclose information if required by law or to protect the
+				platform and community.
+			</p>
+
+			<h2>Retention</h2>
+			<p>
+				We retain account and submission data while your account is active and as needed for
+				legitimate platform operations during alpha. You can request account deletion or
+				corrections by contacting us.
+			</p>
+
+			<h2>Your choices</h2>
+			<p>
+				You can update profile and listing information in the app. For privacy questions,
+				correction requests or deletion requests, email
+				<a href={mailtoHref(CONTACT_SUBJECTS.general)}>{SITE.contactEmail}</a>.
+			</p>
+
+			<h2>Changes</h2>
+			<p>
+				This policy may be updated as PartyLine moves beyond closed alpha. Material changes
+				will be reflected on this page with an updated date.
+			</p>
+		</div>
+	</Section>
+</BaseLayout>
+
+<style>
+	.legal-meta {
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		margin-top: var(--space-3);
+	}
+
+	.prose {
+		display: grid;
+		gap: var(--space-6);
+		max-width: 42rem;
+	}
+
+	.prose h2 {
+		font-size: clamp(1.15rem, 3vw, 1.4rem);
+	}
+
+	.prose p {
+		color: var(--color-muted-strong);
+		line-height: 1.7;
+	}
+
+	.prose a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+</style>

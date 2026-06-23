@@ -5,20 +5,38 @@ export type NavItem = {
 
 export const marketingNav: NavItem[] = [
 	{ label: 'Events', href: '/events' },
+	{ label: 'Blog', href: '/blog' },
 	{ label: 'Artists & DJs', href: '/artists-djs' },
 	{ label: 'Organisers', href: '/organisers' },
 	{ label: 'Venues', href: '/venues' },
 	{ label: 'Opportunities', href: '/opportunities' },
+	{ label: 'About', href: '/about' }
+];
+
+export const footerPlatformLinks: NavItem[] = [
+	{ label: 'Events', href: '/events' },
+	{ label: 'Blog', href: '/blog' },
+	{ label: 'How It Works', href: '/how-it-works' },
 	{ label: 'About', href: '/about' },
+	{ label: 'Partners', href: '/partners' },
 	{ label: 'Contact', href: '/contact' }
 ];
 
-export const footerMarketingLinks: NavItem[] = [
-	{ label: 'Events', href: '/events' },
+export const footerForYouLinks: NavItem[] = [
 	{ label: 'Artists & DJs', href: '/artists-djs' },
 	{ label: 'Organisers', href: '/organisers' },
 	{ label: 'Venues', href: '/venues' },
-	{ label: 'Opportunities', href: '/opportunities' },
-	{ label: 'About', href: '/about' },
-	{ label: 'Contact', href: '/contact' }
+	{ label: 'Opportunities', href: '/opportunities' }
+];
+
+export const footerLegalLinks: NavItem[] = [
+	{ label: 'Privacy Policy', href: '/privacy' },
+	{ label: 'Terms of Use', href: '/terms' },
+	{ label: 'Community Guidelines', href: '/community-guidelines' }
+];
+
+/** @deprecated Use footerPlatformLinks / footerForYouLinks instead */
+export const footerMarketingLinks: NavItem[] = [
+	...footerPlatformLinks.filter((item) => item.href !== '/contact'),
+	...footerForYouLinks
 ];

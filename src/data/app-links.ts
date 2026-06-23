@@ -15,7 +15,17 @@ export const APP_LINKS = {
 	createListing: `${APP_URL}/create-listing`,
 	dashboard: `${APP_URL}/dashboard`,
 	feedback: `${APP_URL}/feedback`,
-	postOpportunity: `${APP_URL}/dashboard/opportunities/new`
+	postOpportunity: `${APP_URL}/dashboard/opportunities/new`,
+	artists: `${APP_URL}/artists`,
+	organisers: `${APP_URL}/organisers`,
+	venues: `${APP_URL}/venues`,
+	production: `${APP_URL}/production`,
+	media: `${APP_URL}/media`,
+	performers: `${APP_URL}/performers`
 } as const;
 
 export type AppLinkKey = keyof typeof APP_LINKS;
+
+export function eventUrl(slug: string): string {
+	return `${APP_URL}/events/${slug}`;
+}

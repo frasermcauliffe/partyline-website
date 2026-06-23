@@ -1,0 +1,46 @@
+---
+import Button from '@/components/ui/Button.astro';
+
+interface Props {
+	ctaHref: string;
+	unavailable?: boolean;
+}
+
+const { ctaHref, unavailable = false } = Astro.props;
+---
+
+<div class="empty-preview">
+	<p>
+		No upcoming public events are available here yet. Explore the app for the latest listings.
+	</p>
+	{
+		unavailable && (
+			<p class="empty-preview__note">
+				Live previews could not be loaded during the last site build. The app may still have
+				current listings.
+			</p>
+		)
+	}
+	<Button href={ctaHref} label="Explore events in the app" variant="primary" external />
+</div>
+
+<style>
+	.empty-preview {
+		align-items: center;
+		display: grid;
+		gap: var(--space-4);
+		justify-items: center;
+		max-width: 36rem;
+		margin-inline: auto;
+		text-align: center;
+	}
+
+	.empty-preview p {
+		color: var(--color-muted);
+		line-height: 1.6;
+	}
+
+	.empty-preview__note {
+		font-size: 0.9rem;
+	}
+</style>

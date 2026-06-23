@@ -1,3 +1,4 @@
+import { cleanBlogText, type BlogEntry } from '@/lib/blog';
 import { SITE, SITE_URL } from '@/data/site';
 
 export type PageSeo = {
@@ -5,6 +6,11 @@ export type PageSeo = {
 	description: string;
 	canonicalPath: string;
 	ogImage?: string;
+};
+
+export type ArticleSeo = PageSeo & {
+	publishedAt?: Date;
+	updatedAt?: Date;
 };
 
 const DEFAULT_OG_IMAGE = '/og-default.svg';
@@ -52,6 +58,48 @@ export function websiteJsonLd(): string {
 	});
 }
 
+export function buildBlogPostSeo(input: {
+	title: string;
+	description: string;
+	slug: string;
+	featuredImage?: string;
+}): PageSeo {
+	return buildPageSeo({
+		title: input.title,
+		description: cleanBlogText(input.description),
+		canonicalPath: `/blog/${input.slug}`,
+		ogImage: input.featuredImage ?? DEFAULT_OG_IMAGE
+	});
+}
+
+export function blogPostingJsonLd(input: { post: BlogEntry; slug: string }): string {
+	const { post, slug } = input;
+	const image = post.data.featuredImage
+		? absoluteUrl(post.data.featuredImage)
+		: absoluteUrl(DEFAULT_OG_IMAGE);
+
+	return JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'BlogPosting',
+		headline: post.data.title,
+		description: cleanBlogText(post.data.description),
+		datePublished: post.data.publishedAt.toISOString(),
+		dateModified: (post.data.updatedAt ?? post.data.publishedAt).toISOString(),
+		author: {
+			'@type': 'Organization',
+			name: post.data.author
+		},
+		publisher: {
+			'@type': 'Organization',
+			name: SITE.name,
+			url: SITE_URL
+		},
+		mainEntityOfPage: absoluteUrl(`/blog/${slug}`),
+		image,
+		url: absoluteUrl(`/blog/${slug}`)
+	});
+}
+
 export const PAGE_SEO = {
 	home: buildPageSeo({
 		title: SITE.name,
@@ -68,37 +116,73 @@ export const PAGE_SEO = {
 	artistsDjs: buildPageSeo({
 		title: 'Artists & DJs',
 		description:
-			'Build your Artist or DJ profile on PartyLine Collective. Get discovered, apply to opportunities, and connect with organisers and venues.',
+			'Create your Artist or DJ profile on PartyLine. Get discovered, show your sound, apply to opportunities, and receive booking enquiries.',
 		canonicalPath: '/artists-djs'
 	}),
 	organisers: buildPageSeo({
 		title: 'Organisers',
 		description:
-			'Submit underground events, post DJ opportunities, and build organiser presence with PartyLine Collective.',
+			'Submit events, post DJ opportunities, review applicants, and build organiser presence with PartyLine — scene infrastructure for promoters and crews.',
 		canonicalPath: '/organisers'
 	}),
 	venues: buildPageSeo({
 		title: 'Venues',
 		description:
-			'Create venue profiles on PartyLine Collective. Connect with organisers, artists and underground events across Australia.',
+			'List your club, warehouse or event space on PartyLine. Connect with organisers, receive enquiries, and link events at your venue.',
 		canonicalPath: '/venues'
 	}),
 	opportunities: buildPageSeo({
 		title: 'DJ Opportunities',
 		description:
-			'DJs wanted, open decks, warm-up slots, guest mixes and residencies on PartyLine Collective — browse and apply in the app.',
+			'DJs wanted, open decks, warm-up slots, guest mixes and residencies — browse and apply on PartyLine with your published profile.',
 		canonicalPath: '/opportunities'
+	}),
+	howItWorks: buildPageSeo({
+		title: 'How It Works',
+		description:
+			'How PartyLine works — discover events, create profiles, submit nights, apply for opportunities, and manage your scene activity in one place.',
+		canonicalPath: '/how-it-works'
 	}),
 	about: buildPageSeo({
 		title: 'About',
 		description:
-			'Why PartyLine Collective exists — practical scene infrastructure for Australia\u2019s underground music and events community.',
+			'Why PartyLine Collective exists — practical, community-first infrastructure for Australia\u2019s underground music and events scene.',
 		canonicalPath: '/about'
+	}),
+	partners: buildPageSeo({
+		title: 'Ticket Partnerships',
+		description:
+			'Request a tracked PartyLine ticket link or affiliate setup for your events. Partner support for underground organisers and ticket platforms.',
+		canonicalPath: '/partners'
 	}),
 	contact: buildPageSeo({
 		title: 'Contact',
 		description:
-			'Contact PartyLine Collective — partnerships, venue and organiser enquiries, and feedback during closed alpha.',
+			'Contact PartyLine Collective — general enquiries, ticket partnerships, profile corrections, and app feedback during closed alpha.',
 		canonicalPath: '/contact'
+	}),
+	privacy: buildPageSeo({
+		title: 'Privacy Policy',
+		description:
+			'How PartyLine Collective handles your information during closed alpha — what we collect, why, and how to contact us.',
+		canonicalPath: '/privacy'
+	}),
+	terms: buildPageSeo({
+		title: 'Terms of Use',
+		description:
+			'Terms for using PartyLine Collective and the PartyLine app — accounts, listings, opportunities, and platform limitations.',
+		canonicalPath: '/terms'
+	}),
+	communityGuidelines: buildPageSeo({
+		title: 'Community Guidelines',
+		description:
+			'Community standards for PartyLine — respectful participation, accurate listings, and underground scene conduct.',
+		canonicalPath: '/community-guidelines'
+	}),
+	blog: buildPageSeo({
+		title: 'Blog',
+		description:
+			'Articles from PartyLine Collective — Track of the Week, Industry Insiiide features, and underground music stories across Australia.',
+		canonicalPath: '/blog'
 	})
 } as const;

@@ -17,19 +17,20 @@ const seo = PAGE_SEO.opportunities;
 			<p class="eyebrow">Opportunities · PartyLine Collective</p>
 			<h1>DJ calls across the underground scene</h1>
 			<p class="lede">
-				DJs wanted, open decks, warm-up slots, guest mixes and residencies — posted by
-				organisers and venues looking for the right fit. Browse and apply in the app.
+				DJs wanted, open decks, warm-up slots, guest mixes, residencies and community
+				showcases — posted by organisers and venues looking for the right fit. Browse and
+				apply in the app.
 			</p>
 			<div class="button-row">
 				<Button
 					href={APP_LINKS.opportunities}
-					label="Browse Opportunities"
+					label="Browse opportunities"
 					variant="primary"
 					external
 				/>
 				<Button
 					href={APP_LINKS.postOpportunity}
-					label="Post Opportunity"
+					label="Post an opportunity"
 					variant="secondary"
 					external
 				/>
@@ -46,6 +47,7 @@ const seo = PAGE_SEO.opportunities;
 			<li>DJs wanted for club nights, showcases and one-off events</li>
 			<li>Open decks and warm-up slots for emerging selectors</li>
 			<li>Guest mixes and residency opportunities</li>
+			<li>Community showcases and scene-led calls</li>
 			<li>Organisers review applicants from their dashboard</li>
 		</ul>
 	</Section>
@@ -65,18 +67,64 @@ const seo = PAGE_SEO.opportunities;
 			title="Posting opportunities"
 			lede="Organisers can post from the dashboard or enable &ldquo;Looking for DJs?&rdquo; when submitting an event."
 		/>
+		<p class="section-note">
+			Production, media and performer opportunities may be added later as the platform grows.
+			The application system lives in the PartyLine app — this page explains how it works and
+			routes you there.
+		</p>
 		<div class="button-row">
-			<Button href={APP_LINKS.postOpportunity} label="Post Opportunity" variant="primary" external />
-			<Button href={APP_LINKS.join} label="Join PartyLine" variant="secondary" external />
+			<Button href={APP_LINKS.postOpportunity} label="Post an opportunity" variant="primary" external />
+			<Button
+				href={APP_LINKS.createListing}
+				label="Create Artist/DJ profile"
+				variant="secondary"
+				external
+			/>
 		</div>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Explore more" lede="Related pages on PartyLine." />
+		<ul class="related-links">
+			<li><a href="/artists-djs">For Artists &amp; DJs</a></li>
+			<li><a href="/organisers">For organisers posting calls</a></li>
+			<li><a href="/venues">For venues posting residencies</a></li>
+		</ul>
 	</Section>
 
 	<CtaBand
 		title="Find your next slot"
 		description="Browse open calls or post an opportunity in the PartyLine app."
-		primaryLabel="Browse Opportunities"
+		primaryLabel="Browse opportunities"
 		primaryHref={APP_LINKS.opportunities}
-		secondaryLabel="Post Opportunity"
+		secondaryLabel="Post an opportunity"
 		secondaryHref={APP_LINKS.postOpportunity}
 	/>
 </BaseLayout>
+
+<style>
+	.section-note {
+		color: var(--color-muted-strong);
+		line-height: 1.65;
+		margin-bottom: var(--space-5);
+		max-width: 42rem;
+	}
+
+	.related-links {
+		display: grid;
+		gap: var(--space-2);
+		list-style: none;
+	}
+
+	.related-links a {
+		color: var(--color-primary);
+		font-size: 0.95rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.related-links a:hover,
+	.related-links a:focus-visible {
+		text-decoration: underline;
+	}
+</style>

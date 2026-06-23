@@ -1,0 +1,82 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import Section from '@/components/ui/Section.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '@/lib/blog';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.blog;
+const allPosts = await getCollection('blog');
+const posts = getPublishedPosts(allPosts);
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Blog · PartyLine Collective</p>
+			<h1>Articles &amp; updates</h1>
+			<p class="lede">
+				Track of the Week, Industry Insiiide features, and stories from Australia&rsquo;s
+				underground music and events scene.
+			</p>
+		</div>
+	</section>
+
+	<Section>
+		{
+			posts.length === 0 ? (
+				<div class="blog-empty">
+					<p>No articles published yet. Check back soon.</p>
+				</div>
+			) : (
+				<div class="blog-grid">
+					{posts.map((post) => (
+						<BlogCard post={post} />
+					))}
+				</div>
+			)
+		}
+	</Section>
+
+	<CtaBand
+		title="Join the network"
+		description="Create your account and explore events, profiles and opportunities across Australia."
+		primaryLabel="Join PartyLine"
+		primaryHref={APP_LINKS.join}
+		secondaryLabel="Explore Events"
+		secondaryHref={APP_LINKS.events}
+	/>
+</BaseLayout>
+
+<style>
+	.blog-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
+	}
+
+	@media (min-width: 640px) {
+		.blog-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.blog-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.blog-empty {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		color: var(--color-muted-strong);
+		padding: var(--space-8);
+		text-align: center;
+	}
+</style>

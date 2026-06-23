@@ -1,0 +1,118 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+import { CONTACT_SUBJECTS, mailtoHref } from '@/data/contact';
+import { SITE } from '@/data/site';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.communityGuidelines;
+const lastUpdated = 'June 2026';
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Legal · PartyLine Collective</p>
+			<h1>Community Guidelines</h1>
+			<p class="lede">
+				Standards for participating in PartyLine Collective — practical, community-first, and
+				built for underground music and events across Australia.
+			</p>
+			<p class="legal-meta">Last updated: {lastUpdated}</p>
+		</div>
+	</section>
+
+	<Section>
+		<div class="prose">
+			<h2>Our approach</h2>
+			<p>
+				PartyLine exists to help scenes connect more easily. These guidelines set expectations
+				for listings, events, opportunities, enquiries and editorial participation.
+			</p>
+
+			<h2>Be accurate</h2>
+			<ul class="list-check">
+				<li>Publish truthful bios, event details, lineups and opportunity descriptions</li>
+				<li>Update or remove outdated events and listings when things change</li>
+				<li>Do not impersonate artists, venues, organisers or crews</li>
+				<li>Report corrections via <a href="/contact">Contact</a> if you spot an error</li>
+			</ul>
+
+			<h2>Be respectful</h2>
+			<ul class="list-check">
+				<li>No harassment, hate speech, threats or targeted abuse</li>
+				<li>No discrimination based on race, gender, sexuality, disability, religion or background</li>
+				<li>Disagree without attacking people — underground scenes thrive on mutual respect</li>
+			</ul>
+
+			<h2>Opportunities and applications</h2>
+			<ul class="list-check">
+				<li>State payment, perks, expectations and deadlines clearly in opportunity posts</li>
+				<li>Do not post misleading &ldquo;exposure only&rdquo; calls without being upfront</li>
+				<li>Review applicants in good faith — accepted is a workflow step, not a confirmed booking</li>
+				<li>Do not spam duplicate opportunities or fake calls</li>
+			</ul>
+
+			<h2>Events and ticketing</h2>
+			<ul class="list-check">
+				<li>Link to legitimate ticket pages where tickets are sold</li>
+				<li>Do not use PartyLine to promote unsafe, unlawful or deceptive events</li>
+				<li>Ticket partnerships are separate from editorial — see <a href="/partners">Partners</a></li>
+			</ul>
+
+			<h2>Content and media</h2>
+			<ul class="list-check">
+				<li>Only upload images, mixes and media you have rights to share</li>
+				<li>Do not publish private information about others without consent</li>
+				<li>Blog and editorial submissions should follow the same accuracy and respect standards</li>
+			</ul>
+
+			<h2>Enforcement</h2>
+			<p>
+				We may warn, restrict, hide or remove content and accounts that breach these
+				guidelines or our <a href="/terms">Terms of Use</a>. Serious or repeated violations
+				may result in removal from the platform.
+			</p>
+
+			<h2>Report issues</h2>
+			<p>
+				Concerns about listings, events, opportunities or behaviour:
+				<a href={mailtoHref(CONTACT_SUBJECTS.general)}>{SITE.contactEmail}</a> or
+				<a href="/contact">Contact</a>.
+			</p>
+		</div>
+	</Section>
+</BaseLayout>
+
+<style>
+	.legal-meta {
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		margin-top: var(--space-3);
+	}
+
+	.prose {
+		display: grid;
+		gap: var(--space-6);
+		max-width: 42rem;
+	}
+
+	.prose h2 {
+		font-size: clamp(1.15rem, 3vw, 1.4rem);
+	}
+
+	.prose p {
+		color: var(--color-muted-strong);
+		line-height: 1.7;
+	}
+
+	.prose a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+</style>
