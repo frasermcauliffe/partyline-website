@@ -1,6 +1,9 @@
 // @ts-check
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+
+const srcDir = fileURLToPath(new URL('./src', import.meta.url));
 
 /** Must match SITE_URL in src/data/site.ts */
 const SITE_URL = 'https://partylinecollective.com';
@@ -14,7 +17,7 @@ export default defineConfig({
 	vite: {
 		resolve: {
 			alias: {
-				'@': '/src'
+				'@': srcDir
 			}
 		}
 	}
