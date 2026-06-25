@@ -134,7 +134,7 @@ export const PAGE_SEO = {
 	opportunities: buildPageSeo({
 		title: 'DJ Opportunities',
 		description:
-			'Browse and post DJ opportunities on PartyLine — DJs wanted, open decks, warm-up slots, guest mixes and residencies across Australia\u2019s underground scene.',
+			'Browse and post PartyLine opportunities including DJs wanted, open decks, residencies, warm-up slots and other open calls across Australia\u2019s underground music scene.',
 		canonicalPath: '/opportunities'
 	}),
 	howItWorks: buildPageSeo({
