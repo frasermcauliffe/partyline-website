@@ -13,6 +13,7 @@ const FETCH_TIMEOUT_MS = 10_000;
 
 function getAppApiBaseUrl(): string {
 	const configured = import.meta.env.PUBLIC_APP_API_URL?.trim();
+	// PUBLIC_APP_API_URL → env-resolved APP_URL → preview fallback (see app-links.ts)
 	return (configured || APP_URL).replace(/\/$/, '');
 }
 

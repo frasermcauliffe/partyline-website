@@ -2,7 +2,7 @@
 
 Static Astro marketing site for **PartyLine Collective** (`https://partylinecollective.com`). This project explains PartyLine and routes visitors into the separate SvelteKit app. It includes read-only **event preview cards** fetched from the app at build time — no auth, forms backend, or direct Supabase access.
 
-**App (accounts, events, profiles, dashboards):** configured in `src/data/app-links.ts` (currently the hosted preview at `https://partyline-webapp.vercel.app`).
+**App (accounts, events, profiles, dashboards):** `PUBLIC_APP_URL` in Vercel (see `.env.example`). When unset, CTAs and preview card links fall back to the hosted preview at `https://partyline-webapp.vercel.app`.
 
 ## Stack
 
@@ -27,9 +27,9 @@ public/blog/media/ # Migrated blog images
 scripts/          # WordPress import script
 ```
 
-**App URL constants** live in `src/data/app-links.ts` — update `APP_URL` when the production app subdomain is ready.
+**App URL** is resolved in `src/data/app-links.ts` from `PUBLIC_APP_URL`, with preview fallback when unset. Set `PUBLIC_APP_URL` and `PUBLIC_APP_API_URL` in Vercel before production cutover (see `.env.example`).
 
-**Public app API** (event previews): set `PUBLIC_APP_API_URL` to the SvelteKit app origin (see `.env.example`). At build time, Astro calls `GET /api/public/events?limit=N` on that origin. If the API is unavailable, the build still succeeds and pages show an empty-state CTA. Previews refresh on the next deploy/build — scheduled rebuilds or deploy hooks can be added later for fresher listings.
+**Public app API** (event, profile, and opportunity previews): set `PUBLIC_APP_API_URL` to the SvelteKit app origin, or leave unset to use `PUBLIC_APP_URL`. At build time, Astro calls `GET /api/public/events?limit=N` (and related listing/opportunity endpoints) on that origin. If the API is unavailable, the build still succeeds and pages show an empty-state CTA. Previews refresh on the next deploy/build — scheduled rebuilds or deploy hooks can be added later for fresher listings.
 
 **Marketing site origin** lives in `src/data/site.ts` (`SITE_URL`) and must stay in sync with `astro.config.mjs`. Confirm DNS before launch; preview deploys may use a Vercel URL until then.
 
