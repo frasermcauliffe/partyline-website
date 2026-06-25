@@ -1,13 +1,20 @@
 /**
  * Links into the PartyLine SvelteKit app.
  *
- * Currently points at the hosted preview. Before launch, update APP_URL to the
- * production app origin (e.g. https://app.partylinecollective.com).
+ * Set PUBLIC_APP_URL in Vercel for production (e.g. https://app.partylinecollective.com).
+ * When unset, falls back to the hosted preview app.
  */
-export const APP_URL = 'https://partyline-webapp.vercel.app';
+const PREVIEW_APP_URL = 'https://partyline-webapp.vercel.app';
+
+export const APP_URL = (
+	import.meta.env.PUBLIC_APP_URL?.trim() || PREVIEW_APP_URL
+).replace(/\/$/, '');
 
 export const APP_LINKS = {
+	/** Neutral / sign-in-first app entry (`/join` defaults to sign in). */
 	join: `${APP_URL}/join`,
+	/** Marketing sign-up intent — opens create-account mode on `/join`. */
+	joinSignup: `${APP_URL}/join?mode=signup`,
 	events: `${APP_URL}/events`,
 	theScene: `${APP_URL}/the-scene`,
 	opportunities: `${APP_URL}/opportunities`,

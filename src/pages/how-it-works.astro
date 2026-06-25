@@ -28,7 +28,7 @@ const steps = [
 			{ label: 'Artists & DJs', href: '/artists-djs' },
 			{ label: 'Organisers', href: '/organisers' },
 			{ label: 'Venues', href: '/venues' },
-			{ label: 'Join PartyLine', href: APP_LINKS.join, external: true }
+			{ label: 'Join PartyLine', href: APP_LINKS.joinSignup, external: true }
 		]
 	},
 	{
@@ -70,7 +70,7 @@ const steps = [
 				you take action.
 			</p>
 			<div class="button-row">
-				<Button href={APP_LINKS.join} label="Join PartyLine" variant="primary" external />
+				<Button href={APP_LINKS.joinSignup} label="Join PartyLine" variant="primary" external />
 				<Button href={APP_LINKS.events} label="Explore Events" variant="secondary" external />
 			</div>
 		</div>
@@ -119,7 +119,7 @@ const steps = [
 		title="Ready to get started?"
 		description="Create your account and explore events, profiles and opportunities across Australia."
 		primaryLabel="Join PartyLine"
-		primaryHref={APP_LINKS.join}
+		primaryHref={APP_LINKS.joinSignup}
 		secondaryLabel="Create a profile"
 		secondaryHref={APP_LINKS.createListing}
 	/>
