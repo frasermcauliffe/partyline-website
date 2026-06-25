@@ -143,6 +143,12 @@ export const PAGE_SEO = {
 			'How PartyLine works — discover events, create profiles, submit nights, apply for opportunities, and manage your scene activity in one place.',
 		canonicalPath: '/how-it-works'
 	}),
+	platform: buildPageSeo({
+		title: 'PartyLine Platform | How Australia\u2019s Underground Music Scene Connects',
+		description:
+			'See how PartyLine connects events, artists, DJs, venues, organisers, suppliers and fans through public discovery, profiles, opportunities, dashboards and future scene insights.',
+		canonicalPath: '/platform'
+	}),
 	about: buildPageSeo({
 		title: 'About',
 		description:

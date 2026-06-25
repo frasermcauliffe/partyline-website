@@ -17,6 +17,7 @@ export const footerPlatformLinks: NavItem[] = [
 	{ label: 'Events', href: '/events' },
 	{ label: 'Blog', href: '/blog' },
 	{ label: 'How It Works', href: '/how-it-works' },
+	{ label: 'Platform', href: '/platform' },
 	{ label: 'About', href: '/about' },
 	{ label: 'Partners', href: '/partners' },
 	{ label: 'Contact', href: '/contact' }
