@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
 import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
+import FeatureGrid from '@/components/ui/FeatureGrid.astro';
 import Callout from '@/components/ui/Callout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import ProfileLivePreviewSection from '@/components/previews/ProfileLivePreviewSection.astro';
@@ -12,6 +13,51 @@ import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.venues;
 const venueProfilesResult = await fetchPublicListings('venue', 6);
+
+const whoItsFor = [
+	{
+		title: 'Clubs & bars',
+		description: 'Regular underground nights and resident programming across Australia.'
+	},
+	{
+		title: 'Warehouses & industrial spaces',
+		description: 'Alternative rooms built for bass, community and one-off takeovers.'
+	},
+	{
+		title: 'Creative spaces',
+		description: 'Multi-use studios, galleries and flexible rooms that host scene-led events.'
+	},
+	{
+		title: 'Independent venues',
+		description: 'Any space that hosts underground events and wants clearer discovery on the network.'
+	}
+];
+
+const liveNow = [
+	'List your space on The Scene',
+	'Show location, capacity, facilities, setup and vibe',
+	'Link events hosted at the venue',
+	'Help organisers judge fit before they reach out',
+	'Connect with organisers, artists, production and media',
+	'Receive enquiries and structured booking requests through your profile',
+	'Post or support opportunities such as residencies or open decks where relevant'
+];
+
+const venueProfileShows = [
+	'Space type and capacity',
+	'Location and access notes',
+	'Facilities, sound, lighting and setup',
+	'Photos, media and collaboration notes',
+	'Hosted and linked events',
+	'Enquiry path through your public profile'
+];
+
+const comingNext = [
+	'Richer venue tooling',
+	'Calendars and event-linked dashboards',
+	'Stronger enquiry and booking workflows',
+	'Scene insights in a later phase'
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -20,40 +66,64 @@ const venueProfilesResult = await fetchPublicListings('venue', 6);
 			<p class="eyebrow">Venues · PartyLine Collective</p>
 			<h1>Showcase your space on the network</h1>
 			<p class="lede">
-				Create a venue or event space profile, connect with organisers and artists, receive
-				hire and booking enquiries, and link events hosted at your space.
+				List your club, warehouse or event space on The Scene, link the nights you host, and
+				help organisers and artists understand your room before they reach out — across
+				Australia&rsquo;s underground scene.
 			</p>
 			<div class="button-row">
-				<Button href={APP_LINKS.createListing} label="Add your venue" variant="primary" external />
-				<Button href={APP_LINKS.venues} label="Explore venues" variant="secondary" external />
+				<Button href={APP_LINKS.createListing} label="List your venue" variant="primary" external />
+				<Button href={APP_LINKS.opportunities} label="Explore opportunities" variant="secondary" external />
 			</div>
 		</div>
 	</section>
 
-	<ProfileLivePreviewSection
-		eyebrow="Live profiles"
-		title="Venues across Australia"
-		lede="Public venue profiles from the PartyLine app — open the app for capacity, facilities, events and full details."
-		profiles={venueProfilesResult.listings}
-		unavailable={venueProfilesResult.unavailable}
-		emptyMessage="No public venue profiles are available here yet. Explore venues in the app."
-		ctaHref={APP_LINKS.venues}
-		ctaLabel="Explore all venues"
-	/>
+	<Section narrow>
+		<SectionHeader eyebrow="Audience" title="Who this is for" />
+		<FeatureGrid items={whoItsFor} columns={2} />
+	</Section>
 
-	<Section>
-		<SectionHeader
-			title="Your venue on The Scene"
-			lede="Clubs, warehouses, bars and alternative spaces — discoverable alongside the events and people that move through them."
-		/>
+	<Section narrow>
+		<SectionHeader title="What you can do now" />
 		<ul class="list-check">
-			<li>Public profiles for clubs, warehouses, bars and alternative event spaces</li>
-			<li>Show location, capacity, facilities and collaboration notes on your profile</li>
-			<li>Floorplans and deeper venue tooling may come later as the platform grows</li>
-			<li>Connect with organisers, artists, production and media on the scene</li>
-			<li>Receive enquiries and structured booking requests</li>
-			<li>Link to events happening at your venue and promote recurring nights</li>
-			<li>Find resident DJs and open decks through <a href="/opportunities">opportunities</a></li>
+			{liveNow.map((item) => <li>{item}</li>)}
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="How it connects to the wider platform" />
+		<div class="prose">
+			<p>
+				Venue profiles make the physical scene easier to discover. Events can link back to
+				your space, and organisers and artists can understand capacity, setup and vibe before
+				making enquiries.
+			</p>
+			<p>
+				<a href="/platform">See the full PartyLine platform overview →</a>
+			</p>
+		</div>
+	</Section>
+
+	<Section narrow>
+		<p class="preview-note">
+			These previews pull from live app data and may look sparse while PartyLine is in closed
+			alpha. See <a href="/releases">release notes</a> for current limitations.
+		</p>
+		<ProfileLivePreviewSection
+			eyebrow="Live profiles"
+			title="Venues across Australia"
+			lede="Public venue profiles from the PartyLine app — open the app for capacity, facilities, events and full details."
+			profiles={venueProfilesResult.listings}
+			unavailable={venueProfilesResult.unavailable}
+			emptyMessage="No public venue profiles are available here yet. Explore venues in the app."
+			ctaHref={APP_LINKS.venues}
+			ctaLabel="Explore all venues"
+		/>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="What your venue profile can show" />
+		<ul class="list-check">
+			{venueProfileShows.map((item) => <li>{item}</li>)}
 		</ul>
 	</Section>
 
@@ -61,16 +131,26 @@ const venueProfilesResult = await fetchPublicListings('venue', 6);
 		<Callout title="Your space, your relationships">
 			<p>
 				Venues are central to underground culture. PartyLine Collective helps your space be
-				discoverable alongside the events and people that move through it — without
-				inserting itself between you and your regular partners.
+				discoverable alongside the events and people that move through it — supporting
+				connection without sitting in the middle of your regular partnerships.
 			</p>
 		</Callout>
 	</Section>
 
 	<Section narrow>
-		<SectionHeader title="Explore more" lede="Related pages and directories in the PartyLine app." />
+		<SectionHeader title="Coming next" />
+		<ul class="list-check list-check--compact">
+			{comingNext.map((item) => <li>{item}</li>)}
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Related" />
 		<ul class="related-links">
-			<li><a href="/organisers">For organisers listing events at your venue</a></li>
+			<li><a href="/platform">Platform overview</a></li>
+			<li><a href="/how-it-works">How It Works</a></li>
+			<li><a href="/releases">Release notes</a></li>
+			<li><a href="/organisers">For organisers</a></li>
 			<li><a href="/artists-djs">For artists and DJs</a></li>
 			<li><a href="/opportunities">Post a residency or open decks opportunity</a></li>
 			<li>
@@ -84,21 +164,40 @@ const venueProfilesResult = await fetchPublicListings('venue', 6);
 	<CtaBand
 		title="List your venue"
 		description="Create your venue profile in the app and connect with organisers and artists across Australia."
-		primaryLabel="Add your venue"
+		primaryLabel="List your venue"
 		primaryHref={APP_LINKS.createListing}
-		secondaryLabel="Post an opportunity"
-		secondaryHref={APP_LINKS.postOpportunity}
+		secondaryLabel="Explore opportunities"
+		secondaryHref={APP_LINKS.opportunities}
 	/>
 </BaseLayout>
 
 <style>
-	.list-check a {
+	.prose a {
+		color: var(--color-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.preview-note {
+		color: var(--color-muted-strong);
+		font-size: 0.9rem;
+		line-height: 1.6;
+		margin-bottom: var(--space-5);
+		max-width: 42rem;
+	}
+
+	.preview-note a {
 		color: var(--color-primary);
 		text-decoration: none;
 	}
 
-	.list-check a:hover,
-	.list-check a:focus-visible {
+	.preview-note a:hover,
+	.preview-note a:focus-visible {
 		text-decoration: underline;
 	}
 

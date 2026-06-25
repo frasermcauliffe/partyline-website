@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
 import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
+import FeatureGrid from '@/components/ui/FeatureGrid.astro';
 import Callout from '@/components/ui/Callout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import ProfileLivePreviewSection from '@/components/previews/ProfileLivePreviewSection.astro';
@@ -12,6 +13,42 @@ import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.artistsDjs;
 const artistProfilesResult = await fetchPublicListings('artist_dj', 6);
+
+const whoItsFor = [
+	{
+		title: 'DJs',
+		description: 'Club, warehouse and festival selectors building a public presence across Australia.'
+	},
+	{
+		title: 'Producers',
+		description: 'Electronic producers who want organisers and venues to hear their sound and see their work.'
+	},
+	{
+		title: 'Live artists',
+		description: 'Live electronic and hybrid performers connecting with underground events and crews.'
+	},
+	{
+		title: 'Selectors & performers',
+		description: 'Artists building a discoverable scene profile — not locked to one city or one promo channel.'
+	}
+];
+
+const liveNow = [
+	'Create a public Artist/DJ listing on The Scene',
+	'Add bio, genres, mixes, media and social links',
+	'Get found when organisers and venues browse the network',
+	'Connect your profile to events and opportunities',
+	'Apply to open opportunities where posted',
+	'Receive enquiries and structured booking requests through your profile',
+	'Manage profile and activity from your dashboard'
+];
+
+const comingNext = [
+	'Richer open decks and DJs wanted flows',
+	'Stronger application UX',
+	'Profile analytics',
+	'Deeper event linkage'
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -20,19 +57,20 @@ const artistProfilesResult = await fetchPublicListings('artist_dj', 6);
 			<p class="eyebrow">Artists &amp; DJs · PartyLine Collective</p>
 			<h1>Get discovered across the underground scene</h1>
 			<p class="lede">
-				Create a public Artist or DJ profile, apply to opportunities, receive booking
-				enquiries, and connect with organisers and venues who are looking for your sound.
+				Create a public Artist or DJ profile, show your sound and activity, apply to
+				opportunities where posted, and connect with organisers and venues across
+				Australia&rsquo;s underground network.
 			</p>
 			<div class="button-row">
 				<Button
 					href={APP_LINKS.createListing}
-					label="Create Artist/DJ profile"
+					label="Create your profile"
 					variant="primary"
 					external
 				/>
 				<Button
 					href={APP_LINKS.opportunities}
-					label="Browse opportunities"
+					label="Explore opportunities"
 					variant="secondary"
 					external
 				/>
@@ -40,29 +78,55 @@ const artistProfilesResult = await fetchPublicListings('artist_dj', 6);
 		</div>
 	</section>
 
-	<ProfileLivePreviewSection
-		eyebrow="Live profiles"
-		title="Artists and DJs across Australia"
-		lede="Public Artist and DJ profiles from the PartyLine app — open the app for full bios, mixes, media and opportunities."
-		profiles={artistProfilesResult.listings}
-		unavailable={artistProfilesResult.unavailable}
-		emptyMessage="No public Artist/DJ profiles are available here yet. Explore The Scene in the app."
-		ctaHref={APP_LINKS.artists}
-		ctaLabel="Explore all artists and DJs"
-	/>
+	<Section narrow>
+		<SectionHeader eyebrow="Audience" title="Who this is for" />
+		<FeatureGrid items={whoItsFor} columns={2} />
+	</Section>
 
-	<Section>
-		<SectionHeader
-			title="Your profile on The Scene"
-			lede="Publish once, get found across the network, and manage applications from your dashboard."
-		/>
+	<Section narrow>
+		<SectionHeader title="What you can do now" />
 		<ul class="list-check">
-			<li>Publish a profile with bio, genres, mixes, social links and media embeds</li>
-			<li>Show availability, rates and EPK-style details when you are ready</li>
-			<li>Get found by organisers and venues searching the network</li>
-			<li>Apply to DJs wanted, open decks, residencies and community showcases</li>
-			<li>Receive enquiries and structured booking requests through your profile</li>
-			<li>Manage applications and activity from your dashboard</li>
+			{liveNow.map((item) => <li>{item}</li>)}
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="How it connects to the wider platform" />
+		<div class="prose">
+			<p>
+				Your profile connects to events, opportunities and future booking workflows on
+				PartyLine. This website gives public visibility through previews and landing pages;
+				the app handles profile management, enquiries and private activity.
+			</p>
+			<p>
+				<a href="/platform">See the full PartyLine platform overview →</a>
+			</p>
+		</div>
+	</Section>
+
+	<Section narrow>
+		<p class="preview-note">
+			These previews pull from live app data and may look sparse while PartyLine is in closed
+			alpha. See <a href="/releases">release notes</a> for current limitations.
+		</p>
+		<ProfileLivePreviewSection
+			eyebrow="Live profiles"
+			title="Artists and DJs across Australia"
+			lede="Public Artist and DJ profiles from the PartyLine app — open the app for full bios, mixes, media and opportunities."
+			profiles={artistProfilesResult.listings}
+			unavailable={artistProfilesResult.unavailable}
+			emptyMessage="No public Artist/DJ profiles are available here yet. Explore The Scene in the app."
+			ctaHref={APP_LINKS.artists}
+			ctaLabel="Explore all artists and DJs"
+		/>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Why create a PartyLine profile?" />
+		<ul class="list-check">
+			<li>One place to show your sound, links and scene activity</li>
+			<li>Easier for organisers and venues to understand fit before reaching out</li>
+			<li>Built to connect with opportunities, event links and future analytics</li>
 		</ul>
 	</Section>
 
@@ -77,11 +141,21 @@ const artistProfilesResult = await fetchPublicListings('artist_dj', 6);
 	</Section>
 
 	<Section narrow>
-		<SectionHeader title="Explore more" lede="Related pages and directories in the PartyLine app." />
+		<SectionHeader title="Coming next" />
+		<ul class="list-check list-check--compact">
+			{comingNext.map((item) => <li>{item}</li>)}
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Related" />
 		<ul class="related-links">
-			<li><a href="/opportunities">DJ opportunities on PartyLine</a></li>
-			<li><a href="/organisers">For organisers posting opportunities</a></li>
-			<li><a href="/venues">For venues looking for resident DJs</a></li>
+			<li><a href="/platform">Platform overview</a></li>
+			<li><a href="/how-it-works">How It Works</a></li>
+			<li><a href="/releases">Release notes</a></li>
+			<li><a href="/opportunities">DJ opportunities</a></li>
+			<li><a href="/organisers">For organisers</a></li>
+			<li><a href="/venues">For venues</a></li>
 			<li>
 				<a href={APP_LINKS.artists} target="_blank" rel="noopener noreferrer">
 					Explore Artists &amp; DJs in the app
@@ -93,14 +167,43 @@ const artistProfilesResult = await fetchPublicListings('artist_dj', 6);
 	<CtaBand
 		title="Build your profile"
 		description="Create your Artist or DJ listing in the app and start connecting with organisers, venues and the wider scene."
-		primaryLabel="Create Artist/DJ profile"
+		primaryLabel="Create your profile"
 		primaryHref={APP_LINKS.createListing}
-		secondaryLabel="Browse opportunities"
+		secondaryLabel="Explore opportunities"
 		secondaryHref={APP_LINKS.opportunities}
 	/>
 </BaseLayout>
 
 <style>
+	.prose a {
+		color: var(--color-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.preview-note {
+		color: var(--color-muted-strong);
+		font-size: 0.9rem;
+		line-height: 1.6;
+		margin-bottom: var(--space-5);
+		max-width: 42rem;
+	}
+
+	.preview-note a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.preview-note a:hover,
+	.preview-note a:focus-visible {
+		text-decoration: underline;
+	}
+
 	.related-links {
 		display: grid;
 		gap: var(--space-2);

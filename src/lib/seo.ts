@@ -116,25 +116,25 @@ export const PAGE_SEO = {
 	artistsDjs: buildPageSeo({
 		title: 'Artists & DJs',
 		description:
-			'Create your Artist or DJ profile on PartyLine. Get discovered, show your sound, apply to opportunities, and receive booking enquiries.',
+			'Create your Artist or DJ profile on PartyLine for Australia-wide discovery — show your sound, apply to opportunities, and receive enquiries through The Scene.',
 		canonicalPath: '/artists-djs'
 	}),
 	organisers: buildPageSeo({
 		title: 'Organisers',
 		description:
-			'Submit events, post DJ opportunities, review applicants, and build organiser presence with PartyLine — scene infrastructure for promoters and crews.',
+			'Submit events, build organiser presence on PartyLine, post DJ opportunities and review applicants — scene infrastructure for promoters and crews across Australia.',
 		canonicalPath: '/organisers'
 	}),
 	venues: buildPageSeo({
 		title: 'Venues',
 		description:
-			'List your club, warehouse or event space on PartyLine. Connect with organisers, receive enquiries, and link events at your venue.',
+			'List your club, warehouse or event space on PartyLine — venue visibility, linked events and enquiries from organisers and artists across Australia.',
 		canonicalPath: '/venues'
 	}),
 	opportunities: buildPageSeo({
 		title: 'DJ Opportunities',
 		description:
-			'DJs wanted, open decks, warm-up slots, guest mixes and residencies — browse and apply on PartyLine with your published profile.',
+			'Browse and post DJ opportunities on PartyLine — DJs wanted, open decks, warm-up slots, guest mixes and residencies across Australia\u2019s underground scene.',
 		canonicalPath: '/opportunities'
 	}),
 	howItWorks: buildPageSeo({

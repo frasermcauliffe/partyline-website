@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
 import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
+import FeatureGrid from '@/components/ui/FeatureGrid.astro';
 import Callout from '@/components/ui/Callout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import OpportunityLivePreviewSection from '@/components/previews/OpportunityLivePreviewSection.astro';
@@ -12,6 +13,54 @@ import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.opportunities;
 const opportunitiesResult = await fetchPublicOpportunities(6);
+
+const whoItsFor = [
+	{
+		title: 'DJs & artists',
+		description: 'Selectors looking for open decks, warm-ups, guest mixes and residencies.'
+	},
+	{
+		title: 'Organisers',
+		description: 'Promoters and crews posting DJs wanted and lineup calls for upcoming events.'
+	},
+	{
+		title: 'Venues',
+		description: 'Spaces looking for residents, regulars or open-deck programming.'
+	},
+	{
+		title: 'Community showcases',
+		description: 'Scene-led calls — with supplier and media opportunities planned for later.'
+	}
+];
+
+const liveNow = [
+	'Browse open calls in the app',
+	'Post opportunities from the dashboard or relevant event workflows',
+	'Apply with a published Artist/DJ profile where supported',
+	'Organisers can review applicants in the dashboard where supported',
+	'Public website preview may be empty until real open calls are posted'
+];
+
+const opportunityTypes = [
+	{ title: 'DJs wanted', description: 'Lineup slots for club nights, showcases and one-off events.' },
+	{ title: 'Open decks', description: 'Emerging selectors and community-first programming.' },
+	{ title: 'Warm-up slots', description: 'Support slots before headline selectors.' },
+	{ title: 'Guest mixes & submissions', description: 'Remote or promo-led calls where organisers ask for mixes or material.' },
+	{ title: 'Residencies', description: 'Regular slots at venues or recurring series.' },
+	{ title: 'Community showcases', description: 'Open calls from collectives and grassroots crews.' },
+	{
+		title: 'Supplier & media calls',
+		description: 'Production, photo, video and performer opportunities — planned for later on PartyLine.'
+	}
+];
+
+const comingNext = [
+	'Richer application flows',
+	'Open decks expansion across more event types',
+	'Stronger residency support',
+	'Supplier and media opportunity types',
+	'Better matching UX — not automatic matching'
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -22,7 +71,7 @@ const opportunitiesResult = await fetchPublicOpportunities(6);
 			<p class="lede">
 				DJs wanted, open decks, warm-up slots, guest mixes, residencies and community
 				showcases — posted by organisers and venues looking for the right fit. Browse and
-				apply in the app.
+				apply in the app where supported.
 			</p>
 			<div class="button-row">
 				<Button
@@ -41,30 +90,85 @@ const opportunitiesResult = await fetchPublicOpportunities(6);
 		</div>
 	</section>
 
-	<OpportunityLivePreviewSection
-		eyebrow="Live opportunities"
-		title="Open opportunities across Australia"
-		lede="DJ calls, open decks, warm-up slots and residencies from the PartyLine app — open the app to apply with your Artist / DJ profile."
-		opportunities={opportunitiesResult.opportunities}
-		unavailable={opportunitiesResult.unavailable}
-		emptyMessage="No public opportunities are available here yet. Browse the app for the latest DJ calls, open decks and residencies."
-		ctaHref={APP_LINKS.opportunities}
-		ctaLabel="Browse all opportunities"
-		emptyCtaLabel="Browse opportunities in the app"
-	/>
+	<Section narrow>
+		<SectionHeader eyebrow="Audience" title="Who this is for" />
+		<FeatureGrid items={whoItsFor} columns={2} />
+	</Section>
 
-	<Section>
-		<SectionHeader
-			title="Open calls for DJs"
-			lede="Filter by city, type, payment and genre — then apply with a published Artist / DJ profile you own."
-		/>
+	<Section narrow>
+		<SectionHeader title="What you can do now" />
 		<ul class="list-check">
-			<li>DJs wanted for club nights, showcases and one-off events</li>
-			<li>Open decks and warm-up slots for emerging selectors</li>
-			<li>Guest mixes and residency opportunities</li>
-			<li>Community showcases and scene-led calls</li>
-			<li>Organisers review applicants from their dashboard</li>
+			{liveNow.map((item) => <li>{item}</li>)}
 		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Opportunity types" />
+		<FeatureGrid items={opportunityTypes} columns={2} />
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="How it connects to the wider platform" />
+		<div class="prose">
+			<p>
+				Opportunities bridge events and the people who want to get involved. They connect
+				profiles, events, organisers and future application workflows on PartyLine.
+			</p>
+			<p>
+				<a href="/platform">See the full PartyLine platform overview →</a>
+			</p>
+		</div>
+	</Section>
+
+	<Section narrow>
+		<p class="preview-note">
+			These previews pull from live app data and may look sparse while PartyLine is in closed
+			alpha. See <a href="/releases">release notes</a> for current limitations.
+		</p>
+		<OpportunityLivePreviewSection
+			eyebrow="Live opportunities"
+			title="Open opportunities across Australia"
+			lede="DJ calls, open decks, warm-up slots and residencies from the PartyLine app — open the app to apply with your Artist / DJ profile."
+			opportunities={opportunitiesResult.opportunities}
+			unavailable={opportunitiesResult.unavailable}
+			emptyMessage="No public opportunities are available here yet. Browse the app for the latest DJ calls, open decks and residencies."
+			ctaHref={APP_LINKS.opportunities}
+			ctaLabel="Browse all opportunities"
+			emptyCtaLabel="Browse opportunities in the app"
+		/>
+	</Section>
+
+	<Section narrow>
+		<div class="split-grid">
+			<section class="split-card">
+				<h2>For organisers posting</h2>
+				<ul class="list-check list-check--compact">
+					<li>Post from your dashboard or when submitting an event</li>
+					<li>Describe the slot, genre, city and what you are looking for</li>
+					<li>Review applicants where supported — viewed, shortlist, accept or request info</li>
+					<li>Accepted is a workflow status, not an automatic confirmed booking</li>
+				</ul>
+				<p class="split-card__action">
+					<a href={APP_LINKS.postOpportunity} target="_blank" rel="noopener noreferrer">
+						Post an opportunity in the app →
+					</a>
+				</p>
+			</section>
+			<section class="split-card">
+				<h2>For artists &amp; DJs applying</h2>
+				<ul class="list-check list-check--compact">
+					<li>Browse open calls filtered by city, type and genre in the app</li>
+					<li>Apply with a published Artist / DJ profile you own</li>
+					<li>Track application status on the opportunity page</li>
+					<li>Follow up through enquiries or booking requests where appropriate</li>
+				</ul>
+				<p class="split-card__action">
+					<a href={APP_LINKS.createListing} target="_blank" rel="noopener noreferrer">
+						Create your Artist/DJ profile →
+					</a>
+				</p>
+			</section>
+		</div>
 	</Section>
 
 	<Section narrow>
@@ -77,30 +181,19 @@ const opportunitiesResult = await fetchPublicOpportunities(6);
 		</Callout>
 	</Section>
 
-	<Section>
-		<SectionHeader
-			title="Posting opportunities"
-			lede="Organisers can post from the dashboard or enable &ldquo;Looking for DJs?&rdquo; when submitting an event."
-		/>
-		<p class="section-note">
-			Production, media and performer opportunities may be added later as the platform grows.
-			The application system lives in the PartyLine app — this page explains how it works and
-			routes you there.
-		</p>
-		<div class="button-row">
-			<Button href={APP_LINKS.postOpportunity} label="Post an opportunity" variant="primary" external />
-			<Button
-				href={APP_LINKS.createListing}
-				label="Create Artist/DJ profile"
-				variant="secondary"
-				external
-			/>
-		</div>
+	<Section narrow>
+		<SectionHeader title="Coming next" />
+		<ul class="list-check list-check--compact">
+			{comingNext.map((item) => <li>{item}</li>)}
+		</ul>
 	</Section>
 
 	<Section narrow>
-		<SectionHeader title="Explore more" lede="Related pages on PartyLine." />
+		<SectionHeader title="Related" />
 		<ul class="related-links">
+			<li><a href="/platform">Platform overview</a></li>
+			<li><a href="/how-it-works">How It Works</a></li>
+			<li><a href="/releases">Release notes</a></li>
 			<li><a href="/artists-djs">For Artists &amp; DJs</a></li>
 			<li><a href="/organisers">For organisers posting calls</a></li>
 			<li><a href="/venues">For venues posting residencies</a></li>
@@ -118,11 +211,74 @@ const opportunitiesResult = await fetchPublicOpportunities(6);
 </BaseLayout>
 
 <style>
-	.section-note {
+	.prose a {
+		color: var(--color-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.preview-note {
 		color: var(--color-muted-strong);
-		line-height: 1.65;
+		font-size: 0.9rem;
+		line-height: 1.6;
 		margin-bottom: var(--space-5);
 		max-width: 42rem;
+	}
+
+	.preview-note a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.preview-note a:hover,
+	.preview-note a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.split-grid {
+		display: grid;
+		gap: var(--space-4);
+	}
+
+	@media (min-width: 768px) {
+		.split-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	.split-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		display: grid;
+		gap: var(--space-3);
+		min-width: 0;
+		padding: var(--space-5);
+	}
+
+	.split-card h2 {
+		font-size: 1.05rem;
+	}
+
+	.split-card__action {
+		margin-top: var(--space-2);
+	}
+
+	.split-card__action a {
+		color: var(--color-primary);
+		font-size: 0.9rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.split-card__action a:hover,
+	.split-card__action a:focus-visible {
+		text-decoration: underline;
 	}
 
 	.related-links {

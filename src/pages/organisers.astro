@@ -3,12 +3,62 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
 import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
+import FeatureGrid from '@/components/ui/FeatureGrid.astro';
 import Callout from '@/components/ui/Callout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
+import ProfileLivePreviewSection from '@/components/previews/ProfileLivePreviewSection.astro';
+import { fetchPublicListings } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.organisers;
+const organiserProfilesResult = await fetchPublicListings('organiser', 6);
+
+const whoItsFor = [
+	{
+		title: 'Promoters & collectives',
+		description: 'Crews putting on club nights, warehouses and community events across Australia.'
+	},
+	{
+		title: 'Event coordinators',
+		description: 'People managing lineups, venues, promo and production for underground nights.'
+	},
+	{
+		title: 'Labels & brands',
+		description: 'Collectives building a visible presence around a sound, series or community.'
+	},
+	{
+		title: 'Community crews',
+		description: 'Student, grassroots and venue-run teams hosting scene-led events.'
+	}
+];
+
+const liveNow = [
+	'Submit club nights, warehouses, showcases and community events',
+	'Build a public organiser or collective profile on The Scene',
+	'Link events to venues, artists and organisers where available',
+	'Add names manually where profiles do not exist yet',
+	'Post DJ opportunities from your dashboard or when submitting an event',
+	'Review applicants where supported — viewed, shortlist, accept or request more info',
+	'Track basic engagement signals where available, such as saves, going responses and ticket link clicks',
+	'Request tracked ticket or partner links through the partners flow where appropriate'
+];
+
+const organiserPresence = [
+	'One public home for your organiser or collective identity',
+	'Event listings linked to venues, lineups and profiles',
+	'Opportunity posting for DJs wanted, open decks and residencies',
+	'Dashboard workflows for applications and event management',
+	'Future collaborator access as the platform grows'
+];
+
+const comingNext = [
+	'Stronger event dashboards',
+	'Shared calendars',
+	'Collaborator access for crews and partners',
+	'Richer analytics and reporting',
+	'What\u2019s On and content workflow improvements'
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -18,8 +68,8 @@ const seo = PAGE_SEO.organisers;
 			<h1>Put your events and crew on the radar</h1>
 			<p class="lede">
 				Submit events, build your organiser presence, post DJ opportunities, review
-				applicants, and track engagement signals from your event dashboard — practical tools
-				for promoters, collectives and event crews.
+				applicants where supported, and help people across Australia find your nights —
+				practical tools for promoters, collectives and event crews.
 			</p>
 			<div class="button-row">
 				<Button href={APP_LINKS.submitEvent} label="Submit an event" variant="primary" external />
@@ -33,20 +83,57 @@ const seo = PAGE_SEO.organisers;
 		</div>
 	</section>
 
-	<Section>
-		<SectionHeader
-			title="Tools for promoters and crews"
-			lede="List events, link profiles, review DJ applications, and track basic engagement — all in the PartyLine app."
-		/>
+	<Section narrow>
+		<SectionHeader eyebrow="Audience" title="Who this is for" />
+		<FeatureGrid items={whoItsFor} columns={2} />
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="What you can do now" />
 		<ul class="list-check">
-			<li>Submit club nights, day parties, warehouses, showcases and community events</li>
-			<li>Link venue, organiser and lineup profiles — or add names manually</li>
-			<li>Upload posters, gallery images and media embeds</li>
-			<li>Track engagement signals such as saves, RSVPs and ticket link clicks where available</li>
-			<li>Post DJ opportunities from your dashboard or when submitting an event</li>
-			<li>Review applications — mark viewed, shortlist, accept or request more info</li>
-			<li>Build a visible organiser profile on The Scene</li>
-			<li>Request a tracked PartyLine ticket link or affiliate setup via our <a href="/partners">ticket partnerships</a> page</li>
+			{liveNow.map((item) => <li>{item}</li>)}
+			<li>
+				Learn more about <a href="/partners">ticket partnerships</a> where a tracked link makes
+				sense for your events.
+			</li>
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="How it connects to the wider platform" />
+		<div class="prose">
+			<p>
+				Organiser profiles connect events, venues, lineups and opportunities on PartyLine.
+				This website helps your nights get discovered through previews and landing pages; the
+				app supports submissions, dashboards and private workflows.
+			</p>
+			<p>
+				<a href="/platform">See the full PartyLine platform overview →</a>
+			</p>
+		</div>
+	</Section>
+
+	<Section narrow>
+		<p class="preview-note">
+			These previews pull from live app data and may look sparse while PartyLine is in closed
+			alpha. See <a href="/releases">release notes</a> for current limitations.
+		</p>
+		<ProfileLivePreviewSection
+			eyebrow="Live profiles"
+			title="Organisers across Australia"
+			lede="Public organiser and collective profiles from the PartyLine app — open the app for full bios, linked events and opportunities."
+			profiles={organiserProfilesResult.listings}
+			unavailable={organiserProfilesResult.unavailable}
+			emptyMessage="No public organiser profiles are available here yet. Explore organisers in the app."
+			ctaHref={APP_LINKS.organisers}
+			ctaLabel="Explore all organisers"
+		/>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Submit events and build your organiser presence" />
+		<ul class="list-check">
+			{organiserPresence.map((item) => <li>{item}</li>)}
 		</ul>
 	</Section>
 
@@ -62,9 +149,19 @@ const seo = PAGE_SEO.organisers;
 	</Section>
 
 	<Section narrow>
-		<SectionHeader title="Explore more" lede="Related pages and directories in the PartyLine app." />
+		<SectionHeader title="Coming next" />
+		<ul class="list-check list-check--compact">
+			{comingNext.map((item) => <li>{item}</li>)}
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Related" />
 		<ul class="related-links">
-			<li><a href="/events">Event discovery on PartyLine</a></li>
+			<li><a href="/platform">Platform overview</a></li>
+			<li><a href="/how-it-works">How It Works</a></li>
+			<li><a href="/releases">Release notes</a></li>
+			<li><a href="/events">Event discovery</a></li>
 			<li><a href="/opportunities">DJ opportunities</a></li>
 			<li><a href="/partners">Ticket partnerships</a></li>
 			<li>
@@ -86,6 +183,17 @@ const seo = PAGE_SEO.organisers;
 </BaseLayout>
 
 <style>
+	.prose a {
+		color: var(--color-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+
 	.list-check a {
 		color: var(--color-primary);
 		text-decoration: none;
@@ -93,6 +201,24 @@ const seo = PAGE_SEO.organisers;
 
 	.list-check a:hover,
 	.list-check a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.preview-note {
+		color: var(--color-muted-strong);
+		font-size: 0.9rem;
+		line-height: 1.6;
+		margin-bottom: var(--space-5);
+		max-width: 42rem;
+	}
+
+	.preview-note a {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.preview-note a:hover,
+	.preview-note a:focus-visible {
 		text-decoration: underline;
 	}
 
