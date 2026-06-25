@@ -1,0 +1,256 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Callout from '@/components/ui/Callout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { APP_LINKS } from '@/data/app-links';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.releases;
+
+const shippedGroups = [
+	{
+		title: 'Website & content',
+		items: [
+			'Astro marketing website and public landing pages',
+			'WordPress blog migration to Astro',
+			'Legal and community pages',
+			'Platform / ecosystem page'
+		]
+	},
+	{
+		title: 'Public previews',
+		items: [
+			'Public events preview from the app',
+			'Public venue/profile previews from the app',
+			'Public opportunities preview from the app'
+		]
+	},
+	{
+		title: 'Cutover readiness',
+		intro:
+			'App subdomain and production cutover work is prepared in code and DNS/env setup is being completed in stages.',
+		items: [
+			'App subdomain preparation',
+			'Env-driven website app links',
+			'App legal links back to website legal pages',
+			'Private-route noindex protection for auth, dashboard and internal app routes'
+		]
+	},
+	{
+		title: 'Auth & account access',
+		items: [
+			'Sign-in-first auth flow on /join',
+			'Google and email/password auth',
+			'Apple auth code added but hidden until Apple Developer and Supabase provider setup are complete'
+		]
+	},
+	{
+		title: 'Alpha tooling',
+		items: [
+			'Alpha feedback route in the app',
+			'App dashboard and account areas under active refinement'
+		]
+	}
+];
+
+const limitations = [
+	'Apple sign-in is hidden until Apple Developer Program and Supabase Apple provider setup are complete.',
+	'Profile previews may show limited data while listings are still sparse in alpha.',
+	'Opportunities may be empty until real open calls are posted.',
+	'Booking workflows, enquiries and structured booking requests are in early form and still being refined.',
+	'Payments, contracts and reviews are not presented as live product features.',
+	'Pages and flows may change as alpha feedback comes in.',
+	'Production domain cutover is prepared in code but still being completed in stages.'
+];
+
+const comingNext = [
+	'Website root-domain cutover to production URLs',
+	'More public profile and event data on marketing previews',
+	'Stronger audience and role landing pages',
+	'Open decks and DJ wanted opportunity flows',
+	'Event and booking calendars',
+	'Better dashboards for users and listings',
+	'What\u2019s On and content workflow improvements',
+	'Scene insights and analytics in a later phase'
+];
+
+const feedbackTopics = [
+	'Bugs and broken behaviour',
+	'Missing events',
+	'Incorrect profile or event information',
+	'Feature suggestions',
+	'Confusing UX',
+	'Broken links'
+];
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Release Notes · PartyLine Collective</p>
+			<h1>PartyLine release notes</h1>
+			<p class="updated-line">Updated June 2026</p>
+			<p class="lede">
+				Track what&rsquo;s live, what&rsquo;s improving and what is coming next as PartyLine
+				grows into Australia&rsquo;s underground music and events platform.
+			</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.feedback} label="Send feedback" variant="primary" external />
+				<Button href="/platform" label="Explore the platform" variant="secondary" />
+			</div>
+		</div>
+	</section>
+
+	<Section narrow>
+		<Callout title="Closed alpha / early public preview">
+			<p>
+				The PartyLine website and app are live in preview and closed alpha. Public event,
+				profile and opportunity previews on this website are connected to the app. Some
+				features are still being tested and refined — and your feedback helps shape what
+				ships next.
+			</p>
+		</Callout>
+	</Section>
+
+	<Section>
+		<SectionHeader
+			title="Recently shipped"
+			lede="Shipped during closed alpha — grouped by area, not by release date."
+		/>
+		<div class="shipped-groups">
+			{
+				shippedGroups.map((group) => (
+					<section class="shipped-group">
+						<h2>{group.title}</h2>
+						{group.intro && <p class="shipped-group__intro">{group.intro}</p>}
+						<ul class="list-check list-check--compact">
+							{group.items.map((item) => (
+								<li>{item}</li>
+							))}
+						</ul>
+					</section>
+				))
+			}
+		</div>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader
+			title="Current limitations"
+			lede="Alpha transparency — what to expect while PartyLine is still evolving."
+		/>
+		<ul class="list-check">
+			{limitations.map((item) => <li>{item}</li>)}
+		</ul>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="What&rsquo;s coming next" />
+		<ul class="list-check">
+			{comingNext.map((item) => <li>{item}</li>)}
+		</ul>
+		<p class="roadmap-note">
+			Roadmap order and timing may shift based on alpha feedback.
+		</p>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader
+			title="Help us improve PartyLine"
+			lede="We read feedback during closed alpha. Tell us what you find."
+		/>
+		<ul class="list-check list-check--compact">
+			{feedbackTopics.map((item) => <li>{item}</li>)}
+		</ul>
+		<div class="feedback-action">
+			<Button href={APP_LINKS.feedback} label="Send feedback" variant="primary" external />
+		</div>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Related" />
+		<ul class="related-links">
+			<li><a href="/platform">Platform overview</a></li>
+			<li><a href="/how-it-works">How It Works</a></li>
+			<li><a href="/about">About PartyLine</a></li>
+		</ul>
+	</Section>
+
+	<CtaBand
+		title="Help shape PartyLine while it grows."
+		description="Send feedback on bugs, missing listings, confusing flows or ideas for what should ship next."
+		primaryLabel="Send feedback"
+		primaryHref={APP_LINKS.feedback}
+		secondaryLabel="Explore the platform"
+		secondaryHref="/platform"
+		secondaryExternal={false}
+	/>
+</BaseLayout>
+
+<style>
+	.updated-line {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: 0.75rem;
+		letter-spacing: var(--tracking-label);
+		margin: 0 0 var(--space-3);
+		text-transform: uppercase;
+	}
+
+	.shipped-groups {
+		display: grid;
+		gap: var(--space-5);
+	}
+
+	.shipped-group {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: var(--space-6);
+	}
+
+	.shipped-group h2 {
+		font-size: clamp(1.05rem, 3vw, 1.2rem);
+		margin-bottom: var(--space-3);
+	}
+
+	.shipped-group__intro {
+		color: var(--color-muted-strong);
+		font-size: 0.95rem;
+		line-height: 1.6;
+		margin-bottom: var(--space-3);
+	}
+
+	.roadmap-note {
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		line-height: 1.55;
+		margin-top: var(--space-4);
+	}
+
+	.feedback-action {
+		margin-top: var(--space-5);
+	}
+
+	.related-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		list-style: none;
+	}
+
+	.related-links a {
+		color: var(--color-primary);
+		font-size: 0.95rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.related-links a:hover,
+	.related-links a:focus-visible {
+		text-decoration: underline;
+	}
+</style>

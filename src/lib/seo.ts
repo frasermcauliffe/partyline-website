@@ -149,6 +149,12 @@ export const PAGE_SEO = {
 			'See how PartyLine connects events, artists, DJs, venues, organisers, suppliers and fans through public discovery, profiles, opportunities, dashboards and future scene insights.',
 		canonicalPath: '/platform'
 	}),
+	releases: buildPageSeo({
+		title: 'PartyLine Release Notes | Alpha Updates and Roadmap',
+		description:
+			'Follow PartyLine\u2019s latest alpha updates, shipped features, known limitations and upcoming improvements for Australia\u2019s underground music and events platform.',
+		canonicalPath: '/releases'
+	}),
 	about: buildPageSeo({
 		title: 'About',
 		description:
