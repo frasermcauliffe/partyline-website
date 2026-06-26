@@ -1,12 +1,15 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import FeatureGrid from '@/components/ui/FeatureGrid.astro';
-import Callout from '@/components/ui/Callout.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import StatusBadge from '@/components/ui/StatusBadge.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
-import OpportunityLivePreviewSection from '@/components/previews/OpportunityLivePreviewSection.astro';
+import PreviewPanel from '@/components/previews/PreviewPanel.astro';
+import PublicOpportunityPreviewCard from '@/components/previews/PublicOpportunityPreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
 import { fetchPublicOpportunities } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
@@ -69,7 +72,8 @@ const opportunityTypes = [
 	{
 		title: 'Supplier & media calls',
 		description:
-			'Later-phase calls for photographers, videographers, production, visuals and event support.'
+			'Later-phase calls for photographers, videographers, production, visuals and event support.',
+		planned: true
 	}
 ];
 
@@ -89,6 +93,15 @@ const comingNext = [
 	'Supplier and media opportunity types',
 	'Smarter discovery and recommendations later'
 ];
+
+const relatedLinks = [
+	{ label: 'Platform overview', href: '/platform' },
+	{ label: 'For Artists & DJs', href: '/artists-djs' },
+	{ label: 'For organisers', href: '/organisers' },
+	{ label: 'For venues', href: '/venues' },
+	{ label: 'Release notes', href: '/releases' },
+	{ label: 'How It Works', href: '/how-it-works' }
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -102,29 +115,17 @@ const comingNext = [
 				supplier or media calls.
 			</p>
 			<div class="button-row">
-				<Button
-					href={APP_LINKS.opportunities}
-					label="Browse opportunities"
-					variant="primary"
-					external
-				/>
-				<Button
-					href={APP_LINKS.postOpportunity}
-					label="Post an opportunity"
-					variant="secondary"
-					external
-				/>
+				<Button href={APP_LINKS.opportunities} label="Browse opportunities" variant="primary" external />
+				<Button href={APP_LINKS.postOpportunity} label="Post an opportunity" variant="secondary" external />
 			</div>
 		</div>
 	</section>
 
-	<Section narrow>
-		<SectionHeader title="What are PartyLine opportunities?" />
+	<SectionShell title="What are PartyLine opportunities?">
 		<div class="prose">
 			<p>
 				Opportunities are open calls posted by organisers, venues and collectives — from DJs
-				wanted and open decks to residencies, warm-ups, guest mixes and community
-				showcases.
+				wanted and open decks to residencies, warm-ups, guest mixes and community showcases.
 			</p>
 			<p>
 				They bridge events and people who want to play, support, collaborate, submit or get
@@ -132,156 +133,145 @@ const comingNext = [
 				public discovery on this website and action inside the PartyLine app.
 			</p>
 		</div>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader eyebrow="Audience" title="Who this is for" />
-		<FeatureGrid items={whoItsFor} columns={2} />
-	</Section>
-
-	<Section narrow>
-		<SectionHeader
-			title="Opportunity types"
-			lede="Opportunity types depend on what organisers and venues post. Some flows are live in early form during alpha; others will expand as the system develops."
-		/>
-		<FeatureGrid items={opportunityTypes} columns={2} />
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="For organisers and venues" />
-		<ul class="list-check">
-			<li>
-				Post an open call when you need DJs, residents, open-deck applicants, warm-up acts
-				or collaborators.
-			</li>
-			<li>Connect the opportunity to an event where relevant.</li>
-			<li>
-				Review interest from people with published profiles where supported.
-			</li>
-			<li>
-				Use opportunities to make calls clearer than scattered DMs.
-			</li>
-		</ul>
-		<p class="section-note">
-			During alpha, flows may still change as the system develops — check
-			<a href="/releases">release notes</a> for what is supported today.
-		</p>
-		<div class="button-row">
-			<Button
-				href={APP_LINKS.postOpportunity}
-				label="Post an opportunity"
-				variant="primary"
-				external
-			/>
+		<div class="opp-subhead">
+			<h2>Who this is for</h2>
 		</div>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="For DJs and artists" />
-		<ul class="list-check">
-			<li>Browse open calls in the app.</li>
-			<li>Apply with a published Artist/DJ profile where supported.</li>
-			<li>
-				Use your PartyLine profile to show sound, media, links and event history.
-			</li>
-			<li>
-				Follow opportunities that match your city, sound or availability as the product
-				develops.
-			</li>
-		</ul>
-		<div class="button-row">
-			<Button
-				href={APP_LINKS.createListing}
-				label="Create your profile"
-				variant="primary"
-				external
-			/>
-			<Button
-				href={APP_LINKS.opportunities}
-				label="Browse opportunities"
-				variant="secondary"
-				external
-			/>
+		<div class="opp-grid opp-grid--2">
+			{
+				whoItsFor.map((item) => (
+					<PremiumCard variant="feature">
+						<h3>{item.title}</h3>
+						<p>{item.description}</p>
+					</PremiumCard>
+				))
+			}
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader title="How it connects to profiles and events" />
-		<div class="prose">
-			<p>
-				Opportunities connect events, organisers, venues and artists. Artist and DJ profiles
-				make applications more useful — organisers can see sound, media and activity before
-				they respond. Organiser and venue profiles make open calls feel more trustworthy
-				when people browse.
-			</p>
-			<p>
-				Event-linked opportunities will become more important as the system grows. Explore
-				how profiles and discovery fit together across PartyLine:
-			</p>
-			<ul class="prose-links">
-				<li><a href="/platform">Platform overview</a></li>
-				<li><a href="/artists-djs">For Artists &amp; DJs</a></li>
-				<li><a href="/organisers">For organisers</a></li>
-				<li><a href="/venues">For venues</a></li>
-			</ul>
+	<SectionShell
+		variant="band"
+		title="Opportunity types"
+		lede="Opportunity types depend on what organisers and venues post. Some flows are live in early form during alpha; others will expand as the system develops."
+	>
+		<div class="opp-grid opp-grid--2">
+			{
+				opportunityTypes.map((type) => (
+					<PremiumCard variant="feature">
+						<div class="opp-card__head">
+							<h3>{type.title}</h3>
+							{type.planned && <StatusBadge status="planned" label="Planned" />}
+						</div>
+						<p>{type.description}</p>
+					</PremiumCard>
+				))
+			}
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<p class="preview-note">
-			These previews pull from live app data and may look sparse while PartyLine is in closed
-			alpha. See <a href="/releases">release notes</a> for current limitations.
-		</p>
-		<OpportunityLivePreviewSection
-			eyebrow="Live opportunities"
-			title="Open opportunities across Australia"
-			lede="DJ calls, open decks, warm-up slots and residencies from the PartyLine app — open the app to apply with your Artist / DJ profile."
-			opportunities={opportunitiesResult.opportunities}
-			unavailable={opportunitiesResult.unavailable}
-			emptyMessage="No public opportunities are available here yet. Browse the app for the latest DJ calls, open decks and residencies."
-			ctaHref={APP_LINKS.opportunities}
-			ctaLabel="Browse all opportunities"
-			emptyCtaLabel="Browse opportunities in the app"
-		/>
-	</Section>
-
-	<Section narrow>
+	<SectionShell title="How to use opportunities">
 		<div class="split-grid">
-			<section class="split-card">
-				<h2>Live now</h2>
+			<div class="split-col">
+				<h3>For organisers and venues</h3>
+				<ul class="list-check">
+					<li>
+						Post an open call when you need DJs, residents, open-deck applicants, warm-up acts
+						or collaborators.
+					</li>
+					<li>Connect the opportunity to an event where relevant.</li>
+					<li>Review interest from people with published profiles where supported.</li>
+					<li>Use opportunities to make calls clearer than scattered DMs.</li>
+				</ul>
+				<div class="button-row">
+					<Button href={APP_LINKS.postOpportunity} label="Post an opportunity" variant="primary" external />
+				</div>
+			</div>
+			<div class="split-col">
+				<h3>For DJs and artists</h3>
+				<ul class="list-check">
+					<li>Browse open calls in the app.</li>
+					<li>Apply with a published Artist/DJ profile where supported.</li>
+					<li>Use your PartyLine profile to show sound, media, links and event history.</li>
+					<li>Follow opportunities that match your city, sound or availability as the product develops.</li>
+				</ul>
+				<div class="button-row">
+					<Button href={APP_LINKS.createListing} label="Create your profile" variant="primary" external />
+				</div>
+			</div>
+		</div>
+		<StatusCallout variant="alpha" class="opp-note">
+			<p>
+				During alpha, flows may still change as the system develops — check the
+				<a href="/releases">release notes</a> for what is supported today.
+			</p>
+		</StatusCallout>
+	</SectionShell>
+
+	<PreviewPanel
+		eyebrow="Live opportunities"
+		title="Open opportunities across Australia"
+		lede="DJ calls, open decks, warm-up slots and residencies from the PartyLine app — open the app to apply with your Artist / DJ profile."
+		source="app"
+		ctaLabel="Browse all opportunities"
+		ctaHref={APP_LINKS.opportunities}
+		narrow={false}
+	>
+		<StatusCallout variant="alpha" class="opp-preview-note">
+			<p>
+				These previews pull from live app data and may look sparse while PartyLine is in closed
+				alpha. See <a href="/releases">release notes</a> for current limitations.
+			</p>
+		</StatusCallout>
+		{
+			opportunitiesResult.opportunities.length > 0 ? (
+				<div class="opp-preview-grid">
+					{opportunitiesResult.opportunities.map((opportunity) => (
+						<PublicOpportunityPreviewCard opportunity={opportunity} />
+					))}
+				</div>
+			) : (
+				<EmptyPreviewState
+					message="No public opportunities are available here yet. Browse the app for the latest DJ calls, open decks and residencies."
+					ctaHref={APP_LINKS.opportunities}
+					ctaLabel="Browse opportunities in the app"
+					unavailable={opportunitiesResult.unavailable}
+				/>
+			)
+		}
+	</PreviewPanel>
+
+	<SectionShell title="Where opportunities are today">
+		<div class="split-grid">
+			<StatusCallout variant="success" title="Live now">
 				<ul class="list-check list-check--compact">
 					{liveNow.map((item) => <li>{item}</li>)}
 				</ul>
-			</section>
-			<section class="split-card">
-				<h2>Coming next</h2>
+			</StatusCallout>
+			<StatusCallout variant="roadmap" title="Coming next">
 				<ul class="list-check list-check--compact">
 					{comingNext.map((item) => <li>{item}</li>)}
 				</ul>
-			</section>
+			</StatusCallout>
 		</div>
-	</Section>
-
-	<Section narrow>
-		<Callout title="Accepted is not a confirmed booking">
+		<StatusCallout variant="warning" title="Accepted is not a confirmed booking" class="opp-note">
 			<p>
 				An accepted opportunity response is the start of a conversation, not a finished
 				booking. Final details still need to be confirmed between the people involved.
 			</p>
-		</Callout>
-	</Section>
+		</StatusCallout>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader title="Related" />
-		<ul class="related-links">
-			<li><a href="/platform">Platform overview</a></li>
-			<li><a href="/artists-djs">For Artists &amp; DJs</a></li>
-			<li><a href="/organisers">For organisers</a></li>
-			<li><a href="/venues">For venues</a></li>
-			<li><a href="/releases">Release notes</a></li>
-			<li><a href="/how-it-works">How It Works</a></li>
-		</ul>
-	</Section>
+	<SectionShell variant="editorial" title="How it connects to profiles and events">
+		<div class="prose">
+			<p>
+				Opportunities connect events, organisers, venues and artists. Artist and DJ profiles
+				make applications more useful — organisers can see sound, media and activity before
+				they respond. Organiser and venue profiles make open calls feel more trustworthy when
+				people browse. Event-linked opportunities will become more important as the system
+				grows.
+			</p>
+		</div>
+		<RelatedLinks title="Related" links={relatedLinks} layout="inline" class="opp-related" />
+	</SectionShell>
 
 	<CtaBand
 		title="Post the call, find the fit."
@@ -295,8 +285,8 @@ const comingNext = [
 
 <style>
 	.prose a {
-		color: var(--color-primary);
-		font-weight: 600;
+		color: var(--signal);
+		font-weight: var(--weight-semibold);
 		text-decoration: none;
 	}
 
@@ -305,53 +295,54 @@ const comingNext = [
 		text-decoration: underline;
 	}
 
-	.prose-links {
-		display: grid;
-		gap: var(--space-2);
-		list-style: none;
-		margin-top: var(--space-3);
-		padding: 0;
-	}
-
-	.section-note {
-		color: var(--color-muted-strong);
-		font-size: 0.9rem;
-		line-height: 1.6;
-		margin-top: var(--space-4);
-		max-width: 42rem;
-	}
-
-	.section-note a {
-		color: var(--color-primary);
-		text-decoration: none;
-	}
-
-	.section-note a:hover,
-	.section-note a:focus-visible {
-		text-decoration: underline;
-	}
-
-	.preview-note {
-		color: var(--color-muted-strong);
-		font-size: 0.9rem;
-		line-height: 1.6;
+	.opp-subhead {
+		margin-top: var(--space-8);
 		margin-bottom: var(--space-5);
-		max-width: 42rem;
 	}
 
-	.preview-note a {
-		color: var(--color-primary);
-		text-decoration: none;
+	.opp-subhead h2 {
+		font-size: var(--text-h3);
 	}
 
-	.preview-note a:hover,
-	.preview-note a:focus-visible {
-		text-decoration: underline;
+	.opp-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+
+	.opp-grid :global(.premium-card h3) {
+		font-size: var(--text-card-title);
+	}
+
+	.opp-grid :global(.premium-card p) {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+	}
+
+	.opp-card__head {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: space-between;
+	}
+
+	@media (min-width: 640px) {
+		.opp-grid--2 {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.opp-grid--2 {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
 	}
 
 	.split-grid {
 		display: grid;
-		gap: var(--space-4);
+		gap: var(--space-5);
 	}
 
 	@media (min-width: 768px) {
@@ -360,35 +351,43 @@ const comingNext = [
 		}
 	}
 
-	.split-card {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
+	.split-col h3 {
+		font-size: var(--text-card-title);
+		margin-bottom: var(--space-4);
+	}
+
+	.split-col .button-row {
+		margin-top: var(--space-5);
+	}
+
+	.opp-note {
+		margin-top: var(--space-6);
+	}
+
+	.opp-preview-note {
+		margin-bottom: var(--space-6);
+	}
+
+	.opp-preview-grid {
+		align-items: stretch;
 		display: grid;
-		gap: var(--space-3);
-		min-width: 0;
-		padding: var(--space-5);
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
 	}
 
-	.split-card h2 {
-		font-size: 1.05rem;
+	@media (min-width: 640px) {
+		.opp-preview-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 
-	.related-links {
-		display: grid;
-		gap: var(--space-2);
-		list-style: none;
+	@media (min-width: 1024px) {
+		.opp-preview-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
 	}
 
-	.related-links a {
-		color: var(--color-primary);
-		font-size: 0.95rem;
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.related-links a:hover,
-	.related-links a:focus-visible {
-		text-decoration: underline;
+	.opp-related {
+		margin-top: var(--space-8);
 	}
 </style>

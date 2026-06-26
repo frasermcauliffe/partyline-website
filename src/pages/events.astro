@@ -1,17 +1,26 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import Callout from '@/components/ui/Callout.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
-import LivePreviewSection from '@/components/previews/LivePreviewSection.astro';
+import PreviewPanel from '@/components/previews/PreviewPanel.astro';
+import PublicEventPreviewCard from '@/components/previews/PublicEventPreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
 import { fetchPublicEvents } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.events;
 const upcomingEventsResult = await fetchPublicEvents(9);
+
+const relatedLinks = [
+	{ label: 'Finding underground events in Australia', href: '/guides/how-to-find-underground-events-australia' },
+	{ label: 'Opportunities', href: '/opportunities' },
+	{ label: 'Platform overview', href: '/platform' },
+	{ label: 'How It Works', href: '/how-it-works' }
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -30,95 +39,96 @@ const upcomingEventsResult = await fetchPublicEvents(9);
 		</div>
 	</section>
 
-	<LivePreviewSection
+	<PreviewPanel
 		eyebrow="Live listings"
 		title="Upcoming events across Australia"
 		lede="Public event previews from the PartyLine app. Open the app for filters, posters, lineups and full details."
-		events={upcomingEventsResult.events}
-		unavailable={upcomingEventsResult.unavailable}
-		ctaHref={APP_LINKS.events}
+		source="app"
 		ctaLabel="Explore events across Australia"
+		ctaHref={APP_LINKS.events}
 		narrow={false}
-	/>
+	>
+		{
+			upcomingEventsResult.events.length > 0 ? (
+				<div class="events-grid">
+					{upcomingEventsResult.events.map((event) => (
+						<PublicEventPreviewCard event={event} />
+					))}
+				</div>
+			) : (
+				<EmptyPreviewState
+					ctaHref={APP_LINKS.events}
+					unavailable={upcomingEventsResult.unavailable}
+				/>
+			)
+		}
+	</PreviewPanel>
 
-	<Section>
-		<SectionHeader
-			title="Event discovery built for the underground"
-			lede="PartyLine Collective brings together nights from organisers, venues and crews across Australia. Browse by city, date and type in the app."
-		/>
+	<SectionShell
+		title="Event discovery built for the underground"
+		lede="PartyLine Collective brings together nights from organisers, venues and crews across Australia. Browse by city, date and type in the app."
+	>
 		<ul class="list-check">
 			<li>Club nights, warehouses, day parties and open air</li>
 			<li>Posters, lineups and linked venue or artist profiles</li>
 			<li>External ticket links where organisers provide them</li>
 			<li>Save and RSVP from your dashboard calendar</li>
 		</ul>
-		<p class="related-guide">
-			New to the scene? Read our guide to
-			<a href="/guides/how-to-find-underground-events-australia">
-				finding underground events in Australia
-			</a>.
-		</p>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<Callout title="Not a ticketing platform">
+	<SectionShell variant="band" narrow>
+		<StatusCallout variant="info" title="Not a ticketing platform">
 			<p>
 				PartyLine Collective is focused on discovery and connection. Ticketing stays with
 				organisers — through their own links and systems. PartyLine helps people find the
 				night; you keep control of how tickets are sold. Organisers can also request a
-				<a class="inline-link" href="/partners">tracked PartyLine ticket link</a> where a partnership is set up.
+				<a href="/partners">tracked PartyLine ticket link</a> where a partnership is set up.
 			</p>
-		</Callout>
-	</Section>
+		</StatusCallout>
+	</SectionShell>
 
-	<Section>
-		<SectionHeader
-			title="Hosting something?"
-			lede="Submit your event in the app — link organiser, venue and lineup profiles, upload a poster, and share ticket information."
-		/>
+	<SectionShell
+		variant="editorial"
+		title="Hosting something?"
+		lede="Submit your event in the app — link organiser, venue and lineup profiles, upload a poster, and share ticket information."
+	>
 		<div class="button-row">
 			<Button href={APP_LINKS.submitEvent} label="Submit an event" variant="primary" external />
-			<Button href={APP_LINKS.joinSignup} label="Join PartyLine" variant="secondary" external />
 		</div>
-	</Section>
+		<RelatedLinks title="Related" links={relatedLinks} layout="inline" class="events-related" />
+	</SectionShell>
 
 	<CtaBand
 		title="See what's on"
 		description="Browse live events in the PartyLine app — updated by organisers and venues across the scene."
 		primaryLabel="Explore Events"
 		primaryHref={APP_LINKS.events}
-		secondaryLabel="Submit an event"
-		secondaryHref={APP_LINKS.submitEvent}
+		secondaryLabel="Join PartyLine"
+		secondaryHref={APP_LINKS.joinSignup}
 	/>
 </BaseLayout>
 
 <style>
-	.inline-link {
-		color: var(--color-primary);
-		text-decoration: none;
+	.events-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
 	}
 
-	.inline-link:hover,
-	.inline-link:focus-visible {
-		text-decoration: underline;
+	@media (min-width: 640px) {
+		.events-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 
-	.related-guide {
-		color: var(--color-muted-strong);
-		font-size: 0.95rem;
-		line-height: 1.6;
-		margin-top: var(--space-5);
-		max-width: 42rem;
+	@media (min-width: 1024px) {
+		.events-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
 	}
 
-	.related-guide a {
-		color: var(--color-primary);
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.related-guide a:hover,
-	.related-guide a:focus-visible {
-		text-decoration: underline;
+	.events-related {
+		margin-top: var(--space-8);
 	}
 </style>

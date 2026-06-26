@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import StatusBadge from '@/components/ui/StatusBadge.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import AudienceCard from '@/components/ui/AudienceCard.astro';
-import Callout from '@/components/ui/Callout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
@@ -16,6 +18,7 @@ const ecosystemLayers = [
 		label: 'Layer A',
 		title: 'Public website',
 		subtitle: 'Discovery, editorial and public previews',
+		status: 'live' as const,
 		points: [
 			'Events, profile and opportunity previews',
 			'Blog, guides and public landing pages',
@@ -26,6 +29,7 @@ const ecosystemLayers = [
 		label: 'Layer B',
 		title: 'Web app',
 		subtitle: 'Accounts, submissions and private workflows',
+		status: 'live' as const,
 		points: [
 			'User accounts and public listings',
 			'Event submission and management',
@@ -36,6 +40,7 @@ const ecosystemLayers = [
 		label: 'Layer C',
 		title: 'Scene activity',
 		subtitle: 'The people, places and moments moving through the network',
+		status: 'live' as const,
 		points: [
 			'Events, venues and organisers',
 			'Artists, DJs, performers, media and suppliers',
@@ -46,7 +51,7 @@ const ecosystemLayers = [
 		label: 'Layer D',
 		title: 'Future insights',
 		subtitle: 'Roadmap: turning activity into useful scene signals',
-		roadmap: true,
+		status: 'planned' as const,
 		points: [
 			'Saves, RSVPs, clicks and profile views',
 			'Event performance and discovery signals',
@@ -120,6 +125,14 @@ const comingNext = [
 	'City and event guides',
 	'Editorial and content workflows such as What\u2019s On'
 ];
+
+const relatedLinks = [
+	{ label: 'Guides', href: '/guides' },
+	{ label: 'Release Notes', href: '/releases' },
+	{ label: 'How It Works', href: '/how-it-works' },
+	{ label: 'About PartyLine', href: '/about' },
+	{ label: 'Events', href: '/events' }
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -129,8 +142,7 @@ const comingNext = [
 			<h1>One place for Australia&rsquo;s underground music scene to be found, followed and connected.</h1>
 			<p class="lede">
 				PartyLine connects events, artists, venues, organisers, suppliers and fans — from
-				public discovery through profiles, opportunities, enquiries and future scene
-				insights.
+				public discovery through profiles, opportunities, enquiries and future scene insights.
 			</p>
 			<div class="button-row">
 				<Button href={APP_LINKS.joinSignup} label="Join PartyLine" variant="primary" external />
@@ -139,61 +151,69 @@ const comingNext = [
 		</div>
 	</section>
 
-	<Section>
-		<SectionHeader
-			eyebrow="Ecosystem"
-			title="Four layers working together"
-			lede="PartyLine is not just a website and not just a directory — it is connected infrastructure for Australia\u2019s underground music and events scene."
-		/>
-		<ul class="ecosystem-grid">
+	<SectionShell narrow>
+		<StatusCallout variant="alpha" title="Closed alpha / early public preview">
+			<p>
+				PartyLine is in closed alpha — actively tested with a growing invited group. The layers
+				below describe how the ecosystem fits together; status labels show what is live today
+				versus what is on the roadmap.
+			</p>
+		</StatusCallout>
+	</SectionShell>
+
+	<SectionShell
+		eyebrow="Ecosystem"
+		title="Four layers working together"
+		lede="PartyLine is not just a website and not just a directory — it is connected infrastructure for Australia's underground music and events scene."
+	>
+		<div class="ecosystem-grid">
 			{
 				ecosystemLayers.map((layer) => (
-					<li class="ecosystem-card" class:list={[layer.roadmap && 'ecosystem-card--roadmap']}>
-						<p class="ecosystem-card__label">{layer.label}</p>
+					<PremiumCard variant={layer.status === 'planned' ? 'quiet' : 'feature'}>
+						<div class="ecosystem-card__head">
+							<p class="ecosystem-card__label">{layer.label}</p>
+							<StatusBadge
+								status={layer.status}
+								label={layer.status === 'planned' ? 'Planned' : 'Live'}
+								dot
+							/>
+						</div>
 						<h2>{layer.title}</h2>
 						<p class="ecosystem-card__subtitle">{layer.subtitle}</p>
-						{layer.roadmap && <p class="ecosystem-card__badge">Coming next — not fully live yet</p>}
 						<ul class="list-check list-check--compact">
 							{layer.points.map((point) => (
 								<li>{point}</li>
 							))}
 						</ul>
-					</li>
+					</PremiumCard>
 				))
 			}
-		</ul>
-	</Section>
+		</div>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader eyebrow="Who it is for" title="Built for the whole underground network" />
+	<SectionShell variant="band" eyebrow="Who it is for" title="Built for the whole underground network" narrow>
 		<div class="audience-grid">
 			{audiences.map((item) => <AudienceCard {...item} />)}
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader
-			eyebrow="Available now"
-			title="What you can do now"
-			lede="PartyLine Collective is in closed alpha — actively tested with a growing invited group. These features are live or near-live today."
-		/>
-		<ul class="list-check">
-			{liveFeatures.map((feature) => <li>{feature}</li>)}
-		</ul>
-	</Section>
+	<SectionShell title="Where the platform is today">
+		<div class="split-grid">
+			<StatusCallout variant="success" title="What you can do now">
+				<ul class="list-check list-check--compact">
+					{liveFeatures.map((feature) => <li>{feature}</li>)}
+				</ul>
+			</StatusCallout>
+			<StatusCallout variant="roadmap" title="What comes next">
+				<ul class="list-check list-check--compact">
+					{comingNext.map((item) => <li>{item}</li>)}
+				</ul>
+				<p class="roadmap-note">Roadmap items are in development — not presented as live features today.</p>
+			</StatusCallout>
+		</div>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader eyebrow="Coming next" title="What comes next" />
-		<ul class="list-check">
-			{comingNext.map((item) => <li>{item}</li>)}
-		</ul>
-		<p class="roadmap-note">
-			Roadmap items are in development — not presented as live features today.
-		</p>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="How the website and app work together" />
+	<SectionShell variant="editorial" title="How the website and app work together">
 		<div class="prose">
 			<p>
 				This website is for public discovery — SEO-friendly landing pages, editorial on the
@@ -210,18 +230,8 @@ const comingNext = [
 				and account activity stay inside the app — not indexed on the public web.
 			</p>
 		</div>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="Related" />
-		<ul class="related-links">
-			<li><a href="/guides">Guides</a></li>
-			<li><a href="/releases">Release Notes</a></li>
-			<li><a href="/how-it-works">How It Works</a></li>
-			<li><a href="/about">About PartyLine</a></li>
-			<li><a href="/events">Events</a></li>
-		</ul>
-	</Section>
+		<RelatedLinks title="Related" links={relatedLinks} layout="inline" class="platform-related" />
+	</SectionShell>
 
 	<CtaBand
 		title="Ready to get on the line?"
@@ -239,7 +249,6 @@ const comingNext = [
 		display: grid;
 		gap: var(--space-5);
 		grid-template-columns: 1fr;
-		list-style: none;
 	}
 
 	@media (min-width: 640px) {
@@ -248,44 +257,30 @@ const comingNext = [
 		}
 	}
 
-	.ecosystem-card {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		display: grid;
+	.ecosystem-card__head {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
 		gap: var(--space-3);
-		min-width: 0;
-		padding: var(--space-6);
-	}
-
-	.ecosystem-card--roadmap {
-		border-color: rgba(60, 232, 97, 0.25);
+		justify-content: space-between;
 	}
 
 	.ecosystem-card__label {
-		color: var(--color-primary);
+		color: var(--signal);
 		font-family: var(--font-label);
-		font-size: 0.7rem;
+		font-size: var(--text-meta);
 		letter-spacing: var(--tracking-label);
 		text-transform: uppercase;
 	}
 
-	.ecosystem-card h2 {
-		font-size: clamp(1.15rem, 3vw, 1.35rem);
+	.ecosystem-grid :global(.premium-card h2) {
+		font-size: var(--text-h3);
 	}
 
 	.ecosystem-card__subtitle {
 		color: var(--color-muted-strong);
-		font-size: 0.95rem;
+		font-size: var(--text-small);
 		line-height: 1.55;
-	}
-
-	.ecosystem-card__badge {
-		color: var(--color-primary);
-		font-family: var(--font-label);
-		font-size: 0.7rem;
-		letter-spacing: var(--tracking-label);
-		text-transform: uppercase;
 	}
 
 	.audience-grid {
@@ -306,6 +301,17 @@ const comingNext = [
 		}
 	}
 
+	.split-grid {
+		display: grid;
+		gap: var(--space-5);
+	}
+
+	@media (min-width: 768px) {
+		.split-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
 	.roadmap-note {
 		color: var(--color-muted);
 		font-size: 0.9rem;
@@ -313,22 +319,18 @@ const comingNext = [
 		margin-top: var(--space-4);
 	}
 
-	.related-links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-3);
-		list-style: none;
+	.platform-related {
+		margin-top: var(--space-8);
 	}
 
-	.related-links a {
-		color: var(--color-primary);
-		font-size: 0.95rem;
-		font-weight: 600;
+	.prose a {
+		color: var(--signal);
+		font-weight: var(--weight-semibold);
 		text-decoration: none;
 	}
 
-	.related-links a:hover,
-	.related-links a:focus-visible {
+	.prose a:hover,
+	.prose a:focus-visible {
 		text-decoration: underline;
 	}
 </style>

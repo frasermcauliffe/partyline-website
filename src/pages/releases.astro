@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import Callout from '@/components/ui/Callout.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import StatusBadge from '@/components/ui/StatusBadge.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
@@ -85,6 +87,12 @@ const feedbackTopics = [
 	'Confusing UX',
 	'Broken links'
 ];
+
+const relatedLinks = [
+	{ label: 'Platform overview', href: '/platform' },
+	{ label: 'How It Works', href: '/how-it-works' },
+	{ label: 'About PartyLine', href: '/about' }
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -104,80 +112,76 @@ const feedbackTopics = [
 		</div>
 	</section>
 
-	<Section narrow>
-		<Callout title="Closed alpha / early public preview">
+	<SectionShell narrow>
+		<StatusCallout variant="alpha" title="Closed alpha / early public preview">
 			<p>
 				The PartyLine website and app are live in preview and closed alpha. Public event,
 				profile and opportunity previews on this website are connected to the app. Some
-				features are still being tested and refined — and your feedback helps shape what
-				ships next.
+				features are still being tested and refined — and your feedback helps shape what ships
+				next.
 			</p>
-		</Callout>
-	</Section>
+		</StatusCallout>
+	</SectionShell>
 
-	<Section>
-		<SectionHeader
-			title="Recently shipped"
-			lede="Shipped during closed alpha — grouped by area, not by release date."
-		/>
+	<SectionShell
+		eyebrow="Shipped"
+		title="Recently shipped"
+		lede="Shipped during closed alpha — grouped by area, not by release date."
+	>
 		<div class="shipped-groups">
 			{
 				shippedGroups.map((group) => (
-					<section class="shipped-group">
-						<h2>{group.title}</h2>
+					<PremiumCard variant="feature">
+						<div class="shipped-group__head">
+							<h2>{group.title}</h2>
+							<StatusBadge status="live" label="Shipped" dot />
+						</div>
 						{group.intro && <p class="shipped-group__intro">{group.intro}</p>}
 						<ul class="list-check list-check--compact">
 							{group.items.map((item) => (
 								<li>{item}</li>
 							))}
 						</ul>
-					</section>
+					</PremiumCard>
 				))
 			}
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader
-			title="Current limitations"
-			lede="Alpha transparency — what to expect while PartyLine is still evolving."
-		/>
-		<ul class="list-check">
-			{limitations.map((item) => <li>{item}</li>)}
-		</ul>
-	</Section>
+	<SectionShell variant="band" title="Current limitations" narrow>
+		<StatusCallout variant="warning" title="Alpha transparency">
+			<p>What to expect while PartyLine is still evolving:</p>
+			<ul class="list-check">
+				{limitations.map((item) => <li>{item}</li>)}
+			</ul>
+		</StatusCallout>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader title="What&rsquo;s coming next" />
-		<ul class="list-check">
-			{comingNext.map((item) => <li>{item}</li>)}
-		</ul>
-		<p class="roadmap-note">
-			Roadmap order and timing may shift based on alpha feedback.
-		</p>
-	</Section>
+	<SectionShell title="What's coming next" narrow>
+		<StatusCallout variant="roadmap">
+			<div class="coming-next__head">
+				<StatusBadge status="planned" label="Planned" />
+			</div>
+			<ul class="list-check">
+				{comingNext.map((item) => <li>{item}</li>)}
+			</ul>
+			<p class="roadmap-note">Roadmap order and timing may shift based on alpha feedback.</p>
+		</StatusCallout>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader
-			title="Help us improve PartyLine"
-			lede="We read feedback during closed alpha. Tell us what you find."
-		/>
+	<SectionShell
+		variant="editorial"
+		title="Help us improve PartyLine"
+		lede="We read feedback during closed alpha. Tell us what you find."
+	>
 		<ul class="list-check list-check--compact">
 			{feedbackTopics.map((item) => <li>{item}</li>)}
 		</ul>
 		<div class="feedback-action">
 			<Button href={APP_LINKS.feedback} label="Send feedback" variant="primary" external />
 		</div>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="Related" />
-		<ul class="related-links">
-			<li><a href="/platform">Platform overview</a></li>
-			<li><a href="/how-it-works">How It Works</a></li>
-			<li><a href="/about">About PartyLine</a></li>
-		</ul>
-	</Section>
+		<RelatedLinks title="Related" links={relatedLinks} layout="inline" class="releases-related" />
+	</SectionShell>
 
 	<CtaBand
 		title="Help shape PartyLine while it grows."
@@ -194,7 +198,7 @@ const feedbackTopics = [
 	.updated-line {
 		color: var(--color-muted);
 		font-family: var(--font-label);
-		font-size: 0.75rem;
+		font-size: var(--text-meta);
 		letter-spacing: var(--tracking-label);
 		margin: 0 0 var(--space-3);
 		text-transform: uppercase;
@@ -203,25 +207,35 @@ const feedbackTopics = [
 	.shipped-groups {
 		display: grid;
 		gap: var(--space-5);
+		grid-template-columns: 1fr;
 	}
 
-	.shipped-group {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		padding: var(--space-6);
+	@media (min-width: 640px) {
+		.shipped-groups {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 
-	.shipped-group h2 {
+	.shipped-group__head {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: space-between;
+	}
+
+	.shipped-groups :global(.premium-card h2) {
 		font-size: clamp(1.05rem, 3vw, 1.2rem);
-		margin-bottom: var(--space-3);
 	}
 
 	.shipped-group__intro {
 		color: var(--color-muted-strong);
-		font-size: 0.95rem;
+		font-size: var(--text-small);
 		line-height: 1.6;
-		margin-bottom: var(--space-3);
+	}
+
+	.coming-next__head {
+		margin-bottom: var(--space-4);
 	}
 
 	.roadmap-note {
@@ -235,22 +249,7 @@ const feedbackTopics = [
 		margin-top: var(--space-5);
 	}
 
-	.related-links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-3);
-		list-style: none;
-	}
-
-	.related-links a {
-		color: var(--color-primary);
-		font-size: 0.95rem;
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.related-links a:hover,
-	.related-links a:focus-visible {
-		text-decoration: underline;
+	.releases-related {
+		margin-top: var(--space-8);
 	}
 </style>
