@@ -1,5 +1,6 @@
 ---
-import { cleanBlogText, formatBlogDate } from '@/lib/blog';
+import ContentCard from '@/components/ui/ContentCard.astro';
+import { cleanBlogText, formatBlogDate, readingTimeLabel } from '@/lib/blog';
 import { formatGuideAudience, guideHref, type GuideEntry } from '@/lib/guides';
 
 interface Props {
@@ -9,123 +10,20 @@ interface Props {
 const { guide } = Astro.props;
 const { title, description, category, audience, publishedAt } = guide.data;
 const href = guideHref(guide);
-const cleanDescription = cleanBlogText(description);
-const cleanCategory = cleanBlogText(category);
-const audienceLabel = formatGuideAudience(audience);
+const readTime = readingTimeLabel(guide.body);
+
+const meta = [
+	{ label: cleanBlogText(category), accent: true },
+	{ label: formatGuideAudience(audience), plain: true },
+	{ label: formatBlogDate(publishedAt) },
+	...(readTime ? [{ label: readTime }] : [])
+];
 ---
 
-<article class="guide-card">
-	<div class="guide-card__body">
-		<p class="guide-card__meta">
-			<span class="guide-card__category">{cleanCategory}</span>
-			<span class="guide-card__audience">{audienceLabel}</span>
-			<time datetime={publishedAt.toISOString()}>{formatBlogDate(publishedAt)}</time>
-		</p>
-		<h2 class="guide-card__title">
-			<a href={href}>{title}</a>
-		</h2>
-		<p class="guide-card__description">{cleanDescription}</p>
-		<a href={href} class="guide-card__link">
-			Read guide →
-		</a>
-	</div>
-</article>
-
-<style>
-	.guide-card {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		display: grid;
-		height: 100%;
-		min-width: 0;
-		transition:
-			border-color 0.15s ease,
-			transform 0.15s ease;
-	}
-
-	.guide-card:hover,
-	.guide-card:focus-within {
-		border-color: var(--color-primary);
-		transform: translateY(-2px);
-	}
-
-	.guide-card__body {
-		display: grid;
-		gap: var(--space-3);
-		padding: var(--space-5);
-	}
-
-	.guide-card__meta {
-		align-items: center;
-		color: var(--color-muted);
-		display: flex;
-		flex-wrap: wrap;
-		font-family: var(--font-label);
-		font-size: 0.7rem;
-		gap: var(--space-2) var(--space-3);
-		letter-spacing: var(--tracking-label);
-		text-transform: uppercase;
-	}
-
-	.guide-card__category {
-		color: var(--color-primary);
-	}
-
-	.guide-card__audience {
-		font-family: var(--font-body);
-		letter-spacing: normal;
-		text-transform: none;
-	}
-
-	.guide-card__audience::before {
-		color: var(--color-border);
-		content: '·';
-		margin-right: var(--space-3);
-	}
-
-	.guide-card__title {
-		font-size: 1.1rem;
-		line-height: 1.35;
-		overflow-wrap: anywhere;
-	}
-
-	.guide-card__title a {
-		color: inherit;
-		display: -webkit-box;
-		overflow: hidden;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 3;
-		text-decoration: none;
-	}
-
-	.guide-card__title a:hover,
-	.guide-card__title a:focus-visible {
-		color: var(--color-primary);
-	}
-
-	.guide-card__description {
-		color: var(--color-muted);
-		display: -webkit-box;
-		font-size: 0.95rem;
-		line-height: 1.55;
-		overflow-wrap: anywhere;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 4;
-		overflow: hidden;
-	}
-
-	.guide-card__link {
-		color: var(--color-primary);
-		font-size: 0.9rem;
-		font-weight: 600;
-		margin-top: auto;
-		text-decoration: none;
-		width: fit-content;
-	}
-
-	.guide-card__link:hover,
-	.guide-card__link:focus-visible {
-		text-decoration: underline;
-	}
-</style>
+<ContentCard
+	href={href}
+	title={title}
+	description={cleanBlogText(description)}
+	meta={meta}
+	linkLabel="Read guide →"
+/>

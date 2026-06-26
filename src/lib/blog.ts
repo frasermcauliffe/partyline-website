@@ -49,6 +49,29 @@ export function formatBlogDate(date: Date): string {
 	}).format(date);
 }
 
+const WORDS_PER_MINUTE = 200;
+
+/**
+ * Derive an approximate reading time from raw markdown body text.
+ *
+ * Computed metadata (word count / ~200 wpm), not invented. Returns at least
+ * "1 min read". Returns undefined when no body text is available.
+ */
+export function readingTimeLabel(body?: string): string | undefined {
+	if (!body) return undefined;
+
+	const words = body
+		.replace(/`{1,3}[^`]*`{1,3}/g, ' ')
+		.replace(/[#>*_~\-]+/g, ' ')
+		.split(/\s+/)
+		.filter(Boolean).length;
+
+	if (words === 0) return undefined;
+
+	const minutes = Math.max(1, Math.round(words / WORDS_PER_MINUTE));
+	return `${minutes} min read`;
+}
+
 export function postHref(post: BlogEntry): string {
 	return `/blog/${getPostSlug(post)}`;
 }

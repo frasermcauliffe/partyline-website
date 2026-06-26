@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import StatusCallout from '@/components/ui/StatusCallout.astro';
 import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
 import GuideCard from '@/components/guides/GuideCard.astro';
 import { getCollection } from 'astro:content';
 import { getPublishedGuides } from '@/lib/guides';
@@ -38,8 +38,7 @@ const relatedLinks = [
 		</div>
 	</section>
 
-	<Section narrow>
-		<SectionHeader eyebrow="Why guides" title="Practical guides, not just stories" />
+	<SectionShell variant="editorial" eyebrow="Why guides" title="Practical guides, not just stories">
 		<div class="prose">
 			<p>
 				PartyLine guides are durable how-to resources — written to stay useful as the scene
@@ -57,15 +56,16 @@ const relatedLinks = [
 				single source of truth for everything happening in the scene.
 			</p>
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader eyebrow="Library" title="Published guides" />
+	<SectionShell narrow eyebrow="Library" title="Published guides">
 		{
 			guides.length === 0 ? (
-				<div class="guides-empty">
-					<p>More guides are being prepared. Check back soon.</p>
-				</div>
+				<EmptyState
+					variant="coming-soon"
+					title="More guides on the way"
+					message="More guides are being prepared. Check back soon."
+				/>
 			) : (
 				<div class="guides-grid">
 					{guides.map((guide) => (
@@ -74,9 +74,9 @@ const relatedLinks = [
 				</div>
 			)
 		}
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
+	<SectionShell narrow>
 		<StatusCallout variant="roadmap" title="More guides coming">
 			<p>
 				The initial guide set covers discovery, event submissions, open calls, bookings and
@@ -88,11 +88,11 @@ const relatedLinks = [
 				See the <a href="/releases">release notes</a> for what PartyLine supports today.
 			</p>
 		</StatusCallout>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
+	<SectionShell narrow>
 		<RelatedLinks title="Explore more" links={relatedLinks} layout="inline" />
-	</Section>
+	</SectionShell>
 
 	<CtaBand
 		title="Start with what’s happening now."
@@ -101,7 +101,7 @@ const relatedLinks = [
 		primaryHref="/events"
 		secondaryLabel="Explore opportunities"
 		secondaryHref="/opportunities"
-		secondaryExternal={false}
+		external={false}
 	/>
 </BaseLayout>
 
@@ -127,16 +127,5 @@ const relatedLinks = [
 		.guides-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
-	}
-
-	.guides-empty {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		color: var(--color-muted-strong);
-		margin-inline: auto;
-		max-width: 42rem;
-		padding: var(--space-8);
-		text-align: center;
 	}
 </style>

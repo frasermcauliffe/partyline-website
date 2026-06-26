@@ -2,8 +2,8 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostMeta from '@/components/blog/PostMeta.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
-import { APP_LINKS } from '@/data/app-links';
-import { cleanBlogText, getPostSlug, type BlogEntry } from '@/lib/blog';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import { cleanBlogText, getPostSlug, readingTimeLabel, type BlogEntry } from '@/lib/blog';
 import { blogPostingJsonLd, buildBlogPostSeo } from '@/lib/seo';
 
 interface Props {
@@ -27,12 +27,20 @@ const slug = getPostSlug(post);
 const cleanDescription = cleanBlogText(description);
 const cleanCategory = category ? cleanBlogText(category) : undefined;
 const cleanTags = tags.map((tag) => cleanBlogText(tag));
+const readTime = readingTimeLabel(post.body);
 const seo = buildBlogPostSeo({
 	title,
 	description,
 	slug,
 	featuredImage
 });
+
+const relatedLinks = [
+	{ label: 'More on the blog', href: '/blog' },
+	{ label: 'Guides', href: '/guides' },
+	{ label: 'Events', href: '/events' },
+	{ label: 'Platform overview', href: '/platform' }
+];
 ---
 
 <BaseLayout
@@ -54,6 +62,7 @@ const seo = buildBlogPostSeo({
 					publishedAt={publishedAt}
 					updatedAt={updatedAt}
 					author={author}
+					readTime={readTime}
 					showUpdated
 				/>
 				<h1>{title}</h1>
@@ -83,7 +92,7 @@ const seo = buildBlogPostSeo({
 
 			{
 				cleanTags.length > 0 && (
-					<footer class="blog-post__tags">
+					<div class="blog-post__tags">
 						<p class="blog-post__tags-label">Tags</p>
 						<ul class="blog-post__tag-list">
 							{cleanTags.map((tag) => (
@@ -92,19 +101,22 @@ const seo = buildBlogPostSeo({
 								</li>
 							))}
 						</ul>
-					</footer>
+					</div>
 				)
 			}
+
+			<RelatedLinks title="Explore PartyLine" links={relatedLinks} class="blog-post__related" />
 		</div>
 	</article>
 
 	<CtaBand
-		title="Explore PartyLine"
-		description="Join the network — events, profiles and opportunities across Australia’s underground scene."
-		primaryLabel="Join PartyLine"
-		primaryHref={APP_LINKS.joinSignup}
-		secondaryLabel="Explore Events"
-		secondaryHref={APP_LINKS.events}
+		title="Start with what’s happening now."
+		description="Browse public event previews on the website, then open the app for filters, profiles and opportunities across Australia."
+		primaryLabel="Browse events"
+		primaryHref="/events"
+		secondaryLabel="Explore opportunities"
+		secondaryHref="/opportunities"
+		external={false}
 	/>
 </BaseLayout>
 
@@ -163,12 +175,16 @@ const seo = buildBlogPostSeo({
 	}
 
 	.blog-post__tag-list span {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
+		background: var(--surface-2);
+		border: 1px solid var(--border-subtle);
 		border-radius: var(--radius-pill);
 		color: var(--color-muted-strong);
 		display: inline-block;
 		font-size: 0.85rem;
 		padding: 0.35rem 0.75rem;
+	}
+
+	.blog-post__related {
+		margin-top: var(--space-8);
 	}
 </style>

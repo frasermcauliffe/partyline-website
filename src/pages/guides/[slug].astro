@@ -13,9 +13,9 @@ export async function getStaticPaths() {
 }
 
 const { guide } = Astro.props;
-const { Content } = await render(guide);
+const { Content, headings } = await render(guide);
 ---
 
-<GuideLayout guide={guide}>
+<GuideLayout guide={guide} headings={headings}>
 	<Content />
 </GuideLayout>

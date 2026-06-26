@@ -6,10 +6,12 @@ interface Props {
 	publishedAt: Date;
 	updatedAt?: Date;
 	author: string;
+	readTime?: string;
 	showUpdated?: boolean;
 }
 
-const { category, publishedAt, updatedAt, author, showUpdated = false }: Props = Astro.props;
+const { category, publishedAt, updatedAt, author, readTime, showUpdated = false }: Props =
+	Astro.props;
 
 const showUpdateLine = showUpdated && shouldShowUpdatedDate(publishedAt, updatedAt);
 ---
@@ -21,6 +23,7 @@ const showUpdateLine = showUpdated && shouldShowUpdatedDate(publishedAt, updated
 		)
 	}
 	<time datetime={publishedAt.toISOString()}>{formatBlogDate(publishedAt)}</time>
+	{readTime && <span class="post-meta__readtime">{readTime}</span>}
 	<span class="post-meta__author">{author}</span>
 	{
 		showUpdateLine && updatedAt && (
@@ -54,6 +57,7 @@ const showUpdateLine = showUpdated && shouldShowUpdatedDate(publishedAt, updated
 		text-transform: none;
 	}
 
+	.post-meta__readtime::before,
 	.post-meta__author::before,
 	.post-meta__updated::before {
 		color: var(--color-border);

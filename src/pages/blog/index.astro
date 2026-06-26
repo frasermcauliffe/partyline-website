@@ -1,16 +1,24 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
-import Section from '@/components/ui/Section.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
 import { getCollection } from 'astro:content';
 import { getPublishedPosts } from '@/lib/blog';
-import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.blog;
 const allPosts = await getCollection('blog');
 const posts = getPublishedPosts(allPosts);
+
+const relatedLinks = [
+	{ label: 'Guides', href: '/guides' },
+	{ label: 'Events', href: '/events' },
+	{ label: 'Opportunities', href: '/opportunities' },
+	{ label: 'Platform overview', href: '/platform' }
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -25,12 +33,29 @@ const posts = getPublishedPosts(allPosts);
 		</div>
 	</section>
 
-	<Section>
+	<SectionShell variant="editorial" eyebrow="Why the blog" title="Stories and culture from the scene">
+		<div class="prose">
+			<p>
+				The PartyLine blog is where the scene speaks — artist features, Industry Insiiide
+				interviews, Track of the Week and stories from the people building underground music
+				and events across Australia.
+			</p>
+			<p>
+				Looking for practical how-tos instead? The <a href="/guides">guides</a> cover discovery,
+				event submissions, opportunities, profiles and bookings — steps you can return to when
+				you need them.
+			</p>
+		</div>
+	</SectionShell>
+
+	<SectionShell>
 		{
 			posts.length === 0 ? (
-				<div class="blog-empty">
-					<p>No articles published yet. Check back soon.</p>
-				</div>
+				<EmptyState
+					variant="no-data"
+					title="No articles yet"
+					message="No articles published yet. Check back soon."
+				/>
 			) : (
 				<div class="blog-grid">
 					{posts.map((post) => (
@@ -39,19 +64,35 @@ const posts = getPublishedPosts(allPosts);
 				</div>
 			)
 		}
-	</Section>
+	</SectionShell>
+
+	<SectionShell narrow>
+		<RelatedLinks title="Explore more" links={relatedLinks} layout="inline" />
+	</SectionShell>
 
 	<CtaBand
-		title="Join the network"
-		description="Create your account and explore events, profiles and opportunities across Australia."
-		primaryLabel="Join PartyLine"
-		primaryHref={APP_LINKS.joinSignup}
-		secondaryLabel="Explore Events"
-		secondaryHref={APP_LINKS.events}
+		title="Start with what’s happening now."
+		description="Browse public event previews on the website, then open the app for filters, profiles and opportunities across Australia."
+		primaryLabel="Browse events"
+		primaryHref="/events"
+		secondaryLabel="Explore opportunities"
+		secondaryHref="/opportunities"
+		external={false}
 	/>
 </BaseLayout>
 
 <style>
+	.prose a {
+		color: var(--color-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+
 	.blog-grid {
 		align-items: stretch;
 		display: grid;
@@ -69,14 +110,5 @@ const posts = getPublishedPosts(allPosts);
 		.blog-grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
-	}
-
-	.blog-empty {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		color: var(--color-muted-strong);
-		padding: var(--space-8);
-		text-align: center;
 	}
 </style>

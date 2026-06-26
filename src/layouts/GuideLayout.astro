@@ -1,15 +1,23 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
-import { formatBlogDate, shouldShowUpdatedDate, cleanBlogText } from '@/lib/blog';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import { formatBlogDate, shouldShowUpdatedDate, cleanBlogText, readingTimeLabel } from '@/lib/blog';
 import { buildGuideSeo, guideArticleJsonLd } from '@/lib/seo';
 import { formatGuideAudience, getGuideSlug, type GuideEntry } from '@/lib/guides';
 
-interface Props {
-	guide: GuideEntry;
+interface MarkdownHeading {
+	depth: number;
+	slug: string;
+	text: string;
 }
 
-const { guide } = Astro.props;
+interface Props {
+	guide: GuideEntry;
+	headings?: MarkdownHeading[];
+}
+
+const { guide, headings = [] } = Astro.props;
 const {
 	title,
 	description,
@@ -25,6 +33,10 @@ const {
 const slug = getGuideSlug(guide);
 const cleanDescription = cleanBlogText(description);
 const cleanCategory = cleanBlogText(category);
+const readTime = readingTimeLabel(guide.body);
+
+const tocHeadings = headings.filter((heading) => heading.depth === 2);
+const showToc = tocHeadings.length >= 3;
 const seo = buildGuideSeo({
 	title,
 	description,
@@ -70,6 +82,7 @@ const mergedRelatedLinks = [...(relatedLinks ?? []), ...defaultRelatedLinks].fil
 					<span class="guide-meta__category">{cleanCategory}</span>
 					<span class="guide-meta__audience">{formatGuideAudience(audience)}</span>
 					<time datetime={publishedAt.toISOString()}>{formatBlogDate(publishedAt)}</time>
+					{readTime && <span class="guide-meta__readtime">{readTime}</span>}
 					{
 						showUpdateLine && updatedAt && (
 							<span class="guide-meta__updated">
@@ -84,22 +97,26 @@ const mergedRelatedLinks = [...(relatedLinks ?? []), ...defaultRelatedLinks].fil
 		</header>
 
 		<div class="container container--narrow guide__content">
+			{
+				showToc && (
+					<nav class="guide__toc" aria-label="On this page">
+						<p class="guide__toc-title">On this page</p>
+						<ol class="guide__toc-list">
+							{tocHeadings.map((heading) => (
+								<li>
+									<a href={`#${heading.slug}`}>{heading.text}</a>
+								</li>
+							))}
+						</ol>
+					</nav>
+				)
+			}
+
 			<div class="prose">
 				<slot />
 			</div>
 
-			<footer class="guide__related">
-				<h2 class="guide__related-title">Explore PartyLine</h2>
-				<ul class="guide__related-links">
-					{
-						mergedRelatedLinks.map((link) => (
-							<li>
-								<a href={link.href}>{link.label}</a>
-							</li>
-						))
-					}
-				</ul>
-			</footer>
+			<RelatedLinks title="Explore PartyLine" links={mergedRelatedLinks} class="guide__related" />
 		</div>
 	</article>
 
@@ -144,6 +161,7 @@ const mergedRelatedLinks = [...(relatedLinks ?? []), ...defaultRelatedLinks].fil
 	}
 
 	.guide-meta__audience::before,
+	.guide-meta__readtime::before,
 	.guide-meta__updated::before {
 		color: var(--color-border);
 		content: '·';
@@ -154,32 +172,44 @@ const mergedRelatedLinks = [...(relatedLinks ?? []), ...defaultRelatedLinks].fil
 		padding-bottom: clamp(2.5rem, 7vw, 4rem);
 	}
 
-	.guide__related {
-		border-top: 1px solid var(--color-border);
-		margin-top: var(--space-8);
-		padding-top: var(--space-5);
+	.guide__toc {
+		background: var(--surface-1);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-card);
+		margin-bottom: var(--space-7);
+		padding: var(--space-5) var(--space-6);
 	}
 
-	.guide__related-title {
-		font-size: 1.05rem;
-		margin-bottom: var(--space-4);
+	.guide__toc-title {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		margin-bottom: var(--space-3);
+		text-transform: uppercase;
 	}
 
-	.guide__related-links {
+	.guide__toc-list {
 		display: grid;
 		gap: var(--space-2);
 		list-style: none;
+		margin: 0;
+		padding: 0;
 	}
 
-	.guide__related-links a {
-		color: var(--color-primary);
-		font-size: 0.95rem;
-		font-weight: 600;
+	.guide__toc-list a {
+		color: var(--signal);
+		font-size: var(--text-small);
+		font-weight: var(--weight-semibold);
 		text-decoration: none;
 	}
 
-	.guide__related-links a:hover,
-	.guide__related-links a:focus-visible {
+	.guide__toc-list a:hover,
+	.guide__toc-list a:focus-visible {
 		text-decoration: underline;
+	}
+
+	.guide__related {
+		margin-top: var(--space-8);
 	}
 </style>

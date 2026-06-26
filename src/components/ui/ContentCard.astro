@@ -1,0 +1,204 @@
+---
+/**
+ * ContentCard — shared editorial card primitive for guides and blog.
+ *
+ * Visually aligned with PremiumCard (W10b tokens) but kept as an <article>
+ * with inner anchors (title + "Read …" link) rather than a full-card anchor,
+ * to avoid nested-interactive accessibility issues. Hover/focus is driven by
+ * :focus-within and is reduced-motion aware.
+ *
+ * The optional `media` slot frames an image or ImagePlaceholder. When present
+ * it is wrapped in an aria-hidden, non-tabbable link (the title link remains
+ * the primary, accessible navigation target).
+ */
+export interface ContentCardMeta {
+	label: string;
+	/** Category-style accent (signal green, uppercase label). */
+	accent?: boolean;
+	/** Body-case text (e.g. audience) rather than the uppercase label style. */
+	plain?: boolean;
+}
+
+interface Props {
+	href: string;
+	title: string;
+	description?: string;
+	meta?: ContentCardMeta[];
+	linkLabel?: string;
+	class?: string;
+}
+
+const {
+	href,
+	title,
+	description,
+	meta = [],
+	linkLabel = 'Read more →',
+	class: className = ''
+}: Props = Astro.props;
+
+const hasMedia = Astro.slots.has('media');
+---
+
+<article class:list={['content-card', className]}>
+	{
+		hasMedia && (
+			<a href={href} class="content-card__media" tabindex="-1" aria-hidden="true">
+				<slot name="media" />
+			</a>
+		)
+	}
+	<div class="content-card__body">
+		{
+			meta.length > 0 && (
+				<p class="content-card__meta">
+					{meta.map((item) => (
+						<span
+							class:list={[
+								'content-card__meta-item',
+								item.accent && 'content-card__meta-item--accent',
+								item.plain && 'content-card__meta-item--plain'
+							]}
+						>
+							{item.label}
+						</span>
+					))}
+				</p>
+			)
+		}
+		<h2 class="content-card__title">
+			<a href={href}>{title}</a>
+		</h2>
+		{description && <p class="content-card__description">{description}</p>}
+		<a href={href} class="content-card__link">{linkLabel}</a>
+	</div>
+</article>
+
+<style>
+	.content-card {
+		background: var(--surface-2);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-card);
+		box-shadow: var(--elevation-1);
+		display: grid;
+		grid-template-rows: auto 1fr;
+		height: 100%;
+		min-width: 0;
+		overflow: hidden;
+		transition:
+			border-color var(--duration-base) var(--ease-out),
+			transform var(--duration-base) var(--ease-out);
+	}
+
+	.content-card:hover,
+	.content-card:focus-within {
+		border-color: var(--border-focus);
+		transform: translateY(-2px);
+	}
+
+	.content-card__media {
+		aspect-ratio: 16 / 9;
+		background: var(--surface-1);
+		display: block;
+		overflow: hidden;
+	}
+
+	.content-card__media :global(img) {
+		display: block;
+		height: 100%;
+		object-fit: cover;
+		object-position: top center;
+		width: 100%;
+	}
+
+	.content-card__body {
+		display: grid;
+		gap: var(--space-3);
+		grid-template-rows: auto auto 1fr auto;
+		padding: var(--space-5);
+	}
+
+	.content-card__meta {
+		align-items: center;
+		color: var(--color-muted);
+		display: flex;
+		flex-wrap: wrap;
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		gap: var(--space-2) var(--space-3);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.content-card__meta-item--accent {
+		color: var(--signal);
+	}
+
+	.content-card__meta-item--plain {
+		font-family: var(--font-body);
+		letter-spacing: normal;
+		text-transform: none;
+	}
+
+	.content-card__meta-item:not(:first-child)::before {
+		color: var(--border-strong);
+		content: '·';
+		margin-right: var(--space-3);
+	}
+
+	.content-card__title {
+		font-size: var(--text-card-title);
+		line-height: 1.35;
+		overflow-wrap: anywhere;
+	}
+
+	.content-card__title a {
+		color: inherit;
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		text-decoration: none;
+	}
+
+	.content-card__title a:hover,
+	.content-card__title a:focus-visible {
+		color: var(--signal);
+	}
+
+	.content-card__description {
+		color: var(--color-muted);
+		display: -webkit-box;
+		font-size: var(--text-small);
+		line-height: 1.55;
+		overflow: hidden;
+		overflow-wrap: anywhere;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+	}
+
+	.content-card__link {
+		align-self: end;
+		color: var(--signal);
+		font-size: var(--text-small);
+		font-weight: var(--weight-semibold);
+		text-decoration: none;
+		width: fit-content;
+	}
+
+	.content-card__link:hover,
+	.content-card__link:focus-visible {
+		text-decoration: underline;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.content-card {
+			transition: border-color var(--duration-base) var(--ease-out);
+		}
+
+		.content-card:hover,
+		.content-card:focus-within {
+			transform: none;
+		}
+	}
+</style>
