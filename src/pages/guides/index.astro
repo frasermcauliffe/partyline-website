@@ -11,11 +11,6 @@ import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.guides;
 const guides = getPublishedGuides(await getCollection('guides'));
-
-const comingNextTopics = [
-	'How to run an open decks night',
-	'How to book a DJ for an event'
-];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -73,14 +68,18 @@ const comingNextTopics = [
 	</Section>
 
 	<Section narrow>
-		<SectionHeader
-			eyebrow="Planned"
-			title="Coming next"
-			lede="More guides are coming as PartyLine grows. These topics are planned — not live pages yet."
-		/>
-		<ul class="list-check list-check--compact">
-			{comingNextTopics.map((topic) => <li>{topic}</li>)}
-		</ul>
+		<SectionHeader eyebrow="Planned" title="More guides coming" />
+		<div class="prose">
+			<p>
+				The initial guide set covers discovery, event submissions, open calls, bookings and
+				the national scene. Future guides — including city-specific pages and deeper
+				opportunity workflows — will be added when editorial quality and live data meet
+				clear thresholds.
+			</p>
+			<p>
+				See the <a href="/releases">release notes</a> for what PartyLine supports today.
+			</p>
+		</div>
 	</Section>
 
 	<CtaBand
