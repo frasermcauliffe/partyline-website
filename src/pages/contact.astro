@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
 import AppLink from '@/components/site/AppLink.astro';
 import { APP_LINKS } from '@/data/app-links';
 import { CONTACT_SUBJECTS, mailtoHref } from '@/data/contact';
@@ -68,7 +68,7 @@ const enquiryCards = [
 		</div>
 	</section>
 
-	<Section>
+	<SectionShell>
 		<div class="contact-grid">
 			{
 				enquiryCards.map((card) => (
@@ -84,15 +84,15 @@ const enquiryCards = [
 				))
 			}
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
+	<SectionShell narrow>
 		<p class="footer-note muted">
 			For ticket partnerships, see also our <a href="/partners">Partners</a> page. Legal
 			questions: <a href="/privacy">Privacy</a>, <a href="/terms">Terms</a>,
 			<a href="/community-guidelines">Community Guidelines</a>.
 		</p>
-	</Section>
+	</SectionShell>
 </BaseLayout>
 
 <style>
@@ -131,9 +131,9 @@ const enquiryCards = [
 	}
 
 	.contact-card {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
+		background: var(--surface-2);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-card);
 		display: grid;
 		gap: var(--space-3);
 		min-width: 0;

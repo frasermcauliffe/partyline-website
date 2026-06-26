@@ -13,6 +13,29 @@ export const marketingNav: NavItem[] = [
 	{ label: 'About', href: '/about' }
 ];
 
+export type NavGroup = {
+	label: string;
+	items: NavItem[];
+};
+
+/**
+ * Grouped navigation for the mobile disclosure menu only. Desktop nav output
+ * (marketingNav) is unchanged; this surfaces footer-only destinations
+ * (Guides / Platform / Releases / How It Works) on small screens.
+ */
+export const mobileNavGroups: NavGroup[] = [
+	{ label: 'Main', items: marketingNav },
+	{
+		label: 'More',
+		items: [
+			{ label: 'Guides', href: '/guides' },
+			{ label: 'Platform', href: '/platform' },
+			{ label: 'Releases', href: '/releases' },
+			{ label: 'How It Works', href: '/how-it-works' }
+		]
+	}
+];
+
 export const footerPlatformLinks: NavItem[] = [
 	{ label: 'Events', href: '/events' },
 	{ label: 'Blog', href: '/blog' },

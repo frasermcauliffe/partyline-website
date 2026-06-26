@@ -1,7 +1,7 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import { APP_LINKS } from '@/data/app-links';
-import { marketingNav } from '@/data/nav';
+import { marketingNav, mobileNavGroups } from '@/data/nav';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -34,6 +34,53 @@ const currentPath = Astro.url.pathname;
 					))
 				}
 			</ul>
+
+			<details class="site-nav__mobile">
+				<summary class="site-nav__summary">
+					<span>Menu</span>
+					<svg
+						class="site-nav__chevron"
+						viewBox="0 0 16 16"
+						width="16"
+						height="16"
+						aria-hidden="true"
+						focusable="false"
+					>
+						<path
+							d="M4 6l4 4 4-4"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"></path>
+					</svg>
+				</summary>
+
+				<div class="site-nav__panel">
+					{
+						mobileNavGroups.map((group) => (
+							<div class="site-nav__group">
+								<p class="site-nav__group-label">{group.label}</p>
+								<ul class="site-nav__group-list">
+									{group.items.map((item) => (
+										<li>
+											<a
+												href={item.href}
+												class:list={[
+													'site-nav__mobile-link',
+													currentPath === item.href && 'is-active'
+												]}
+											>
+												{item.label}
+											</a>
+										</li>
+									))}
+								</ul>
+							</div>
+						))
+					}
+				</div>
+			</details>
 		</nav>
 
 		<div class="site-header__actions">
@@ -55,7 +102,7 @@ const currentPath = Astro.url.pathname;
 		padding-block: var(--space-3);
 		position: sticky;
 		top: 0;
-		z-index: 50;
+		z-index: var(--z-header);
 		background: rgba(5, 5, 5, 0.92);
 		backdrop-filter: blur(8px);
 	}
@@ -86,22 +133,11 @@ const currentPath = Astro.url.pathname;
 		flex: 1 1 100%;
 		min-width: 0;
 		order: 3;
-		overflow-x: auto;
-		-webkit-overflow-scrolling: touch;
-		scrollbar-width: none;
 	}
 
-	.site-nav::-webkit-scrollbar {
-		display: none;
-	}
-
+	/* Desktop inline list — hidden on mobile (replaced by the disclosure menu). */
 	.site-nav__list {
-		display: flex;
-		flex-wrap: nowrap;
-		gap: var(--space-1);
-		list-style: none;
-		width: max-content;
-		min-width: 100%;
+		display: none;
 	}
 
 	.site-nav__link {
@@ -127,6 +163,88 @@ const currentPath = Astro.url.pathname;
 
 	.site-nav__link.is-active {
 		border-color: var(--color-primary);
+		color: var(--color-primary);
+	}
+
+	/* Mobile disclosure menu (no JS). */
+	.site-nav__mobile {
+		width: 100%;
+	}
+
+	.site-nav__summary {
+		align-items: center;
+		border: 1px solid var(--border-strong);
+		border-radius: var(--radius-pill);
+		color: var(--color-muted-strong);
+		cursor: pointer;
+		display: flex;
+		font-family: var(--font-label);
+		font-size: 0.8rem;
+		gap: var(--space-2);
+		justify-content: center;
+		letter-spacing: var(--tracking-label);
+		list-style: none;
+		min-height: 2.75rem;
+		padding: 0.45rem 1rem;
+		text-transform: uppercase;
+		user-select: none;
+	}
+
+	.site-nav__summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.site-nav__summary:hover,
+	.site-nav__summary:focus-visible {
+		border-color: var(--color-primary);
+		color: var(--color-text);
+	}
+
+	.site-nav__chevron {
+		transition: transform var(--duration-base) var(--ease-out);
+	}
+
+	.site-nav__mobile[open] .site-nav__chevron {
+		transform: rotate(180deg);
+	}
+
+	.site-nav__panel {
+		display: grid;
+		gap: var(--space-5);
+		padding-block: var(--space-4) var(--space-2);
+	}
+
+	.site-nav__group-label {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		margin-bottom: var(--space-2);
+		text-transform: uppercase;
+	}
+
+	.site-nav__group-list {
+		display: grid;
+		gap: var(--space-1);
+		list-style: none;
+	}
+
+	.site-nav__mobile-link {
+		border-radius: var(--radius-sm);
+		color: var(--color-muted-strong);
+		display: block;
+		min-height: 2.75rem;
+		padding: 0.6rem 0.75rem;
+		text-decoration: none;
+	}
+
+	.site-nav__mobile-link:hover,
+	.site-nav__mobile-link:focus-visible {
+		background: var(--surface-2);
+		color: var(--color-text);
+	}
+
+	.site-nav__mobile-link.is-active {
 		color: var(--color-primary);
 	}
 
@@ -159,13 +277,21 @@ const currentPath = Astro.url.pathname;
 		}
 
 		.site-nav__list {
-			width: auto;
-			min-width: 0;
+			display: flex;
+			flex-wrap: nowrap;
+			gap: var(--space-1);
+			list-style: none;
+			justify-content: flex-end;
 		}
 
 		.site-nav__link {
 			font-size: 0.875rem;
 			padding: 0.45rem 0.75rem;
+		}
+
+		/* Disclosure menu is mobile-only. */
+		.site-nav__mobile {
+			display: none;
 		}
 	}
 

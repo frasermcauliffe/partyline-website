@@ -1,15 +1,21 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import Callout from '@/components/ui/Callout.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import { CONTACT_SUBJECTS, mailtoHref } from '@/data/contact';
 import { PAGE_SEO } from '@/lib/seo';
 
 const seo = PAGE_SEO.partners;
 const partnershipMailto = mailtoHref(CONTACT_SUBJECTS.partnership);
+
+const relatedLinks = [
+	{ label: 'For organisers', href: '/organisers' },
+	{ label: 'Event discovery', href: '/events' },
+	{ label: 'Contact PartyLine', href: '/contact' }
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -29,47 +35,40 @@ const partnershipMailto = mailtoHref(CONTACT_SUBJECTS.partnership);
 		</div>
 	</section>
 
-	<Section>
-		<SectionHeader
-			title="What we offer"
-			lede="Partnership options for organisers, collectives and ticket platforms who want clearer attribution and support around underground events."
-		/>
+	<SectionShell
+		title="What we offer"
+		lede="Partnership options for organisers, collectives and ticket platforms who want clearer attribution and support around underground events."
+	>
 		<ul class="list-check">
 			<li>Tracked PartyLine ticket links for events listed on the network</li>
 			<li>Affiliate or referral setup requests where a partnership makes sense</li>
 			<li>Partner event support — listing, discovery and routing fans to the right ticket URL</li>
 			<li>Coordination with your existing ticketing provider or direct ticket page</li>
 		</ul>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader title="What this is not" />
+	<SectionShell narrow title="What this is not">
 		<ul class="list-check">
 			<li>Not paid editorial coverage — blog and editorial content is separate from partnerships</li>
 			<li>Not a replacement ticketing platform — PartyLine focuses on discovery and connection</li>
 			<li>Not a guarantee of reach, placement or sales — partnerships are practical and transparent</li>
 			<li>Not a middleman between you and your regular ticket partners</li>
 		</ul>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<Callout title="How to get started">
+	<SectionShell narrow>
+		<StatusCallout variant="info" title="How to get started">
 			<p>
 				Email us with your event, ticketing setup and what you are looking for. We will review
 				whether a tracked PartyLine ticket link or affiliate setup is a good fit during
 				closed alpha.
 			</p>
-		</Callout>
-	</Section>
+		</StatusCallout>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader title="Related" />
-		<ul class="related-links">
-			<li><a href="/organisers">For organisers</a></li>
-			<li><a href="/events">Event discovery</a></li>
-			<li><a href="/contact">Contact PartyLine</a></li>
-		</ul>
-	</Section>
+	<SectionShell narrow>
+		<RelatedLinks title="Related" links={relatedLinks} layout="inline" />
+	</SectionShell>
 
 	<CtaBand
 		title="Request a ticket partnership"
@@ -83,22 +82,3 @@ const partnershipMailto = mailtoHref(CONTACT_SUBJECTS.partnership);
 	/>
 </BaseLayout>
 
-<style>
-	.related-links {
-		display: grid;
-		gap: var(--space-2);
-		list-style: none;
-	}
-
-	.related-links a {
-		color: var(--color-primary);
-		font-size: 0.95rem;
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.related-links a:hover,
-	.related-links a:focus-visible {
-		text-decoration: underline;
-	}
-</style>

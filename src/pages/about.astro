@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import Callout from '@/components/ui/Callout.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
@@ -27,7 +27,7 @@ const seo = PAGE_SEO.about;
 		</div>
 	</section>
 
-	<Section>
+	<SectionShell>
 		<div class="prose">
 			<h2>Why PartyLine exists</h2>
 			<p>
@@ -74,17 +74,17 @@ const seo = PAGE_SEO.about;
 				<li>Not paid editorial coverage — editorial lives on the <a href="/blog">blog</a> separately from partnerships</li>
 			</ul>
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<Callout title="Building in the open">
+	<SectionShell narrow>
+		<StatusCallout variant="alpha" title="Building in the open">
 			<p>
 				PartyLine Collective is in closed alpha — actively tested with a small invited group.
 				The app handles accounts, events, profiles, opportunities and bookings. This website
 				explains PartyLine and links you into the app.
 			</p>
-		</Callout>
-	</Section>
+		</StatusCallout>
+	</SectionShell>
 
 	<CtaBand
 		title="Join the network"
