@@ -16,6 +16,7 @@ export const marketingNav: NavItem[] = [
 export const footerPlatformLinks: NavItem[] = [
 	{ label: 'Events', href: '/events' },
 	{ label: 'Blog', href: '/blog' },
+	{ label: 'Guides', href: '/guides' },
 	{ label: 'How It Works', href: '/how-it-works' },
 	{ label: 'Platform', href: '/platform' },
 	{ label: 'Release Notes', href: '/releases' },

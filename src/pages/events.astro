@@ -52,6 +52,12 @@ const upcomingEventsResult = await fetchPublicEvents(9);
 			<li>External ticket links where organisers provide them</li>
 			<li>Save and RSVP from your dashboard calendar</li>
 		</ul>
+		<p class="related-guide">
+			New to the scene? Read our guide to
+			<a href="/guides/how-to-find-underground-events-australia">
+				finding underground events in Australia
+			</a>.
+		</p>
 	</Section>
 
 	<Section narrow>
@@ -94,6 +100,25 @@ const upcomingEventsResult = await fetchPublicEvents(9);
 
 	.inline-link:hover,
 	.inline-link:focus-visible {
+		text-decoration: underline;
+	}
+
+	.related-guide {
+		color: var(--color-muted-strong);
+		font-size: 0.95rem;
+		line-height: 1.6;
+		margin-top: var(--space-5);
+		max-width: 42rem;
+	}
+
+	.related-guide a {
+		color: var(--color-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.related-guide a:hover,
+	.related-guide a:focus-visible {
 		text-decoration: underline;
 	}
 </style>

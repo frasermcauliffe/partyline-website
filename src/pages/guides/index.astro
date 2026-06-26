@@ -1,0 +1,128 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import GuideCard from '@/components/guides/GuideCard.astro';
+import { getCollection } from 'astro:content';
+import { getPublishedGuides } from '@/lib/guides';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.guides;
+const guides = getPublishedGuides(await getCollection('guides'));
+
+const comingNextTopics = [
+	'How to submit your event to PartyLine',
+	'Australia underground music scene guide',
+	'How to run an open decks night',
+	'How to book a DJ for an event'
+];
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Guides · PartyLine Collective</p>
+			<h1>Guides for finding, creating and connecting around underground events</h1>
+			<p class="lede">
+				Practical guides for fans, DJs, artists, organisers, venues and crews navigating
+				Australia&rsquo;s underground music and events scene.
+			</p>
+			<div class="button-row">
+				<Button href="/events" label="Browse events" variant="primary" />
+				<Button href="/opportunities" label="Explore opportunities" variant="secondary" />
+			</div>
+		</div>
+	</section>
+
+	<Section narrow>
+		<SectionHeader title="Practical guides, not just stories" />
+		<div class="prose">
+			<p>
+				PartyLine guides are durable how-to resources — written to stay useful as the scene
+				and platform grow. They cover discovery, organising, profiles, opportunities and
+				how to take part in underground music and events across Australia.
+			</p>
+			<p>
+				The <a href="/blog">blog</a> is for stories, features and culture — Track of the Week,
+				Industry Insiiide interviews and scene profiles. Guides are for practical steps you
+				can return to when you need them.
+			</p>
+			<p>
+				PartyLine is still growing, so these guides are designed to be useful alongside local
+				organisers, venue pages, artist communities and trusted word of mouth — not as a
+				single source of truth for everything happening in the scene.
+			</p>
+		</div>
+	</Section>
+
+	<Section narrow>
+		<SectionHeader title="Published guides" />
+		{
+			guides.length === 0 ? (
+				<div class="guides-empty">
+					<p>More guides are being prepared. Check back soon.</p>
+				</div>
+			) : (
+				<div class="guides-grid">
+					{guides.map((guide) => (
+						<GuideCard guide={guide} />
+					))}
+				</div>
+			)
+		}
+	</Section>
+
+	<Section narrow>
+		<SectionHeader
+			eyebrow="Planned"
+			title="Coming next"
+			lede="More guides are coming as PartyLine grows. These topics are planned — not live pages yet."
+		/>
+		<ul class="list-check list-check--compact">
+			{comingNextTopics.map((topic) => <li>{topic}</li>)}
+		</ul>
+	</Section>
+
+	<CtaBand
+		title="Start with what’s happening now."
+		description="Browse public event previews on the website, then open the app for filters, profiles and opportunities across Australia."
+		primaryLabel="Browse events"
+		primaryHref="/events"
+		secondaryLabel="Explore opportunities"
+		secondaryHref="/opportunities"
+		secondaryExternal={false}
+	/>
+</BaseLayout>
+
+<style>
+	.prose a {
+		color: var(--color-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.prose a:hover,
+	.prose a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.guides-grid {
+		display: grid;
+		gap: var(--space-5);
+		margin-inline: auto;
+		max-width: 42rem;
+	}
+
+	.guides-empty {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		color: var(--color-muted-strong);
+		margin-inline: auto;
+		max-width: 42rem;
+		padding: var(--space-8);
+		text-align: center;
+	}
+</style>

@@ -195,6 +195,12 @@ export const PAGE_SEO = {
 			'Follow PartyLine\u2019s latest alpha updates, shipped features, known limitations and upcoming improvements for Australia\u2019s underground music and events platform.',
 		canonicalPath: '/releases'
 	}),
+	guides: buildPageSeo({
+		title: 'PartyLine Guides',
+		description:
+			'Practical PartyLine guides for finding underground events, discovering DJs and venues, posting opportunities and navigating Australia\u2019s underground music scene.',
+		canonicalPath: '/guides'
+	}),
 	about: buildPageSeo({
 		title: 'About',
 		description:
