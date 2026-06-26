@@ -1,55 +1,48 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import FeatureGrid from '@/components/ui/FeatureGrid.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import StatusBadge from '@/components/ui/StatusBadge.astro';
 import AudienceCard from '@/components/ui/AudienceCard.astro';
-import FaqList from '@/components/ui/FaqList.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
-import Card from '@/components/ui/Card.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
-import LivePreviewSection from '@/components/previews/LivePreviewSection.astro';
+import GuideCard from '@/components/guides/GuideCard.astro';
+import PreviewPanel from '@/components/previews/PreviewPanel.astro';
+import PublicEventPreviewCard from '@/components/previews/PublicEventPreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
 import { getCollection } from 'astro:content';
 import { getPublishedPosts } from '@/lib/blog';
+import { getPublishedGuides } from '@/lib/guides';
 import { fetchPublicEvents } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO, organizationJsonLd, websiteJsonLd } from '@/lib/seo';
 
 const seo = PAGE_SEO.home;
 const latestPosts = getPublishedPosts(await getCollection('blog')).slice(0, 3);
+const latestGuides = getPublishedGuides(await getCollection('guides')).slice(0, 3);
 const upcomingEventsResult = await fetchPublicEvents(6);
 
-const platformFeatures = [
+const pillars = [
 	{
-		title: 'Events',
+		title: 'Discover events',
 		description:
-			'Discover club nights, warehouse parties, day parties and underground events across Australia — browse live listings in the app.'
+			'Club nights, warehouse parties, day parties and open air across Australia — surfaced in one place.'
 	},
 	{
-		title: 'The Scene profiles',
+		title: 'Build scene profiles',
 		description:
 			'Public profiles for artists, venues, organisers, production, media and performers — your place in the network.'
 	},
 	{
-		title: 'Opportunities',
+		title: 'Post and find opportunities',
 		description:
-			'DJs wanted, open decks, residencies and more — posted by organisers and venues. Apply with your published profile.'
+			'DJs wanted, open decks, residencies and more — posted by organisers and venues, open to published profiles.'
 	},
 	{
-		title: 'Enquiries & bookings',
+		title: 'Connect through the app',
 		description:
-			'Reach out with general enquiries or structured booking requests when you are ready to take things further.'
-	},
-	{
-		title: 'Submit & manage',
-		description:
-			'Submit events, create listings, review applications, and manage your dashboard, calendar and account settings.'
-	},
-	{
-		title: 'Save & follow',
-		description:
-			'Save events, follow profiles, and build a personal feed of what matters across the scene.'
+			'Save, follow, enquire, apply and manage everything from your dashboard when you are ready to go further.'
 	}
 ];
 
@@ -113,51 +106,7 @@ const howItWorks = [
 	}
 ];
 
-const exploreCards = [
-	{
-		title: 'Events',
-		description: 'Browse upcoming underground events across Australia.',
-		href: APP_LINKS.events
-	},
-	{
-		title: 'The Scene',
-		description: 'Search artists, venues, organisers and crews on the network.',
-		href: APP_LINKS.theScene
-	},
-	{
-		title: 'Opportunities',
-		description: 'Find DJ calls — DJs wanted, open decks, residencies and more.',
-		href: APP_LINKS.opportunities
-	}
-];
-
-const faqItems = [
-	{
-		question: 'Is PartyLine only for one city?',
-		answer:
-			'No. PartyLine Collective is built Australia-wide — for events, profiles and scenes across the country.'
-	},
-	{
-		question: 'Is PartyLine a ticketing platform?',
-		answer:
-			'Not primarily. PartyLine focuses on discovery, profiles and connection. Ticketing stays with organisers via external links where provided.'
-	},
-	{
-		question: 'Who can join?',
-		answer:
-			'Fans, artists, DJs, organisers, venues, production crews, media and performers. You can join with a simple account or create a public listing.'
-	},
-	{
-		question: 'Does an accepted DJ application mean a confirmed booking?',
-		answer:
-			'No. Accepted applications are a workflow status in the app — not an automatic confirmed booking. Connection continues from there.'
-	},
-	{
-		question: 'Where is the app?',
-		answer:
-			'Accounts, events, profiles and dashboards live in the PartyLine app. Use Open the app from any page CTA, or go directly from the header and footer links.'
-	}
-];
+const networkNodes = ['Events', 'Artists', 'Venues', 'Organisers', 'Opportunities', 'Guides'];
 ---
 
 <BaseLayout
@@ -166,72 +115,164 @@ const faqItems = [
 	canonicalPath={seo.canonicalPath}
 	jsonLd={[organizationJsonLd(), websiteJsonLd()]}
 >
-	<section class="hero page-hero--accent">
-		<div class="container">
-			<p class="eyebrow">PartyLine Collective</p>
-			<h1>Find your line into Australia&rsquo;s underground scene.</h1>
-			<p class="lede">
-				Australia&rsquo;s underground music and events platform — discovery, scene profiles, DJ
-				opportunities and practical connection built for the people who make nights happen.
-			</p>
-			<div class="button-row">
-				<Button href={APP_LINKS.joinSignup} label="Join PartyLine" variant="primary" external />
-				<Button href={APP_LINKS.events} label="Explore Events" variant="secondary" external />
+	<section class="home-hero u-grain">
+		<div class="container home-hero__inner">
+			<div class="home-hero__copy">
+				<p class="home-hero__eyebrow">
+					<span class="eyebrow">PartyLine Collective</span>
+					<StatusBadge status="alpha" label="Alpha" dot />
+				</p>
+				<h1>Find your line into Australia&rsquo;s underground scene.</h1>
+				<p class="lede">
+					Australia&rsquo;s underground music and events platform — discovery, scene profiles, DJ
+					opportunities and practical connection built for the people who make nights happen.
+				</p>
+				<div class="button-row">
+					<Button href={APP_LINKS.joinSignup} label="Join PartyLine" variant="primary" external />
+					<Button href="/events" label="Explore events" variant="secondary" />
+				</div>
+			</div>
+
+			<div class="home-hero__visual" aria-hidden="true">
+				<figure class="signal-panel">
+					<svg
+						class="signal-panel__svg"
+						viewBox="0 0 400 400"
+						role="presentation"
+						focusable="false"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<g class="signal-panel__links">
+							<line x1="200" y1="200" x2="200" y2="80" />
+							<line x1="200" y1="200" x2="303.9" y2="140" />
+							<line x1="200" y1="200" x2="303.9" y2="260" />
+							<line x1="200" y1="200" x2="200" y2="320" />
+							<line x1="200" y1="200" x2="96.1" y2="260" />
+							<line x1="200" y1="200" x2="96.1" y2="140" />
+						</g>
+
+						<g class="signal-panel__nodes">
+							<circle class="node node--active" cx="200" cy="80" r="9" />
+							<circle class="node" cx="303.9" cy="140" r="7" />
+							<circle class="node" cx="303.9" cy="260" r="7" />
+							<circle class="node" cx="200" cy="320" r="7" />
+							<circle class="node" cx="96.1" cy="260" r="7" />
+							<circle class="node" cx="96.1" cy="140" r="7" />
+						</g>
+
+						<g class="signal-panel__labels">
+							<text x="200" y="56" text-anchor="middle">Events</text>
+							<text x="303.9" y="120" text-anchor="middle">Artists</text>
+							<text x="303.9" y="284" text-anchor="middle">Venues</text>
+							<text x="200" y="346" text-anchor="middle">Organisers</text>
+							<text x="96.1" y="284" text-anchor="middle">Opportunities</text>
+							<text x="96.1" y="120" text-anchor="middle">Guides</text>
+						</g>
+
+						<g class="signal-panel__hub">
+							<circle cx="200" cy="200" r="30" />
+							<text x="200" y="204" text-anchor="middle">PartyLine</text>
+						</g>
+					</svg>
+				</figure>
 			</div>
 		</div>
 	</section>
 
-	<Section>
-		<SectionHeader
-			eyebrow="What it is"
-			title="Scene infrastructure for connection"
-			lede="PartyLine Collective helps DJs, organisers, venues, suppliers and fans find each other more easily — without replacing your existing relationships. Everything interactive lives in the app."
-		/>
-		<FeatureGrid items={platformFeatures} columns={3} />
-	</Section>
-
-	<LivePreviewSection
+	<PreviewPanel
 		eyebrow="Events"
 		title="Upcoming events across Australia"
 		lede="A snapshot of public listings in the PartyLine app — open the app for full discovery, filters and details."
-		events={upcomingEventsResult.events}
-		unavailable={upcomingEventsResult.unavailable}
+		source="app"
+		ctaLabel="Explore all events in the app"
 		ctaHref={APP_LINKS.events}
-		ctaLabel="Explore events across Australia"
-	/>
+		narrow={false}
+	>
+		{
+			upcomingEventsResult.events.length > 0 ? (
+				<div class="home-events-grid">
+					{upcomingEventsResult.events.map((event) => (
+						<PublicEventPreviewCard event={event} />
+					))}
+				</div>
+			) : (
+				<EmptyPreviewState
+					ctaHref={APP_LINKS.events}
+					unavailable={upcomingEventsResult.unavailable}
+				/>
+			)
+		}
+	</PreviewPanel>
 
-	<Section narrow>
-		<SectionHeader
-			eyebrow="Who it's for"
-			title="Built for the people who make nights happen"
-		/>
+	<SectionShell
+		eyebrow="What it is"
+		title="One connected layer for the scene"
+		lede="PartyLine links events, profiles, opportunities and editorial — so DJs, organisers, venues, suppliers and fans can find each other without replacing the relationships they already have."
+	>
+		<div class="pillar-grid">
+			{
+				pillars.map((pillar) => (
+					<PremiumCard variant="feature">
+						<h3>{pillar.title}</h3>
+						<p>{pillar.description}</p>
+					</PremiumCard>
+				))
+			}
+		</div>
+		<p class="section-link">
+			<a href="/platform">See the full PartyLine platform &rarr;</a>
+		</p>
+	</SectionShell>
+
+	<SectionShell
+		variant="band"
+		eyebrow="Guides & stories"
+		title="Guides and stories from the scene"
+		lede="Guides are practical resources you can return to. The blog is for stories, features and culture across Australia's underground."
+	>
+		{
+			latestGuides.length > 0 && (
+				<div class="content-block">
+					<div class="content-block__head">
+						<h3>Guides</h3>
+						<a href="/guides">See all guides &rarr;</a>
+					</div>
+					<div class="content-grid">
+						{latestGuides.map((guide) => (
+							<GuideCard guide={guide} />
+						))}
+					</div>
+				</div>
+			)
+		}
+
+		{
+			latestPosts.length > 0 && (
+				<div class="content-block">
+					<div class="content-block__head">
+						<h3>From the blog</h3>
+						<a href="/blog">Read the blog &rarr;</a>
+					</div>
+					<div class="content-grid">
+						{latestPosts.map((post) => (
+							<BlogCard post={post} />
+						))}
+					</div>
+				</div>
+			)
+		}
+	</SectionShell>
+
+	<SectionShell
+		eyebrow="Who it's for"
+		title="Built for the people who make nights happen"
+	>
 		<div class="audience-grid">
 			{audiences.map((item) => <AudienceCard {...item} external />)}
 		</div>
-	</Section>
+	</SectionShell>
 
-	{
-		latestPosts.length > 0 && (
-			<Section narrow>
-				<SectionHeader
-					eyebrow="From the blog"
-					title="Latest from the blog"
-					lede="Track of the Week, Industry Insiiide features, and underground stories from across Australia."
-				/>
-				<div class="blog-preview-grid">
-					{latestPosts.map((post) => (
-						<BlogCard post={post} />
-					))}
-				</div>
-				<div class="blog-preview-actions">
-					<Button href="/blog" label="Read all articles" variant="secondary" />
-				</div>
-			</Section>
-		)
-	}
-
-	<Section narrow>
-		<SectionHeader eyebrow="How it works" title="Three steps into the network" />
+	<SectionShell variant="editorial" eyebrow="How it works" title="Three steps into the network">
 		<ol class="steps">
 			{
 				howItWorks.map((step) => (
@@ -242,147 +283,277 @@ const faqItems = [
 				))
 			}
 		</ol>
-		<p class="how-it-works-link">
-			<a href="/how-it-works">See the full PartyLine flow →</a>
+		<p class="section-link">
+			<a href="/how-it-works">See the full PartyLine flow &rarr;</a>
 		</p>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader
-			eyebrow="Why PartyLine"
-			title="Built for underground culture"
-			lede="Australia-wide, community-first, and practical for a fragmented scene."
-		/>
-		<ul class="list-check list-check--compact">
-			<li>Your relationships stay yours — PartyLine supports connection, not replacement</li>
-			<li>Discovery and profiles alongside DJ opportunities and applicant review</li>
-			<li>Enquiries and structured booking requests when you want to go further</li>
-		</ul>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader eyebrow="Explore" title="Open the PartyLine app" align="center" />
-		<div class="explore-grid">
-			{exploreCards.map((card) => <Card {...card} external />)}
-		</div>
-		<div class="explore-actions">
-			<Button href={APP_LINKS.join} label="Open the app" variant="primary" external />
-		</div>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader eyebrow="FAQ" title="Common questions" />
-		<FaqList items={faqItems} />
-		<p class="faq-app-link">
-			<Button href={APP_LINKS.join} label="Open the app" variant="secondary" external />
-		</p>
-	</Section>
+	</SectionShell>
 
 	<CtaBand
 		title="Ready to join the network?"
 		description="Create your account and start exploring events, profiles and opportunities across Australia."
 		primaryLabel="Join PartyLine"
 		primaryHref={APP_LINKS.joinSignup}
-		secondaryLabel="Explore Events"
-		secondaryHref={APP_LINKS.events}
+		secondaryLabel="Explore events"
+		secondaryHref="/events"
+		secondaryExternal={false}
 	/>
 </BaseLayout>
 
 <style>
-	.hero {
-		padding-block: clamp(3rem, 10vw, 5.5rem);
+	/* ---------------------------------------------------------------- */
+	/* Hero                                                             */
+	/* ---------------------------------------------------------------- */
+	.home-hero {
+		background:
+			radial-gradient(
+				120% 90% at 85% 10%,
+				var(--signal-soft) 0%,
+				rgba(60, 232, 97, 0) 55%
+			),
+			var(--color-bg);
+		border-top: 2px solid var(--signal);
+		overflow: hidden;
+		padding-block: clamp(3rem, 9vw, 5.5rem);
 	}
 
-	.hero h1 {
-		font-size: clamp(2.25rem, 8vw, 3.75rem);
+	.home-hero__inner {
+		align-items: center;
+		display: grid;
+		gap: clamp(2rem, 6vw, 4rem);
+		grid-template-columns: 1fr;
+	}
+
+	.home-hero__eyebrow {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		margin-bottom: var(--space-4);
+	}
+
+	.home-hero__eyebrow .eyebrow {
+		margin-bottom: 0;
+	}
+
+	.home-hero h1 {
+		font-size: var(--text-display);
 		max-width: 16ch;
 	}
 
+	.home-hero .lede {
+		margin-top: var(--space-4);
+	}
+
+	/* ---------------------------------------------------------------- */
+	/* Signal network panel                                             */
+	/* ---------------------------------------------------------------- */
+	.home-hero__visual {
+		position: relative;
+	}
+
+	.home-hero__visual::before {
+		background: radial-gradient(
+			circle at 50% 45%,
+			var(--signal-glow) 0%,
+			rgba(60, 232, 97, 0) 60%
+		);
+		content: '';
+		inset: -10%;
+		position: absolute;
+		z-index: 0;
+	}
+
+	.signal-panel {
+		background: var(--surface-1);
+		border: 1px solid var(--border-strong);
+		border-radius: var(--radius-panel);
+		margin: 0;
+		padding: clamp(1rem, 4vw, 1.75rem);
+		position: relative;
+		z-index: 1;
+	}
+
+	.signal-panel__svg {
+		display: block;
+		height: auto;
+		margin-inline: auto;
+		max-width: 360px;
+		width: 100%;
+	}
+
+	.signal-panel__links line {
+		stroke: var(--border-strong);
+		stroke-width: 1.5;
+	}
+
+	.signal-panel__nodes .node {
+		fill: var(--surface-3);
+		stroke: var(--border-strong);
+		stroke-width: 1.5;
+	}
+
+	.signal-panel__nodes .node--active {
+		fill: var(--signal);
+		stroke: var(--signal);
+	}
+
+	.signal-panel__labels text {
+		fill: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.signal-panel__hub circle {
+		fill: var(--surface-2);
+		stroke: var(--signal);
+		stroke-width: 1.5;
+	}
+
+	.signal-panel__hub text {
+		fill: var(--color-text);
+		font-family: var(--font-display);
+		font-size: 13px;
+		font-weight: var(--weight-bold);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.signal-panel__nodes .node--active {
+			animation: signal-pulse 2.8s var(--ease-out) infinite;
+			transform-box: fill-box;
+			transform-origin: center;
+		}
+	}
+
+	@keyframes signal-pulse {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.55;
+		}
+	}
+
+	/* ---------------------------------------------------------------- */
+	/* Live events grid (inside PreviewPanel)                           */
+	/* ---------------------------------------------------------------- */
+	.home-events-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
+	}
+
+	/* ---------------------------------------------------------------- */
+	/* Pillars                                                          */
+	/* ---------------------------------------------------------------- */
+	.pillar-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+
+	.pillar-grid :global(.premium-card h3) {
+		font-size: var(--text-card-title);
+		margin-bottom: var(--space-2);
+	}
+
+	.pillar-grid :global(.premium-card p) {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+	}
+
+	/* ---------------------------------------------------------------- */
+	/* Content band (guides + blog)                                     */
+	/* ---------------------------------------------------------------- */
+	.content-block + .content-block {
+		margin-top: var(--space-10);
+	}
+
+	.content-block__head {
+		align-items: baseline;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3) var(--space-5);
+		justify-content: space-between;
+		margin-bottom: var(--space-5);
+	}
+
+	.content-block__head h3 {
+		font-size: var(--text-h3);
+	}
+
+	.content-block__head a,
+	.section-link a {
+		color: var(--signal);
+		font-size: var(--text-small);
+		font-weight: var(--weight-semibold);
+		text-decoration: none;
+	}
+
+	.content-block__head a:hover,
+	.content-block__head a:focus-visible,
+	.section-link a:hover,
+	.section-link a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.content-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
+	}
+
+	.section-link {
+		margin-top: var(--space-6);
+	}
+
+	/* ---------------------------------------------------------------- */
+	/* Audience grid                                                    */
+	/* ---------------------------------------------------------------- */
 	.audience-grid {
 		display: grid;
 		gap: var(--space-4);
 		grid-template-columns: 1fr;
 	}
 
+	/* ---------------------------------------------------------------- */
+	/* Responsive                                                       */
+	/* ---------------------------------------------------------------- */
 	@media (min-width: 640px) {
+		.home-events-grid,
+		.content-grid,
+		.pillar-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
 		.audience-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
+	@media (min-width: 960px) {
+		.home-hero__inner {
+			grid-template-columns: 1.05fr 0.95fr;
+		}
+	}
+
 	@media (min-width: 1024px) {
+		.home-events-grid,
+		.content-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.pillar-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+
 		.audience-grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
-	}
-
-	.blog-preview-grid {
-		align-items: stretch;
-		display: grid;
-		gap: var(--space-5);
-		grid-template-columns: 1fr;
-		margin-bottom: var(--space-5);
-	}
-
-	@media (min-width: 640px) {
-		.blog-preview-grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
-
-	@media (min-width: 1024px) {
-		.blog-preview-grid {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
-	}
-
-	.blog-preview-actions {
-		display: flex;
-		justify-content: center;
-	}
-
-	.how-it-works-link {
-		margin-top: var(--space-5);
-		text-align: center;
-	}
-
-	.how-it-works-link a {
-		color: var(--color-primary);
-		font-size: 0.95rem;
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.how-it-works-link a:hover,
-	.how-it-works-link a:focus-visible {
-		text-decoration: underline;
-	}
-
-	.explore-grid {
-		display: grid;
-		gap: var(--space-4);
-		grid-template-columns: 1fr;
-		margin-bottom: var(--space-5);
-	}
-
-	@media (min-width: 768px) {
-		.explore-grid {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
-	}
-
-	.explore-actions {
-		display: flex;
-		justify-content: center;
-	}
-
-	.faq-app-link {
-		display: flex;
-		justify-content: center;
-		margin-top: var(--space-5);
-	}
-
-	.list-check--compact {
-		max-width: 40rem;
 	}
 </style>
