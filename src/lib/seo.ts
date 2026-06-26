@@ -1,4 +1,6 @@
 import { cleanBlogText, type BlogEntry } from '@/lib/blog';
+import type { GuideEntry } from '@/lib/guides';
+import { getGuideSlug } from '@/lib/guides';
 import { SITE, SITE_URL } from '@/data/site';
 
 export type PageSeo = {
@@ -69,6 +71,44 @@ export function buildBlogPostSeo(input: {
 		description: cleanBlogText(input.description),
 		canonicalPath: `/blog/${input.slug}`,
 		ogImage: input.featuredImage ?? DEFAULT_OG_IMAGE
+	});
+}
+
+export function buildGuideSeo(input: {
+	title: string;
+	description: string;
+	slug: string;
+	seoTitle?: string;
+	seoDescription?: string;
+}): PageSeo {
+	return buildPageSeo({
+		title: input.seoTitle ?? input.title,
+		description: cleanBlogText(input.seoDescription ?? input.description),
+		canonicalPath: `/guides/${input.slug}`
+	});
+}
+
+export function guideArticleJsonLd(input: { guide: GuideEntry; slug: string }): string {
+	const { guide, slug } = input;
+
+	return JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'Article',
+		headline: guide.data.title,
+		description: cleanBlogText(guide.data.description),
+		datePublished: guide.data.publishedAt.toISOString(),
+		dateModified: (guide.data.updatedAt ?? guide.data.publishedAt).toISOString(),
+		author: {
+			'@type': 'Organization',
+			name: SITE.name
+		},
+		publisher: {
+			'@type': 'Organization',
+			name: SITE.name,
+			url: SITE_URL
+		},
+		mainEntityOfPage: absoluteUrl(`/guides/${slug}`),
+		url: absoluteUrl(`/guides/${slug}`)
 	});
 }
 

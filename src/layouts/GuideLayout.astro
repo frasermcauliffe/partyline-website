@@ -1,0 +1,184 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { formatBlogDate, shouldShowUpdatedDate, cleanBlogText } from '@/lib/blog';
+import { buildGuideSeo, guideArticleJsonLd } from '@/lib/seo';
+import { formatGuideAudience, getGuideSlug, type GuideEntry } from '@/lib/guides';
+
+interface Props {
+	guide: GuideEntry;
+}
+
+const { guide } = Astro.props;
+const {
+	title,
+	description,
+	category,
+	audience,
+	publishedAt,
+	updatedAt,
+	relatedLinks,
+	seoTitle,
+	seoDescription
+} = guide.data;
+
+const slug = getGuideSlug(guide);
+const cleanDescription = cleanBlogText(description);
+const cleanCategory = cleanBlogText(category);
+const seo = buildGuideSeo({
+	title,
+	description,
+	slug,
+	seoTitle,
+	seoDescription
+});
+const showUpdateLine = shouldShowUpdatedDate(publishedAt, updatedAt);
+
+const defaultRelatedLinks = [
+	{ label: 'Events on PartyLine', href: '/events' },
+	{ label: 'Opportunities', href: '/opportunities' },
+	{ label: 'Platform overview', href: '/platform' },
+	{ label: 'Release notes', href: '/releases' }
+];
+
+const seenRelatedHrefs = new Set<string>();
+const mergedRelatedLinks = [...(relatedLinks ?? []), ...defaultRelatedLinks].filter((link) => {
+	if (seenRelatedHrefs.has(link.href)) {
+		return false;
+	}
+
+	seenRelatedHrefs.add(link.href);
+	return true;
+});
+---
+
+<BaseLayout
+	title={seo.title}
+	description={seo.description}
+	canonicalPath={seo.canonicalPath}
+	ogType="article"
+	publishedAt={publishedAt}
+	updatedAt={updatedAt}
+	jsonLd={[guideArticleJsonLd({ guide, slug })]}
+>
+	<article class="guide">
+		<header class="page-hero page-hero--accent guide__hero">
+			<div class="container container--narrow">
+				<p class="eyebrow">Guide · PartyLine Collective</p>
+				<div class="guide-meta">
+					<span class="guide-meta__category">{cleanCategory}</span>
+					<span class="guide-meta__audience">{formatGuideAudience(audience)}</span>
+					<time datetime={publishedAt.toISOString()}>{formatBlogDate(publishedAt)}</time>
+					{
+						showUpdateLine && updatedAt && (
+							<span class="guide-meta__updated">
+								Updated <time datetime={updatedAt.toISOString()}>{formatBlogDate(updatedAt)}</time>
+							</span>
+						)
+					}
+				</div>
+				<h1>{title}</h1>
+				<p class="lede">{cleanDescription}</p>
+			</div>
+		</header>
+
+		<div class="container container--narrow guide__content">
+			<div class="prose">
+				<slot />
+			</div>
+
+			<footer class="guide__related">
+				<h2 class="guide__related-title">Explore PartyLine</h2>
+				<ul class="guide__related-links">
+					{
+						mergedRelatedLinks.map((link) => (
+							<li>
+								<a href={link.href}>{link.label}</a>
+							</li>
+						))
+					}
+				</ul>
+			</footer>
+		</div>
+	</article>
+
+	<CtaBand
+		title="Start with what’s happening now."
+		description="Browse public event previews on the website, then open the app for filters, profiles and opportunities across Australia."
+		primaryLabel="Browse events"
+		primaryHref="/events"
+		secondaryLabel="Explore opportunities"
+		secondaryHref="/opportunities"
+		secondaryExternal={false}
+	/>
+</BaseLayout>
+
+<style>
+	.guide__hero h1 {
+		font-size: clamp(1.75rem, 6vw, 2.75rem);
+		margin-top: var(--space-4);
+		overflow-wrap: anywhere;
+	}
+
+	.guide-meta {
+		align-items: center;
+		color: var(--color-muted);
+		display: flex;
+		flex-wrap: wrap;
+		font-family: var(--font-label);
+		font-size: 0.75rem;
+		gap: var(--space-2) var(--space-3);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.guide-meta__category {
+		color: var(--color-primary);
+	}
+
+	.guide-meta__audience {
+		font-family: var(--font-body);
+		letter-spacing: normal;
+		text-transform: none;
+	}
+
+	.guide-meta__audience::before,
+	.guide-meta__updated::before {
+		color: var(--color-border);
+		content: '·';
+		margin-right: var(--space-3);
+	}
+
+	.guide__content {
+		padding-bottom: clamp(2.5rem, 7vw, 4rem);
+	}
+
+	.guide__related {
+		border-top: 1px solid var(--color-border);
+		margin-top: var(--space-8);
+		padding-top: var(--space-5);
+	}
+
+	.guide__related-title {
+		font-size: 1.05rem;
+		margin-bottom: var(--space-4);
+	}
+
+	.guide__related-links {
+		display: grid;
+		gap: var(--space-2);
+		list-style: none;
+	}
+
+	.guide__related-links a {
+		color: var(--color-primary);
+		font-size: 0.95rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.guide__related-links a:hover,
+	.guide__related-links a:focus-visible {
+		text-decoration: underline;
+	}
+</style>
