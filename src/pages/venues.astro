@@ -1,12 +1,15 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import FeatureGrid from '@/components/ui/FeatureGrid.astro';
-import Callout from '@/components/ui/Callout.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import StatusBadge from '@/components/ui/StatusBadge.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
-import ProfileLivePreviewSection from '@/components/previews/ProfileLivePreviewSection.astro';
+import PreviewPanel from '@/components/previews/PreviewPanel.astro';
+import PublicProfilePreviewCard from '@/components/previews/PublicProfilePreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
 import { fetchPublicListings } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
@@ -58,6 +61,32 @@ const comingNext = [
 	'Stronger enquiry and booking workflows',
 	'Scene insights in a later phase'
 ];
+
+const connections = [
+	{
+		title: 'Events',
+		description: 'Link the nights your space hosts and help people find them.',
+		href: '/events'
+	},
+	{
+		title: 'Organisers',
+		description: 'Connect with the promoters and crews who program your room.',
+		href: '/organisers'
+	},
+	{
+		title: 'Suppliers & production',
+		description: 'Find production, media and suppliers across The Scene.',
+		href: APP_LINKS.theScene,
+		external: true
+	}
+];
+
+const relatedLinks = [
+	{ label: 'Events', href: '/events' },
+	{ label: 'For organisers', href: '/organisers' },
+	{ label: 'Platform overview', href: '/platform' },
+	{ label: 'Contact PartyLine', href: '/contact' }
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -72,150 +101,209 @@ const comingNext = [
 			</p>
 			<div class="button-row">
 				<Button href={APP_LINKS.createListing} label="List your venue" variant="primary" external />
-				<Button href={APP_LINKS.opportunities} label="Explore opportunities" variant="secondary" external />
+				<Button href="/events" label="Explore events" variant="secondary" />
 			</div>
 		</div>
 	</section>
 
-	<Section narrow>
-		<SectionHeader eyebrow="Audience" title="Who this is for" />
-		<FeatureGrid items={whoItsFor} columns={2} />
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="What you can do now" />
-		<ul class="list-check">
-			{liveNow.map((item) => <li>{item}</li>)}
-		</ul>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="How it connects to the wider platform" />
-		<div class="prose">
-			<p>
-				Venue profiles make the physical scene easier to discover. Events can link back to
-				your space, and organisers and artists can understand capacity, setup and vibe before
-				making enquiries.
-			</p>
-			<p>
-				<a href="/platform">See the full PartyLine platform overview →</a>
-			</p>
+	<SectionShell eyebrow="Audience" title="Who this is for">
+		<div class="role-grid">
+			{
+				whoItsFor.map((item) => (
+					<PremiumCard variant="feature">
+						<h3>{item.title}</h3>
+						<p>{item.description}</p>
+					</PremiumCard>
+				))
+			}
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<p class="preview-note">
-			These previews pull from live app data and may look sparse while PartyLine is in closed
-			alpha. See <a href="/releases">release notes</a> for current limitations.
-		</p>
-		<ProfileLivePreviewSection
-			eyebrow="Live profiles"
-			title="Venues across Australia"
-			lede="Public venue profiles from the PartyLine app — open the app for capacity, facilities, events and full details."
-			profiles={venueProfilesResult.listings}
-			unavailable={venueProfilesResult.unavailable}
-			emptyMessage="No public venue profiles are available here yet. Explore venues in the app."
-			ctaHref={APP_LINKS.venues}
-			ctaLabel="Explore all venues"
-		/>
-	</Section>
+	<SectionShell variant="band" title="Where venues are today">
+		<div class="split-grid">
+			<StatusCallout variant="success" title="What you can do now">
+				<ul class="list-check list-check--compact">
+					{liveNow.map((item) => <li>{item}</li>)}
+				</ul>
+			</StatusCallout>
+			<StatusCallout variant="roadmap" title="Coming next">
+				<div class="callout-badge"><StatusBadge status="planned" label="Planned" /></div>
+				<ul class="list-check list-check--compact">
+					{comingNext.map((item) => <li>{item}</li>)}
+				</ul>
+			</StatusCallout>
+		</div>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader title="What your venue profile can show" />
-		<ul class="list-check">
-			{venueProfileShows.map((item) => <li>{item}</li>)}
-		</ul>
-	</Section>
+	<SectionShell variant="editorial" title="How it connects to the wider platform">
+		<div class="connection-grid">
+			{
+				connections.map((item) => (
+					<PremiumCard variant="quiet" href={item.href} external={item.external}>
+						<h3>{item.title}</h3>
+						<p>{item.description}</p>
+						<span class="connection-link">Learn more &rarr;</span>
+					</PremiumCard>
+				))
+			}
+		</div>
+	</SectionShell>
 
-	<Section narrow>
-		<Callout title="Your space, your relationships">
+	<PreviewPanel
+		eyebrow="Live profiles"
+		title="Venues across Australia"
+		lede="Public venue profiles from the PartyLine app — open the app for capacity, facilities, events and full details."
+		source="app"
+		ctaLabel="Explore all venues"
+		ctaHref={APP_LINKS.venues}
+		narrow={false}
+	>
+		<StatusCallout variant="alpha" class="preview-note">
+			<p>
+				These previews pull from live app data and may look sparse while PartyLine is in closed
+				alpha. See <a href="/releases">release notes</a> for current limitations.
+			</p>
+		</StatusCallout>
+		{
+			venueProfilesResult.listings.length > 0 ? (
+				<div class="profile-grid">
+					{venueProfilesResult.listings.map((profile) => (
+						<PublicProfilePreviewCard profile={profile} />
+					))}
+				</div>
+			) : (
+				<EmptyPreviewState
+					message="No public venue profiles are available here yet. Explore venues in the app."
+					ctaHref={APP_LINKS.venues}
+					ctaLabel="Explore venues in the app"
+					unavailable={venueProfilesResult.unavailable}
+				/>
+			)
+		}
+	</PreviewPanel>
+
+	<SectionShell title="What your venue profile can show">
+		<div class="value-grid">
+			{
+				venueProfileShows.map((item) => (
+					<PremiumCard variant="feature">
+						<h3>{item}</h3>
+					</PremiumCard>
+				))
+			}
+		</div>
+	</SectionShell>
+
+	<SectionShell narrow>
+		<StatusCallout variant="info" title="Your space, your relationships">
 			<p>
 				Venues are central to underground culture. PartyLine Collective helps your space be
 				discoverable alongside the events and people that move through it — supporting
 				connection without sitting in the middle of your regular partnerships.
 			</p>
-		</Callout>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="Coming next" />
-		<ul class="list-check list-check--compact">
-			{comingNext.map((item) => <li>{item}</li>)}
-		</ul>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="Related" />
-		<ul class="related-links">
-			<li><a href="/platform">Platform overview</a></li>
-			<li><a href="/how-it-works">How It Works</a></li>
-			<li><a href="/releases">Release notes</a></li>
-			<li><a href="/organisers">For organisers</a></li>
-			<li><a href="/artists-djs">For artists and DJs</a></li>
-			<li><a href="/opportunities">Post a residency or open decks opportunity</a></li>
-			<li>
-				<a href={APP_LINKS.venues} target="_blank" rel="noopener noreferrer">
-					Explore venues in the app
-				</a>
-			</li>
-		</ul>
-	</Section>
+		</StatusCallout>
+		<RelatedLinks title="Related" links={relatedLinks} layout="inline" class="role-related" />
+	</SectionShell>
 
 	<CtaBand
 		title="List your venue"
 		description="Create your venue profile in the app and connect with organisers and artists across Australia."
 		primaryLabel="List your venue"
 		primaryHref={APP_LINKS.createListing}
-		secondaryLabel="Explore opportunities"
-		secondaryHref={APP_LINKS.opportunities}
+		secondaryLabel="Explore events"
+		secondaryHref="/events"
+		secondaryExternal={false}
 	/>
 </BaseLayout>
 
 <style>
-	.prose a {
-		color: var(--color-primary);
-		font-weight: 600;
-		text-decoration: none;
+	.role-grid,
+	.connection-grid,
+	.value-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
 	}
 
-	.prose a:hover,
-	.prose a:focus-visible {
-		text-decoration: underline;
+	.role-grid :global(.premium-card h3),
+	.connection-grid :global(.premium-card h3),
+	.value-grid :global(.premium-card h3) {
+		font-size: var(--text-card-title);
+	}
+
+	.role-grid :global(.premium-card p),
+	.connection-grid :global(.premium-card p) {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+	}
+
+	.connection-link {
+		color: var(--signal);
+		font-size: var(--text-small);
+		font-weight: var(--weight-semibold);
+	}
+
+	.split-grid {
+		display: grid;
+		gap: var(--space-5);
+	}
+
+	.callout-badge {
+		margin-bottom: var(--space-4);
+	}
+
+	.profile-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
 	}
 
 	.preview-note {
-		color: var(--color-muted-strong);
-		font-size: 0.9rem;
-		line-height: 1.6;
-		margin-bottom: var(--space-5);
-		max-width: 42rem;
+		margin-bottom: var(--space-6);
 	}
 
-	.preview-note a {
-		color: var(--color-primary);
+	.preview-note :global(a) {
+		color: var(--signal);
+		font-weight: var(--weight-semibold);
 		text-decoration: none;
 	}
 
-	.preview-note a:hover,
-	.preview-note a:focus-visible {
+	.preview-note :global(a:hover),
+	.preview-note :global(a:focus-visible) {
 		text-decoration: underline;
 	}
 
-	.related-links {
-		display: grid;
-		gap: var(--space-2);
-		list-style: none;
+	.role-related {
+		margin-top: var(--space-8);
 	}
 
-	.related-links a {
-		color: var(--color-primary);
-		font-size: 0.95rem;
-		font-weight: 600;
-		text-decoration: none;
+	@media (min-width: 640px) {
+		.role-grid,
+		.value-grid,
+		.profile-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 
-	.related-links a:hover,
-	.related-links a:focus-visible {
-		text-decoration: underline;
+	@media (min-width: 768px) {
+		.split-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 960px) {
+		.connection-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.role-grid,
+		.value-grid,
+		.profile-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
 	}
 </style>

@@ -1,12 +1,15 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import FeatureGrid from '@/components/ui/FeatureGrid.astro';
-import Callout from '@/components/ui/Callout.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import StatusBadge from '@/components/ui/StatusBadge.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
-import ProfileLivePreviewSection from '@/components/previews/ProfileLivePreviewSection.astro';
+import PreviewPanel from '@/components/previews/PreviewPanel.astro';
+import PublicProfilePreviewCard from '@/components/previews/PublicProfilePreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
 import { fetchPublicListings } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import { PAGE_SEO } from '@/lib/seo';
@@ -40,8 +43,7 @@ const liveNow = [
 	'Add names manually where profiles do not exist yet',
 	'Post DJ opportunities from your dashboard or when submitting an event',
 	'Review applicants where supported — viewed, shortlist, accept or request more info',
-	'Track basic engagement signals where available, such as saves, going responses and ticket link clicks',
-	'Request tracked ticket or partner links through the partners flow where appropriate'
+	'Track basic engagement signals where available, such as saves, going responses and ticket link clicks'
 ];
 
 const organiserPresence = [
@@ -59,6 +61,31 @@ const comingNext = [
 	'Richer analytics and reporting',
 	'What\u2019s On and content workflow improvements'
 ];
+
+const connections = [
+	{
+		title: 'Events',
+		description: 'Submit and link the nights you run across Australia.',
+		href: '/events'
+	},
+	{
+		title: 'Opportunities',
+		description: 'Post DJs wanted, open decks, warm-ups and residencies.',
+		href: '/opportunities'
+	},
+	{
+		title: 'Venues',
+		description: 'Connect your events to the spaces that host them.',
+		href: '/venues'
+	}
+];
+
+const relatedLinks = [
+	{ label: 'Events', href: '/events' },
+	{ label: 'Opportunities', href: '/opportunities' },
+	{ label: 'Guides', href: '/guides' },
+	{ label: 'Platform overview', href: '/platform' }
+];
 ---
 
 <BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
@@ -67,176 +94,219 @@ const comingNext = [
 			<p class="eyebrow">Organisers · PartyLine Collective</p>
 			<h1>Put your events and crew on the radar</h1>
 			<p class="lede">
-				Submit events, build your organiser presence, post DJ opportunities, review
-				applicants where supported, and help people across Australia find your nights —
-				practical tools for promoters, collectives and event crews.
+				Submit events, build your organiser presence, post DJ opportunities, review applicants
+				where supported, and help people across Australia find your nights — practical tools
+				for promoters, collectives and event crews.
 			</p>
 			<div class="button-row">
 				<Button href={APP_LINKS.submitEvent} label="Submit an event" variant="primary" external />
-				<Button
-					href={APP_LINKS.postOpportunity}
-					label="Post an opportunity"
-					variant="secondary"
-					external
-				/>
+				<Button href={APP_LINKS.postOpportunity} label="Post an opportunity" variant="secondary" external />
 			</div>
 		</div>
 	</section>
 
-	<Section narrow>
-		<SectionHeader eyebrow="Audience" title="Who this is for" />
-		<FeatureGrid items={whoItsFor} columns={2} />
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="What you can do now" />
-		<ul class="list-check">
-			{liveNow.map((item) => <li>{item}</li>)}
-			<li>
-				Learn more about <a href="/partners">ticket partnerships</a> where a tracked link makes
-				sense for your events.
-			</li>
-		</ul>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="How it connects to the wider platform" />
-		<div class="prose">
-			<p>
-				Organiser profiles connect events, venues, lineups and opportunities on PartyLine.
-				This website helps your nights get discovered through previews and landing pages; the
-				app supports submissions, dashboards and private workflows.
-			</p>
-			<p>
-				<a href="/platform">See the full PartyLine platform overview →</a>
-			</p>
+	<SectionShell eyebrow="Audience" title="Who this is for">
+		<div class="role-grid">
+			{
+				whoItsFor.map((item) => (
+					<PremiumCard variant="feature">
+						<h3>{item.title}</h3>
+						<p>{item.description}</p>
+					</PremiumCard>
+				))
+			}
 		</div>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<p class="preview-note">
-			These previews pull from live app data and may look sparse while PartyLine is in closed
-			alpha. See <a href="/releases">release notes</a> for current limitations.
-		</p>
-		<ProfileLivePreviewSection
-			eyebrow="Live profiles"
-			title="Organisers across Australia"
-			lede="Public organiser and collective profiles from the PartyLine app — open the app for full bios, linked events and opportunities."
-			profiles={organiserProfilesResult.listings}
-			unavailable={organiserProfilesResult.unavailable}
-			emptyMessage="No public organiser profiles are available here yet. Explore organisers in the app."
-			ctaHref={APP_LINKS.organisers}
-			ctaLabel="Explore all organisers"
-		/>
-	</Section>
+	<SectionShell variant="band" title="Where organisers are today">
+		<div class="split-grid">
+			<StatusCallout variant="success" title="What you can do now">
+				<ul class="list-check list-check--compact">
+					{liveNow.map((item) => <li>{item}</li>)}
+					<li>
+						Request tracked ticket or partner links through the
+						<a href="/partners">partners flow</a> where appropriate
+					</li>
+				</ul>
+			</StatusCallout>
+			<StatusCallout variant="roadmap" title="Coming next">
+				<div class="callout-badge"><StatusBadge status="planned" label="Planned" /></div>
+				<ul class="list-check list-check--compact">
+					{comingNext.map((item) => <li>{item}</li>)}
+				</ul>
+			</StatusCallout>
+		</div>
+	</SectionShell>
 
-	<Section narrow>
-		<SectionHeader title="Submit events and build your organiser presence" />
+	<SectionShell variant="editorial" title="How it connects to the wider platform">
+		<div class="connection-grid">
+			{
+				connections.map((item) => (
+					<PremiumCard variant="quiet" href={item.href}>
+						<h3>{item.title}</h3>
+						<p>{item.description}</p>
+						<span class="connection-link">Learn more &rarr;</span>
+					</PremiumCard>
+				))
+			}
+		</div>
+	</SectionShell>
+
+	<PreviewPanel
+		eyebrow="Live profiles"
+		title="Organisers across Australia"
+		lede="Public organiser and collective profiles from the PartyLine app — open the app for full bios, linked events and opportunities."
+		source="app"
+		ctaLabel="Explore all organisers"
+		ctaHref={APP_LINKS.organisers}
+		narrow={false}
+	>
+		<StatusCallout variant="alpha" class="preview-note">
+			<p>
+				These previews pull from live app data and may look sparse while PartyLine is in closed
+				alpha. See <a href="/releases">release notes</a> for current limitations.
+			</p>
+		</StatusCallout>
+		{
+			organiserProfilesResult.listings.length > 0 ? (
+				<div class="profile-grid">
+					{organiserProfilesResult.listings.map((profile) => (
+						<PublicProfilePreviewCard profile={profile} />
+					))}
+				</div>
+			) : (
+				<EmptyPreviewState
+					message="No public organiser profiles are available here yet. Explore organisers in the app."
+					ctaHref={APP_LINKS.organisers}
+					ctaLabel="Explore organisers in the app"
+					unavailable={organiserProfilesResult.unavailable}
+				/>
+			)
+		}
+	</PreviewPanel>
+
+	<SectionShell title="Submit events and build your organiser presence">
 		<ul class="list-check">
 			{organiserPresence.map((item) => <li>{item}</li>)}
 		</ul>
-	</Section>
+	</SectionShell>
 
-	<Section narrow>
-		<Callout title="Your stack, your relationships">
+	<SectionShell narrow>
+		<StatusCallout variant="info" title="Your stack, your relationships">
 			<p>
-				PartyLine Collective supports discovery and connection — it doesn&rsquo;t replace
-				your ticketing, your promo channels or the relationships you&rsquo;ve built. Use
-				external ticket links, keep your existing connections, and let PartyLine help new
-				people find you.
+				PartyLine Collective supports discovery and connection — it doesn&rsquo;t replace your
+				ticketing, your promo channels or the relationships you&rsquo;ve built. Use external
+				ticket links, keep your existing connections, and let PartyLine help new people find you.
 			</p>
-		</Callout>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="Coming next" />
-		<ul class="list-check list-check--compact">
-			{comingNext.map((item) => <li>{item}</li>)}
-		</ul>
-	</Section>
-
-	<Section narrow>
-		<SectionHeader title="Related" />
-		<ul class="related-links">
-			<li><a href="/platform">Platform overview</a></li>
-			<li><a href="/how-it-works">How It Works</a></li>
-			<li><a href="/releases">Release notes</a></li>
-			<li><a href="/events">Event discovery</a></li>
-			<li><a href="/opportunities">DJ opportunities</a></li>
-			<li><a href="/partners">Ticket partnerships</a></li>
-			<li>
-				<a href={APP_LINKS.organisers} target="_blank" rel="noopener noreferrer">
-					Explore organisers in the app
-				</a>
-			</li>
-		</ul>
-	</Section>
+		</StatusCallout>
+		<RelatedLinks title="Related" links={relatedLinks} layout="inline" class="role-related" />
+	</SectionShell>
 
 	<CtaBand
 		title="Start listing your events"
-		description="Submit your first event or create an organiser profile in the PartyLine app."
-		primaryLabel="Submit an event"
-		primaryHref={APP_LINKS.submitEvent}
-		secondaryLabel="Create organiser profile"
-		secondaryHref={APP_LINKS.createListing}
+		description="Create an organiser profile or submit your first event in the PartyLine app."
+		primaryLabel="Create organiser profile"
+		primaryHref={APP_LINKS.createListing}
+		secondaryLabel="Submit an event"
+		secondaryHref={APP_LINKS.submitEvent}
 	/>
 </BaseLayout>
 
 <style>
-	.prose a {
-		color: var(--color-primary);
-		font-weight: 600;
+	.role-grid,
+	.connection-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+
+	.role-grid :global(.premium-card h3),
+	.connection-grid :global(.premium-card h3) {
+		font-size: var(--text-card-title);
+	}
+
+	.role-grid :global(.premium-card p),
+	.connection-grid :global(.premium-card p) {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+	}
+
+	.connection-link {
+		color: var(--signal);
+		font-size: var(--text-small);
+		font-weight: var(--weight-semibold);
+	}
+
+	.split-grid {
+		display: grid;
+		gap: var(--space-5);
+	}
+
+	.split-grid :global(a) {
+		color: var(--signal);
+		font-weight: var(--weight-semibold);
 		text-decoration: none;
 	}
 
-	.prose a:hover,
-	.prose a:focus-visible {
+	.split-grid :global(a:hover),
+	.split-grid :global(a:focus-visible) {
 		text-decoration: underline;
 	}
 
-	.list-check a {
-		color: var(--color-primary);
-		text-decoration: none;
+	.callout-badge {
+		margin-bottom: var(--space-4);
 	}
 
-	.list-check a:hover,
-	.list-check a:focus-visible {
-		text-decoration: underline;
+	.profile-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
 	}
 
 	.preview-note {
-		color: var(--color-muted-strong);
-		font-size: 0.9rem;
-		line-height: 1.6;
-		margin-bottom: var(--space-5);
-		max-width: 42rem;
+		margin-bottom: var(--space-6);
 	}
 
-	.preview-note a {
-		color: var(--color-primary);
+	.preview-note :global(a) {
+		color: var(--signal);
+		font-weight: var(--weight-semibold);
 		text-decoration: none;
 	}
 
-	.preview-note a:hover,
-	.preview-note a:focus-visible {
+	.preview-note :global(a:hover),
+	.preview-note :global(a:focus-visible) {
 		text-decoration: underline;
 	}
 
-	.related-links {
-		display: grid;
-		gap: var(--space-2);
-		list-style: none;
+	.role-related {
+		margin-top: var(--space-8);
 	}
 
-	.related-links a {
-		color: var(--color-primary);
-		font-size: 0.95rem;
-		font-weight: 600;
-		text-decoration: none;
+	@media (min-width: 640px) {
+		.role-grid,
+		.profile-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 
-	.related-links a:hover,
-	.related-links a:focus-visible {
-		text-decoration: underline;
+	@media (min-width: 768px) {
+		.split-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 960px) {
+		.connection-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.role-grid,
+		.profile-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
 	}
 </style>
