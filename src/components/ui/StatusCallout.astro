@@ -1,0 +1,114 @@
+---
+/**
+ * StatusCallout — unified status / note / callout surface.
+ *
+ * Unifies alpha notes, release notes, roadmap notes and preview warnings under
+ * one tokenised component.
+ *
+ * Variants:
+ *  - info     : neutral information (muted)
+ *  - alpha    : alpha / in-progress status (signal)
+ *  - success  : shipped / available (signal)
+ *  - warning  : caution / closing-soon (amber)
+ *  - roadmap  : planned / future (muted, dashed edge)
+ */
+type Variant = 'info' | 'alpha' | 'success' | 'warning' | 'roadmap';
+
+interface Props {
+	variant?: Variant;
+	title?: string;
+	class?: string;
+}
+
+const { variant = 'info', title, class: className = '' }: Props = Astro.props;
+
+const LABELS: Record<Variant, string> = {
+	info: 'Info',
+	alpha: 'Alpha',
+	success: 'Shipped',
+	warning: 'Heads up',
+	roadmap: 'Planned'
+};
+
+const tagLabel = LABELS[variant];
+---
+
+<aside class:list={['status-callout', `status-callout--${variant}`, className]}>
+	<p class="status-callout__tag">{tagLabel}</p>
+	{title && <h2 class="status-callout__title">{title}</h2>}
+	<div class="status-callout__body">
+		<slot />
+	</div>
+</aside>
+
+<style>
+	.status-callout {
+		--callout-accent: var(--status-info);
+		background: var(--surface-2);
+		border: 1px solid var(--border-subtle);
+		border-left: 3px solid var(--callout-accent);
+		border-radius: var(--radius-card);
+		padding: var(--space-5) var(--space-6);
+	}
+
+	.status-callout--alpha,
+	.status-callout--success {
+		--callout-accent: var(--signal);
+	}
+
+	.status-callout--warning {
+		--callout-accent: var(--status-closing);
+	}
+
+	.status-callout--info,
+	.status-callout--roadmap {
+		--callout-accent: var(--border-strong);
+	}
+
+	.status-callout--roadmap {
+		border-left-style: dashed;
+	}
+
+	.status-callout__tag {
+		color: var(--callout-accent);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.status-callout--info .status-callout__tag,
+	.status-callout--roadmap .status-callout__tag {
+		color: var(--color-muted);
+	}
+
+	.status-callout__title {
+		font-size: 1.25rem;
+		margin-top: var(--space-3);
+	}
+
+	.status-callout__body {
+		color: var(--color-muted-strong);
+		line-height: var(--leading-body);
+		margin-top: var(--space-3);
+	}
+
+	.status-callout__body :global(p) {
+		margin: 0;
+	}
+
+	.status-callout__body :global(p + p) {
+		margin-top: var(--space-3);
+	}
+
+	.status-callout__body :global(a) {
+		color: var(--signal);
+		font-weight: var(--weight-semibold);
+		text-decoration: none;
+	}
+
+	.status-callout__body :global(a:hover),
+	.status-callout__body :global(a:focus-visible) {
+		text-decoration: underline;
+	}
+</style>

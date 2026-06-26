@@ -1,4 +1,7 @@
 :root {
+	/* ------------------------------------------------------------------ */
+	/* Core palette (live aliases — kept at current exact values in W10b) */
+	/* ------------------------------------------------------------------ */
 	--color-bg: #050505;
 	--color-surface: #111111;
 	--color-surface-soft: #151515;
@@ -9,18 +12,90 @@
 	--color-muted: #a3a3a3;
 	--color-muted-strong: #d4d4d4;
 
+	/* ------------------------------------------------------------------ */
+	/* Signal (green = action / live / status / focus / key interaction)  */
+	/* ------------------------------------------------------------------ */
+	--signal: var(--color-primary);
+	--signal-strong: #34d856;
+	--signal-soft: rgba(60, 232, 97, 0.12);
+	--signal-glow: rgba(60, 232, 97, 0.28);
+
+	/* ------------------------------------------------------------------ */
+	/* Surface ladder (elevation by lightness — for new primitives)       */
+	/* ------------------------------------------------------------------ */
+	--surface-0: #050505;
+	--surface-1: #0e0e0e;
+	--surface-2: #141414;
+	--surface-3: #1b1b1b;
+
+	/* Borders */
+	--border-subtle: #1f1f1f;
+	--border-strong: #2a2a2a;
+	--border-focus: var(--signal);
+
+	/* Elevation / glow (used sparingly) */
+	--elevation-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+	--elevation-2: 0 8px 24px rgba(0, 0, 0, 0.45);
+	--glow-signal: 0 0 0 1px var(--signal), 0 0 16px var(--signal-glow);
+
+	/* ------------------------------------------------------------------ */
+	/* Status palette (one restrained amber for closing-soon / warning)   */
+	/* ------------------------------------------------------------------ */
+	--status-live: var(--signal);
+	--status-open: var(--signal);
+	--status-closing: #f5b544;
+	--status-closed: var(--color-muted);
+	--status-planned: var(--color-muted);
+	--status-info: var(--color-muted-strong);
+
+	/* ------------------------------------------------------------------ */
+	/* Typography                                                         */
+	/* ------------------------------------------------------------------ */
 	--font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
 	--font-body: 'Inter', system-ui, -apple-system, sans-serif;
 	--font-label: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
 		monospace;
 
+	/* Type scale (mirrors current global.css values; adopted in later phases) */
+	--text-display: clamp(2.25rem, 8vw, 3.75rem);
+	--text-h1: clamp(2rem, 7vw, 3.25rem);
+	--text-h2: clamp(1.5rem, 4vw, 2rem);
+	--text-h3: clamp(1.15rem, 3vw, 1.35rem);
+	--text-card-title: 1.1rem;
+	--text-body: 1rem;
+	--text-small: 0.95rem;
+	--text-meta: 0.75rem;
+	--text-eyebrow: 0.75rem;
+
+	--leading-tight: 1.15;
+	--leading-snug: 1.35;
+	--leading-body: 1.6;
+	--leading-relaxed: 1.75;
+
+	--weight-regular: 400;
+	--weight-medium: 500;
+	--weight-semibold: 600;
+	--weight-bold: 700;
+
+	--tracking-label: 0.08em;
+	--tracking-tight: 0.02em;
+
+	/* ------------------------------------------------------------------ */
+	/* Layout                                                             */
+	/* ------------------------------------------------------------------ */
 	--container-max: 72rem;
 	--container-narrow: 42rem;
 	--section-gap: clamp(3rem, 8vw, 5rem);
+
+	/* Radius semantics (buttons stay pill) */
+	--radius-xs: 4px;
 	--radius-sm: 8px;
+	--radius-card: 8px;
+	--radius-panel: 10px;
 	--radius-md: 12px;
 	--radius-pill: 999px;
 
+	/* Spacing */
 	--space-1: 0.25rem;
 	--space-2: 0.5rem;
 	--space-3: 0.75rem;
@@ -31,6 +106,24 @@
 	--space-10: 2.5rem;
 	--space-12: 3rem;
 
-	--tracking-label: 0.08em;
-	--tracking-tight: 0.02em;
+	/* ------------------------------------------------------------------ */
+	/* Motion                                                             */
+	/* ------------------------------------------------------------------ */
+	--duration-fast: 120ms;
+	--duration-base: 180ms;
+	--ease-out: cubic-bezier(0.2, 0.6, 0.2, 1);
+
+	/* ------------------------------------------------------------------ */
+	/* Layers                                                             */
+	/* ------------------------------------------------------------------ */
+	--z-base: 1;
+	--z-header: 50;
+	--z-overlay: 100;
+	--z-modal: 200;
+	--z-skip: 1000;
+
+	/* ------------------------------------------------------------------ */
+	/* Texture (defined for later use — not applied globally in W10b)     */
+	/* ------------------------------------------------------------------ */
+	--texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

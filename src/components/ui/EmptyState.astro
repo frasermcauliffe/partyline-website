@@ -1,0 +1,101 @@
+---
+/**
+ * EmptyState — designed empty / unavailable / coming-soon surface.
+ *
+ * W10b: created as a foundation only. Existing preview empty states
+ * (EmptyPreviewState) are NOT replaced yet.
+ *
+ * Variants:
+ *  - no-data      : nothing here yet (calm, expected)
+ *  - unavailable  : data could not load (honest, non-alarming)
+ *  - coming-soon  : planned / not live yet
+ */
+import Button from '@/components/ui/Button.astro';
+
+type Variant = 'no-data' | 'unavailable' | 'coming-soon';
+
+interface Props {
+	variant?: Variant;
+	title?: string;
+	message?: string;
+	ctaLabel?: string;
+	ctaHref?: string;
+	external?: boolean;
+	class?: string;
+}
+
+const {
+	variant = 'no-data',
+	title,
+	message,
+	ctaLabel,
+	ctaHref,
+	external = false,
+	class: className = ''
+}: Props = Astro.props;
+
+const LABELS: Record<Variant, string> = {
+	'no-data': 'Nothing here yet',
+	unavailable: 'Temporarily unavailable',
+	'coming-soon': 'Coming soon'
+};
+
+const tagLabel = LABELS[variant];
+const hasCta = Boolean(ctaLabel && ctaHref);
+---
+
+<div class:list={['empty-state', `empty-state--${variant}`, className]}>
+	<p class="empty-state__tag">{tagLabel}</p>
+	{title && <p class="empty-state__title">{title}</p>}
+	{message && <p class="empty-state__message">{message}</p>}
+	{
+		hasCta && (
+			<Button href={ctaHref!} label={ctaLabel!} variant="primary" external={external} />
+		)
+	}
+</div>
+
+<style>
+	.empty-state {
+		align-items: center;
+		background: var(--surface-1);
+		border: 1px dashed var(--border-strong);
+		border-radius: var(--radius-panel);
+		display: grid;
+		gap: var(--space-3);
+		justify-items: center;
+		margin-inline: auto;
+		max-width: 36rem;
+		padding: clamp(2rem, 6vw, 3rem);
+		text-align: center;
+	}
+
+	.empty-state__tag {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.empty-state--unavailable .empty-state__tag {
+		color: var(--status-closing);
+	}
+
+	.empty-state__title {
+		color: var(--color-text);
+		font-family: var(--font-display);
+		font-size: var(--text-card-title);
+		font-weight: var(--weight-bold);
+	}
+
+	.empty-state__message {
+		color: var(--color-muted);
+		line-height: var(--leading-body);
+		max-width: 32rem;
+	}
+
+	.empty-state :global(.button) {
+		margin-top: var(--space-2);
+	}
+</style>

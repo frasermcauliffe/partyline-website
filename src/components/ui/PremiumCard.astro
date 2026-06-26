@@ -1,0 +1,104 @@
+---
+/**
+ * PremiumCard — base card primitive for the PartyLine design system.
+ *
+ * W10b: created as a foundation only. Existing cards are NOT migrated to this
+ * component yet (that happens in later W10 phases).
+ *
+ * Variants:
+ *  - feature  : standard content tile (surface-2)
+ *  - content  : editorial/list card, slightly raised (surface-2 + elevation)
+ *  - preview  : framed app-sourced data card (surface-1, stronger border)
+ *  - quiet    : low-emphasis tile (surface-1, subtle border)
+ *  - status   : note/status surface (surface-2, signal edge)
+ */
+type Variant = 'feature' | 'content' | 'preview' | 'quiet' | 'status';
+
+interface Props {
+	variant?: Variant;
+	href?: string;
+	external?: boolean;
+	class?: string;
+}
+
+const {
+	variant = 'feature',
+	href,
+	external = false,
+	class: className = ''
+}: Props = Astro.props;
+
+const Tag = href ? 'a' : 'div';
+const interactive = Boolean(href);
+---
+
+<Tag
+	href={href}
+	class:list={[
+		'premium-card',
+		`premium-card--${variant}`,
+		interactive && 'premium-card--interactive',
+		className
+	]}
+	{...(href && external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+>
+	<slot />
+</Tag>
+
+<style>
+	.premium-card {
+		background: var(--surface-2);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-card);
+		color: inherit;
+		display: grid;
+		gap: var(--space-3);
+		min-width: 0;
+		padding: var(--space-5);
+		text-decoration: none;
+	}
+
+	.premium-card--content {
+		box-shadow: var(--elevation-1);
+	}
+
+	.premium-card--preview {
+		background: var(--surface-1);
+		border-color: var(--border-strong);
+	}
+
+	.premium-card--quiet {
+		background: var(--surface-1);
+		border-color: var(--border-subtle);
+	}
+
+	.premium-card--status {
+		border-left: 2px solid var(--signal);
+	}
+
+	.premium-card--interactive {
+		transition:
+			border-color var(--duration-base) var(--ease-out),
+			box-shadow var(--duration-base) var(--ease-out),
+			transform var(--duration-base) var(--ease-out);
+	}
+
+	.premium-card--interactive:hover,
+	.premium-card--interactive:focus-visible,
+	.premium-card--interactive:focus-within {
+		border-color: var(--border-focus);
+		transform: translateY(-2px);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.premium-card--interactive {
+			transition: border-color var(--duration-base) var(--ease-out);
+		}
+
+		.premium-card--interactive:hover,
+		.premium-card--interactive:focus-visible,
+		.premium-card--interactive:focus-within {
+			transform: none;
+		}
+	}
+</style>

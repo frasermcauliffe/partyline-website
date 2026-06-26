@@ -60,7 +60,7 @@ ol {
 	position: absolute;
 	text-decoration: none;
 	top: -100px;
-	z-index: 1000;
+	z-index: var(--z-skip);
 }
 
 .skip-link:focus {
@@ -242,7 +242,7 @@ ol {
 
 .prose a:hover,
 .prose a:focus-visible {
-	color: #34d856;
+	color: var(--signal-strong);
 }
 
 .prose strong {
@@ -342,4 +342,26 @@ ol {
 .prose th {
 	background: var(--color-surface);
 	color: var(--color-text);
+}
+
+/*
+ * Subtle grain texture utility — defined for later use, intentionally NOT
+ * applied globally in W10b. Add `u-grain` to an element to layer faint noise
+ * over its background. Suppressed for reduced-motion-agnostic safety: it is a
+ * static texture, so it stays at a very low opacity and never animates.
+ */
+.u-grain {
+	position: relative;
+	isolation: isolate;
+}
+
+.u-grain::after {
+	background-image: var(--texture-grain);
+	content: '';
+	inset: 0;
+	mix-blend-mode: overlay;
+	opacity: 0.035;
+	pointer-events: none;
+	position: absolute;
+	z-index: -1;
 }

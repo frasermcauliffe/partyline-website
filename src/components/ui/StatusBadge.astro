@@ -1,0 +1,81 @@
+---
+/**
+ * StatusBadge — small reusable status badge / dot.
+ *
+ * W10b: created as a foundation only. IMPORTANT: do NOT attach this to
+ * event / profile / opportunity data cards yet — no fabricated statuses.
+ * First real usage will be static contexts (e.g. release notes, platform
+ * roadmap) in a later W10 phase.
+ *
+ * Statuses: live | open | closing | closed | planned | alpha
+ */
+type Status = 'live' | 'open' | 'closing' | 'closed' | 'planned' | 'alpha';
+
+interface Props {
+	status: Status;
+	label?: string;
+	dot?: boolean;
+	class?: string;
+}
+
+const { status, label, dot = false, class: className = '' }: Props = Astro.props;
+
+const DEFAULT_LABELS: Record<Status, string> = {
+	live: 'Live',
+	open: 'Open',
+	closing: 'Closing soon',
+	closed: 'Closed',
+	planned: 'Planned',
+	alpha: 'Alpha'
+};
+
+const text = label ?? DEFAULT_LABELS[status];
+---
+
+<span class:list={['status-badge', `status-badge--${status}`, className]}>
+	{dot && <span class="status-badge__dot" aria-hidden="true"></span>}
+	{text}
+</span>
+
+<style>
+	.status-badge {
+		--badge-color: var(--color-muted);
+		align-items: center;
+		border: 1px solid var(--border-strong);
+		border-radius: var(--radius-pill);
+		color: var(--badge-color);
+		display: inline-flex;
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		gap: var(--space-2);
+		letter-spacing: var(--tracking-label);
+		line-height: 1;
+		padding: 0.3rem 0.6rem;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.status-badge--live,
+	.status-badge--open,
+	.status-badge--alpha {
+		--badge-color: var(--signal);
+		border-color: color-mix(in srgb, var(--signal) 35%, transparent);
+	}
+
+	.status-badge--closing {
+		--badge-color: var(--status-closing);
+		border-color: color-mix(in srgb, var(--status-closing) 40%, transparent);
+	}
+
+	.status-badge--closed,
+	.status-badge--planned {
+		--badge-color: var(--color-muted);
+	}
+
+	.status-badge__dot {
+		background: var(--badge-color);
+		border-radius: var(--radius-pill);
+		height: 0.5rem;
+		width: 0.5rem;
+	}
+</style>

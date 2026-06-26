@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button.astro';
 import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
 import GuideCard from '@/components/guides/GuideCard.astro';
 import { getCollection } from 'astro:content';
 import { getPublishedGuides } from '@/lib/guides';
@@ -68,8 +69,7 @@ const guides = getPublishedGuides(await getCollection('guides'));
 	</Section>
 
 	<Section narrow>
-		<SectionHeader eyebrow="Planned" title="More guides coming" />
-		<div class="prose">
+		<StatusCallout variant="roadmap" title="More guides coming">
 			<p>
 				The initial guide set covers discovery, event submissions, open calls, bookings and
 				the national scene. Future guides — including city-specific pages and deeper
@@ -79,7 +79,7 @@ const guides = getPublishedGuides(await getCollection('guides'));
 			<p>
 				See the <a href="/releases">release notes</a> for what PartyLine supports today.
 			</p>
-		</div>
+		</StatusCallout>
 	</Section>
 
 	<CtaBand

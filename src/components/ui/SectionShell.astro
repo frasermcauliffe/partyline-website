@@ -1,0 +1,101 @@
+---
+/**
+ * SectionShell — shared section wrapper for the PartyLine design system.
+ *
+ * W10b: created as a foundation only. Existing pages are NOT migrated to this
+ * component yet (that happens in later W10 phases).
+ *
+ * Variants:
+ *  - default  : transparent section, page background
+ *  - band     : full-bleed contrast band (surface-1)
+ *  - feature  : emphasised block with a subtle top signal rule
+ *  - editorial : narrow, reading-optimised rhythm
+ *  - inset    : framed inset panel (surface-1 + border + radius)
+ */
+type Variant = 'default' | 'band' | 'feature' | 'editorial' | 'inset';
+
+interface Props {
+	variant?: Variant;
+	eyebrow?: string;
+	title?: string;
+	lede?: string;
+	align?: 'start' | 'center';
+	narrow?: boolean;
+	class?: string;
+}
+
+const {
+	variant = 'default',
+	eyebrow,
+	title,
+	lede,
+	align = 'start',
+	narrow = false,
+	class: className = ''
+}: Props = Astro.props;
+
+const isNarrow = narrow || variant === 'editorial';
+const hasHeader = Boolean(eyebrow || title || lede);
+---
+
+<section class:list={['section-shell', `section-shell--${variant}`, className]}>
+	<div class="container" class:list={[isNarrow && 'container--narrow']}>
+		{
+			hasHeader && (
+				<header
+					class:list={['section-shell__header', align === 'center' && 'section-shell__header--center']}
+				>
+					{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+					{title && <h2>{title}</h2>}
+					{lede && <p class="lede">{lede}</p>}
+				</header>
+			)
+		}
+		<slot />
+	</div>
+</section>
+
+<style>
+	.section-shell {
+		padding-block: var(--section-gap);
+	}
+
+	.section-shell--editorial {
+		padding-block: clamp(2rem, 6vw, 3rem);
+	}
+
+	.section-shell--band {
+		background: var(--surface-1);
+		border-block: 1px solid var(--border-subtle);
+	}
+
+	.section-shell--feature {
+		border-top: 2px solid var(--signal);
+	}
+
+	.section-shell--inset .section-shell__inner,
+	.section-shell--inset > .container {
+		background: var(--surface-1);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-panel);
+		padding: clamp(1.5rem, 5vw, 2.5rem);
+	}
+
+	.section-shell__header {
+		margin-bottom: clamp(1.5rem, 4vw, 2rem);
+		max-width: 42rem;
+	}
+
+	.section-shell__header--center {
+		margin-inline: auto;
+		text-align: center;
+	}
+
+	.section-shell__header--center .lede {
+		margin-inline: auto;
+	}
+
+	.section-shell__header h2 {
+		font-size: var(--text-h2);
+	}
+</style>

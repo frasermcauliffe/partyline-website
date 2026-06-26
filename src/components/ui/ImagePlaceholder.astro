@@ -1,0 +1,56 @@
+---
+/**
+ * ImagePlaceholder — branded fallback for missing images.
+ *
+ * W10b: created as a foundation only. NOT wired into existing cards yet.
+ * Pure CSS + a small text mark — no heavy image assets.
+ */
+interface Props {
+	aspectRatio?: string;
+	label?: string;
+	class?: string;
+}
+
+const {
+	aspectRatio = '16 / 9',
+	label = 'PartyLine',
+	class: className = ''
+}: Props = Astro.props;
+---
+
+<div
+	class:list={['image-placeholder', 'u-grain', className]}
+	style={`--placeholder-ratio: ${aspectRatio};`}
+	role="img"
+	aria-label={`${label} — image coming soon`}
+>
+	<span class="image-placeholder__mark">{label}</span>
+</div>
+
+<style>
+	.image-placeholder {
+		align-items: center;
+		aspect-ratio: var(--placeholder-ratio);
+		background:
+			radial-gradient(
+				120% 120% at 50% 0%,
+				var(--surface-3) 0%,
+				var(--surface-1) 70%
+			);
+		border: 1px solid var(--border-subtle);
+		box-shadow: inset 0 1px 0 var(--signal-soft);
+		display: flex;
+		justify-content: center;
+		overflow: hidden;
+		width: 100%;
+	}
+
+	.image-placeholder__mark {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		opacity: 0.6;
+		text-transform: uppercase;
+	}
+</style>
