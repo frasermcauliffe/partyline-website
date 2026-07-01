@@ -1,0 +1,53 @@
+---
+import Button from '@/components/ui/Button.astro';
+import StatusBadge from '@/components/ui/StatusBadge.astro';
+import { APP_LINKS } from '@/data/app-links';
+---
+
+<section class="directory-hero page-hero page-hero--accent u-grain">
+	<div class="container directory-hero__inner">
+		<div class="directory-hero__copy">
+			<p class="directory-hero__eyebrow">
+				<span class="eyebrow">Event directory</span>
+				<StatusBadge status="alpha" label="Alpha" dot />
+			</p>
+			<h1>PartyLine Event Directory</h1>
+			<p class="lede">
+				Browse upcoming underground club nights, warehouse parties, day parties, live electronic
+				shows and community-led events across the PartyLine network.
+			</p>
+			<p class="directory-hero__proof">Perth-first. Building across Australia.</p>
+			<div class="button-row">
+				<Button href={APP_LINKS.events} label="Explore Events in App" variant="primary" external />
+				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="secondary" external />
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.directory-hero__inner {
+		max-width: 46rem;
+	}
+
+	.directory-hero__eyebrow {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		margin-bottom: var(--space-4);
+	}
+
+	.directory-hero__eyebrow .eyebrow {
+		margin-bottom: 0;
+	}
+
+	.directory-hero__proof {
+		color: var(--color-muted-strong);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		margin-top: var(--space-4);
+		text-transform: uppercase;
+	}
+</style>

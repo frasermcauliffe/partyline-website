@@ -140,6 +140,62 @@ export function blogPostingJsonLd(input: { post: BlogEntry; slug: string }): str
 	});
 }
 
+type FaqItem = {
+	question: string;
+	answer: string;
+};
+
+export function faqPageJsonLd(items: FaqItem[]): string {
+	return JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: items.map((item) => ({
+			'@type': 'Question',
+			name: item.question,
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: item.answer
+			}
+		}))
+	});
+}
+
+type DirectoryEventItem = {
+	title: string;
+	appUrl: string;
+};
+
+export function directoryPageJsonLd(input: {
+	description: string;
+	events: DirectoryEventItem[];
+}): string {
+	const { description, events } = input;
+
+	return JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'PartyLine Event Directory',
+		description,
+		url: absoluteUrl('/events/directory'),
+		isPartOf: {
+			'@type': 'WebSite',
+			name: SITE.name,
+			url: SITE_URL
+		},
+		...(events.length > 0 && {
+			mainEntity: {
+				'@type': 'ItemList',
+				itemListElement: events.map((event, index) => ({
+					'@type': 'ListItem',
+					position: index + 1,
+					url: event.appUrl,
+					name: event.title
+				}))
+			}
+		})
+	});
+}
+
 export const PAGE_SEO = {
 	home: buildPageSeo({
 		title: SITE.name,
@@ -152,6 +208,12 @@ export const PAGE_SEO = {
 		description:
 			'Discover club nights, warehouse parties and underground events across Australia. Browse live listings in the PartyLine Collective app.',
 		canonicalPath: '/events'
+	}),
+	eventsDirectory: buildPageSeo({
+		title: 'PartyLine Event Directory',
+		description:
+			'Browse upcoming underground club nights, warehouse parties, day parties and community events on PartyLine. Perth-first listings, building across Australia.',
+		canonicalPath: '/events/directory'
 	}),
 	artistsDjs: buildPageSeo({
 		title: 'Artists & DJs',

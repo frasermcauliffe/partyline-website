@@ -36,6 +36,9 @@ const relatedLinks = [
 				<Button href={APP_LINKS.events} label="Explore Events" variant="primary" external />
 				<Button href={APP_LINKS.submitEvent} label="Submit an event" variant="secondary" external />
 			</div>
+			<p class="events-directory-link">
+				<a href="/events/directory">Browse the full event directory &rarr;</a>
+			</p>
 		</div>
 	</section>
 
@@ -130,5 +133,21 @@ const relatedLinks = [
 
 	.events-related {
 		margin-top: var(--space-8);
+	}
+
+	.events-directory-link {
+		margin-top: var(--space-5);
+	}
+
+	.events-directory-link a {
+		color: var(--color-primary);
+		font-size: var(--text-small);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.events-directory-link a:hover,
+	.events-directory-link a:focus-visible {
+		text-decoration: underline;
 	}
 </style>

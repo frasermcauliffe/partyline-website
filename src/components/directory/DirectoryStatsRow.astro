@@ -1,0 +1,88 @@
+---
+import type { DirectoryStats } from '@/lib/event-directory-stats';
+
+interface Props {
+	stats: DirectoryStats;
+}
+
+const { stats }: Props = Astro.props;
+---
+
+<div class="directory-stats">
+	<ul class="directory-stats__grid" aria-label="Event directory preview stats">
+		{
+			stats.items.map((item) => (
+				<li class="directory-stats__item">
+					{stats.mode === 'computed' && item.value ? (
+						<>
+							<p class="directory-stats__value">{item.value}</p>
+							<p class="directory-stats__label">{item.label}</p>
+						</>
+					) : (
+						<p class="directory-stats__chip">{item.label}</p>
+					)}
+				</li>
+			))
+		}
+	</ul>
+	{stats.note && <p class="directory-stats__note">{stats.note}</p>}
+</div>
+
+<style>
+	.directory-stats {
+		display: grid;
+		gap: var(--space-4);
+	}
+
+	.directory-stats__grid {
+		display: grid;
+		gap: var(--space-3);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.directory-stats__item {
+		background: var(--surface-1);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-card);
+		padding: var(--space-4);
+	}
+
+	.directory-stats__value {
+		font-family: var(--font-display);
+		font-size: clamp(1.35rem, 4vw, 1.75rem);
+		font-weight: var(--weight-bold);
+		line-height: 1.1;
+	}
+
+	.directory-stats__label,
+	.directory-stats__chip {
+		color: var(--color-muted-strong);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		line-height: 1.4;
+		text-transform: uppercase;
+	}
+
+	.directory-stats__chip {
+		font-size: var(--text-small);
+		letter-spacing: 0.02em;
+		text-transform: none;
+	}
+
+	.directory-stats__note {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+		max-width: 42rem;
+	}
+
+	@media (min-width: 768px) {
+		.directory-stats__grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+</style>

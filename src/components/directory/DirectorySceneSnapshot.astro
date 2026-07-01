@@ -1,0 +1,67 @@
+---
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import type { SceneSnapshotCard } from '@/lib/event-directory-stats';
+
+interface Props {
+	cards: SceneSnapshotCard[];
+}
+
+const { cards }: Props = Astro.props;
+---
+
+<div class="scene-snapshot">
+	{
+		cards.map((card) => (
+			<PremiumCard variant="quiet" class="scene-snapshot__card">
+				<p class="scene-snapshot__label">{card.title}</p>
+				<p class="scene-snapshot__value">{card.value}</p>
+				<p class="scene-snapshot__description">{card.description}</p>
+			</PremiumCard>
+		))
+	}
+</div>
+
+<style>
+	.scene-snapshot {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+
+	.scene-snapshot :global(.scene-snapshot__card) {
+		gap: var(--space-2);
+	}
+
+	.scene-snapshot__label {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.scene-snapshot__value {
+		font-family: var(--font-display);
+		font-size: var(--text-card-title);
+		font-weight: var(--weight-bold);
+		line-height: 1.25;
+	}
+
+	.scene-snapshot__description {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+	}
+
+	@media (min-width: 640px) {
+		.scene-snapshot {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.scene-snapshot {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+</style>

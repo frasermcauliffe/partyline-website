@@ -1,0 +1,79 @@
+---
+import type { DirectoryFilterChip } from '@/data/directory-content';
+
+interface Props {
+	chips: DirectoryFilterChip[];
+}
+
+const { chips }: Props = Astro.props;
+---
+
+<nav class="directory-filters" aria-label="Event quick filters">
+	<ul class="directory-filters__list">
+		{
+			chips.map((chip) => (
+				<li>
+					<a href={chip.href} class="directory-filters__chip" target="_blank" rel="noopener noreferrer">
+						{chip.label}
+					</a>
+				</li>
+			))
+		}
+	</ul>
+	<p class="directory-filters__note">
+		Quick links open filtered views in the PartyLine app. Genre and city filters are still expanding
+		during alpha.
+	</p>
+</nav>
+
+<style>
+	.directory-filters__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.directory-filters__chip {
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-pill);
+		color: var(--color-muted-strong);
+		display: inline-block;
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		padding: 0.45rem 0.85rem;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition:
+			border-color var(--duration-base) var(--ease-out),
+			color var(--duration-base) var(--ease-out);
+		white-space: nowrap;
+	}
+
+	.directory-filters__chip:hover,
+	.directory-filters__chip:focus-visible {
+		border-color: var(--signal);
+		color: var(--color-text);
+	}
+
+	.directory-filters__note {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+		margin-top: var(--space-4);
+		max-width: 42rem;
+	}
+
+	@media (max-width: 639px) {
+		.directory-filters__list {
+			flex-wrap: nowrap;
+			margin-inline: calc(-1 * var(--space-4));
+			overflow-x: auto;
+			padding-inline: var(--space-4);
+			scrollbar-width: thin;
+		}
+	}
+</style>

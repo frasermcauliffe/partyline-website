@@ -1,0 +1,349 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import FeatureGrid from '@/components/ui/FeatureGrid.astro';
+import FaqList from '@/components/ui/FaqList.astro';
+import PreviewPanel from '@/components/previews/PreviewPanel.astro';
+import PublicEventPreviewCard from '@/components/previews/PublicEventPreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
+import DirectoryHero from '@/components/directory/DirectoryHero.astro';
+import DirectoryStatsRow from '@/components/directory/DirectoryStatsRow.astro';
+import DirectoryFilterChips from '@/components/directory/DirectoryFilterChips.astro';
+import DirectorySceneSnapshot from '@/components/directory/DirectorySceneSnapshot.astro';
+import { fetchPublicEvents } from '@/lib/app-api';
+import { APP_LINKS } from '@/data/app-links';
+import {
+	DIRECTORY_CITIES,
+	DIRECTORY_FAQ,
+	DIRECTORY_FILTER_CHIPS,
+	DIRECTORY_GENRES,
+	DIRECTORY_SOURCING,
+	type DirectoryCityEntry,
+	type DirectoryGenreEntry
+} from '@/data/directory-content';
+import {
+	buildDirectoryStats,
+	buildSceneSnapshot,
+	countEventsMatchingCity,
+	countEventsMatchingGenres
+} from '@/lib/event-directory-stats';
+import type { PublicEventPreview } from '@/lib/app-preview-types';
+import {
+	directoryPageJsonLd,
+	faqPageJsonLd,
+	organizationJsonLd,
+	PAGE_SEO,
+	websiteJsonLd
+} from '@/lib/seo';
+
+const seo = PAGE_SEO.eventsDirectory;
+const eventsResult = await fetchPublicEvents(24);
+const events = eventsResult.events;
+const stats = buildDirectoryStats(events, eventsResult.unavailable);
+const sceneSnapshot = buildSceneSnapshot(events, eventsResult.unavailable);
+
+function cityBadge(entry: DirectoryCityEntry, previewEvents: PublicEventPreview[]): string {
+	if (entry.match) {
+		const count = countEventsMatchingCity(previewEvents, entry.match);
+		if (count > 0) {
+			return `${count} in preview`;
+		}
+	}
+
+	if (entry.status === 'active') {
+		return 'Active now';
+	}
+
+	if (entry.status === 'opening') {
+		return 'Opening';
+	}
+
+	return 'Coming next';
+}
+
+function genreBadge(entry: DirectoryGenreEntry, previewEvents: PublicEventPreview[]): string | undefined {
+	if (!entry.matchers?.length) {
+		return undefined;
+	}
+
+	const count = countEventsMatchingGenres(previewEvents, entry.matchers);
+	return count > 0 ? `${count} in preview` : undefined;
+}
+
+const jsonLd = [
+	organizationJsonLd(),
+	websiteJsonLd(),
+	directoryPageJsonLd({
+		description: seo.description,
+		events: events.map((event) => ({ title: event.title, appUrl: event.appUrl }))
+	}),
+	faqPageJsonLd([...DIRECTORY_FAQ])
+];
+---
+
+<BaseLayout
+	title={seo.title}
+	description={seo.description}
+	canonicalPath={seo.canonicalPath}
+	jsonLd={jsonLd}
+>
+	<DirectoryHero />
+
+	<SectionShell variant="inset" eyebrow="Preview stats" title="Current public listings snapshot">
+		<DirectoryStatsRow stats={stats} />
+	</SectionShell>
+
+	<SectionShell eyebrow="Quick filters" title="Browse upcoming events">
+		<DirectoryFilterChips chips={DIRECTORY_FILTER_CHIPS} />
+	</SectionShell>
+
+	<PreviewPanel
+		eyebrow="Directory"
+		title="Upcoming events"
+		lede="Public event previews from the PartyLine app — Perth-first, building across Australia. Open the app for posters, lineups, filters and full details."
+		source="app"
+		ctaLabel="Explore all events in the app"
+		ctaHref={APP_LINKS.events}
+		narrow={false}
+	>
+		{
+			events.length > 0 ? (
+				<div class="directory-events-grid">
+					{events.map((event) => (
+						<PublicEventPreviewCard event={event} />
+					))}
+				</div>
+			) : (
+				<EmptyPreviewState
+					ctaHref={APP_LINKS.submitEvent}
+					unavailable={eventsResult.unavailable}
+					message="No upcoming public events are in the current preview. Submit your event or explore the app for the latest listings."
+					ctaLabel="Submit Event"
+				/>
+			)
+		}
+		{
+			events.length === 0 && (
+				<p class="directory-empty-secondary">
+					<a href={APP_LINKS.events} target="_blank" rel="noopener noreferrer">
+						Explore events in the app &rarr;
+					</a>
+				</p>
+			)
+		}
+	</PreviewPanel>
+
+	<SectionShell
+		variant="band"
+		eyebrow="Cities"
+		title="Browse by city"
+		lede="Perth is active now. More Australian cities are opening as organisers and profiles join."
+	>
+		<div class="directory-browse-grid">
+			{
+				DIRECTORY_CITIES.map((city) => (
+					<PremiumCard
+						variant="preview"
+						href={city.href}
+						external={city.external}
+						class="directory-browse-card"
+					>
+						<p class="directory-browse-card__badge">{cityBadge(city, events)}</p>
+						<h3>{city.name}</h3>
+						<p class="directory-browse-card__link">Browse in app &rarr;</p>
+					</PremiumCard>
+				))
+			}
+		</div>
+	</SectionShell>
+
+	<SectionShell
+		eyebrow="Genres"
+		title="Browse by genre"
+		lede="Genre filters in the app are still expanding. These links open the closest match in PartyLine today."
+	>
+		<div class="directory-browse-grid directory-browse-grid--genres">
+			{
+				DIRECTORY_GENRES.map((genre) => {
+					const badge = genreBadge(genre, events);
+					return (
+						<PremiumCard
+							variant="quiet"
+							href={genre.href}
+							external={genre.external}
+							class="directory-browse-card"
+						>
+							{badge && <p class="directory-browse-card__badge">{badge}</p>}
+							<h3>{genre.name}</h3>
+							<p class="directory-browse-card__link">Browse in app &rarr;</p>
+						</PremiumCard>
+					);
+				})
+			}
+		</div>
+	</SectionShell>
+
+	<SectionShell variant="feature" eyebrow="Snapshot" title="Scene snapshot">
+		<DirectorySceneSnapshot cards={sceneSnapshot} />
+	</SectionShell>
+
+	<SectionShell
+		variant="inset"
+		eyebrow="Sourcing"
+		title="How events are listed"
+		lede="Honest sourcing for the PartyLine Event Directory during alpha — no scraping and no automated ticketing imports."
+	>
+		<FeatureGrid items={[...DIRECTORY_SOURCING]} columns={2} />
+	</SectionShell>
+
+	<SectionShell eyebrow="FAQ" title="Event directory questions">
+		<FaqList items={[...DIRECTORY_FAQ]} />
+	</SectionShell>
+
+	<section class="directory-final-cta">
+		<div class="container directory-final-cta__inner">
+			<div class="directory-final-cta__copy">
+				<h2>Put your event on the line.</h2>
+				<p>
+					Submit your night, explore what&rsquo;s on, or create a profile — Perth-first, building
+					across Australia.
+				</p>
+			</div>
+			<div class="directory-final-cta__actions">
+				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="primary" external />
+				<Button href={APP_LINKS.events} label="Explore Events" variant="secondary" external />
+				<Button href={APP_LINKS.createListing} label="Create Profile" variant="secondary" external />
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.directory-events-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
+	}
+
+	.directory-empty-secondary {
+		margin-top: var(--space-4);
+		text-align: center;
+	}
+
+	.directory-empty-secondary a {
+		color: var(--signal);
+		font-size: var(--text-small);
+		font-weight: var(--weight-semibold);
+		text-decoration: none;
+	}
+
+	.directory-empty-secondary a:hover,
+	.directory-empty-secondary a:focus-visible {
+		text-decoration: underline;
+	}
+
+	.directory-browse-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+
+	.directory-browse-grid :global(.directory-browse-card h3) {
+		font-size: var(--text-card-title);
+		line-height: 1.35;
+	}
+
+	.directory-browse-card__badge {
+		color: var(--signal);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.directory-browse-card__link {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+	}
+
+	.directory-final-cta {
+		background: linear-gradient(
+			180deg,
+			var(--color-surface-soft) 0%,
+			rgba(60, 232, 97, 0.06) 100%
+		);
+		border-block: 1px solid var(--color-border);
+		padding-block: clamp(2.5rem, 7vw, 4rem);
+	}
+
+	.directory-final-cta__inner {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+		text-align: center;
+	}
+
+	.directory-final-cta__copy {
+		display: grid;
+		gap: var(--space-3);
+		max-width: 38rem;
+	}
+
+	.directory-final-cta__copy h2 {
+		font-size: clamp(1.5rem, 4vw, 2rem);
+	}
+
+	.directory-final-cta__copy p {
+		color: var(--color-muted-strong);
+		line-height: 1.6;
+	}
+
+	.directory-final-cta__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: center;
+	}
+
+	@media (min-width: 640px) {
+		.directory-events-grid,
+		.directory-browse-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.directory-browse-grid--genres {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 768px) {
+		.directory-final-cta__inner {
+			flex-direction: row;
+			justify-content: space-between;
+			text-align: left;
+		}
+
+		.directory-final-cta__actions {
+			flex-shrink: 0;
+			justify-content: flex-end;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.directory-events-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.directory-browse-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+
+		.directory-browse-grid--genres {
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
+	}
+</style>
