@@ -1,0 +1,245 @@
+---
+import Button from '@/components/ui/Button.astro';
+import StatusBadge from '@/components/ui/StatusBadge.astro';
+import { HOME_PROOF_CHIPS } from '@/data/home-content';
+import { APP_LINKS } from '@/data/app-links';
+---
+
+<section class="home-hero u-grain">
+	<div class="container home-hero__inner">
+		<div class="home-hero__copy">
+			<p class="home-hero__eyebrow">
+				<span class="eyebrow">PartyLine Collective</span>
+				<StatusBadge status="alpha" label="Alpha" dot />
+			</p>
+			<h1>Australia&rsquo;s underground music and events network.</h1>
+			<p class="lede">
+				Discover events, browse scene profiles, submit listings, send booking enquiries, and
+				connect the people behind underground culture. Perth-first, building across Australia.
+			</p>
+			<div class="button-row home-hero__ctas">
+				<Button href={APP_LINKS.events} label="Explore Events" variant="primary" external />
+				<Button href={APP_LINKS.createListing} label="Create Profile" variant="secondary" external />
+				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="secondary" external />
+				<Button href={APP_LINKS.theScene} label="Browse Profiles" variant="ghost" external />
+			</div>
+			<ul class="home-hero__proof" aria-label="Platform highlights">
+				{
+					HOME_PROOF_CHIPS.map((chip) => (
+						<li>
+							<span>{chip}</span>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<div class="home-hero__visual" aria-hidden="true">
+			<figure class="signal-panel">
+				<svg
+					class="signal-panel__svg"
+					viewBox="0 0 400 400"
+					role="presentation"
+					focusable="false"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<g class="signal-panel__links">
+						<line x1="200" y1="200" x2="200" y2="80" />
+						<line x1="200" y1="200" x2="303.9" y2="140" />
+						<line x1="200" y1="200" x2="303.9" y2="260" />
+						<line x1="200" y1="200" x2="200" y2="320" />
+						<line x1="200" y1="200" x2="96.1" y2="260" />
+						<line x1="200" y1="200" x2="96.1" y2="140" />
+					</g>
+
+					<g class="signal-panel__nodes">
+						<circle class="node node--active" cx="200" cy="80" r="9" />
+						<circle class="node" cx="303.9" cy="140" r="7" />
+						<circle class="node" cx="303.9" cy="260" r="7" />
+						<circle class="node" cx="200" cy="320" r="7" />
+						<circle class="node" cx="96.1" cy="260" r="7" />
+						<circle class="node" cx="96.1" cy="140" r="7" />
+					</g>
+
+					<g class="signal-panel__labels">
+						<text x="200" y="56" text-anchor="middle">Events</text>
+						<text x="303.9" y="120" text-anchor="middle">Profiles</text>
+						<text x="303.9" y="284" text-anchor="middle">Venues</text>
+						<text x="200" y="346" text-anchor="middle">Bookings</text>
+						<text x="96.1" y="284" text-anchor="middle">Opps</text>
+						<text x="96.1" y="120" text-anchor="middle">Media</text>
+					</g>
+
+					<g class="signal-panel__hub">
+						<circle cx="200" cy="200" r="30" />
+						<text x="200" y="204" text-anchor="middle">PartyLine</text>
+					</g>
+				</svg>
+			</figure>
+		</div>
+	</div>
+</section>
+
+<style>
+	.home-hero {
+		background:
+			radial-gradient(
+				120% 90% at 85% 10%,
+				var(--signal-soft) 0%,
+				rgba(60, 232, 97, 0) 55%
+			),
+			var(--color-bg);
+		border-top: 2px solid var(--signal);
+		overflow: hidden;
+		padding-block: clamp(3rem, 9vw, 5.5rem);
+	}
+
+	.home-hero__inner {
+		align-items: center;
+		display: grid;
+		gap: clamp(2rem, 6vw, 4rem);
+		grid-template-columns: 1fr;
+	}
+
+	.home-hero__eyebrow {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		margin-bottom: var(--space-4);
+	}
+
+	.home-hero__eyebrow .eyebrow {
+		margin-bottom: 0;
+	}
+
+	.home-hero h1 {
+		font-size: var(--text-display);
+		max-width: 18ch;
+	}
+
+	.home-hero .lede {
+		margin-top: var(--space-4);
+		max-width: 42rem;
+	}
+
+	.home-hero__ctas {
+		margin-top: var(--space-5);
+	}
+
+	.home-hero__proof {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+		list-style: none;
+		margin: var(--space-5) 0 0;
+		padding: 0;
+	}
+
+	.home-hero__proof li span {
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-pill);
+		color: var(--color-muted-strong);
+		display: inline-block;
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		padding: 0.35rem 0.75rem;
+		text-transform: uppercase;
+	}
+
+	.home-hero__visual {
+		position: relative;
+	}
+
+	.home-hero__visual::before {
+		background: radial-gradient(
+			circle at 50% 45%,
+			var(--signal-glow) 0%,
+			rgba(60, 232, 97, 0) 60%
+		);
+		content: '';
+		inset: -10%;
+		position: absolute;
+		z-index: 0;
+	}
+
+	.signal-panel {
+		background: var(--surface-1);
+		border: 1px solid var(--border-strong);
+		border-radius: var(--radius-panel);
+		margin: 0;
+		padding: clamp(1rem, 4vw, 1.75rem);
+		position: relative;
+		z-index: 1;
+	}
+
+	.signal-panel__svg {
+		display: block;
+		height: auto;
+		margin-inline: auto;
+		max-width: 360px;
+		width: 100%;
+	}
+
+	.signal-panel__links line {
+		stroke: var(--border-strong);
+		stroke-width: 1.5;
+	}
+
+	.signal-panel__nodes .node {
+		fill: var(--surface-3);
+		stroke: var(--border-strong);
+		stroke-width: 1.5;
+	}
+
+	.signal-panel__nodes .node--active {
+		fill: var(--signal);
+		stroke: var(--signal);
+	}
+
+	.signal-panel__labels text {
+		fill: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.signal-panel__hub circle {
+		fill: var(--surface-2);
+		stroke: var(--signal);
+		stroke-width: 1.5;
+	}
+
+	.signal-panel__hub text {
+		fill: var(--color-text);
+		font-family: var(--font-display);
+		font-size: 13px;
+		font-weight: var(--weight-bold);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.signal-panel__nodes .node--active {
+			animation: signal-pulse 2.8s var(--ease-out) infinite;
+			transform-box: fill-box;
+			transform-origin: center;
+		}
+	}
+
+	@keyframes signal-pulse {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.55;
+		}
+	}
+
+	@media (min-width: 960px) {
+		.home-hero__inner {
+			grid-template-columns: 1.05fr 0.95fr;
+		}
+	}
+</style>

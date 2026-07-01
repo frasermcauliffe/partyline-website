@@ -144,7 +144,7 @@ export const PAGE_SEO = {
 	home: buildPageSeo({
 		title: SITE.name,
 		description:
-			'PartyLine Collective — underground events, DJs, venues, organisers and opportunities across Australia. Scene infrastructure for connection.',
+			'PartyLine Collective — Perth-first underground events, scene profiles, booking enquiries and secure deposits. Discover, connect and build across Australia\u2019s underground network.',
 		canonicalPath: '/'
 	}),
 	events: buildPageSeo({

@@ -1,0 +1,121 @@
+---
+import ImagePlaceholder from '@/components/ui/ImagePlaceholder.astro';
+import type { HomeAppPreview } from '@/data/home-content';
+
+interface Props {
+	items: HomeAppPreview[];
+}
+
+const { items }: Props = Astro.props;
+---
+
+<div class="app-preview-grid" role="list">
+	{
+		items.map((item) => (
+			<article class="app-preview-card" role="listitem">
+				<div class="app-preview-card__chrome" aria-hidden="true">
+					<span />
+					<span />
+					<span />
+				</div>
+				<ImagePlaceholder aspectRatio="16 / 10" label={item.label} class="app-preview-card__frame" />
+				<div class="app-preview-card__body">
+					<p class="app-preview-card__label">{item.label}</p>
+					<h3>{item.title}</h3>
+					<p>{item.description}</p>
+				</div>
+			</article>
+		))
+	}
+</div>
+
+<style>
+	.app-preview-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-auto-flow: column;
+		grid-auto-columns: min(85vw, 18rem);
+		margin-inline: calc(-1 * var(--space-4));
+		overflow-x: auto;
+		padding-block: var(--space-1);
+		padding-inline: var(--space-4);
+		scroll-snap-type: x mandatory;
+		scrollbar-width: thin;
+	}
+
+	.app-preview-card {
+		background: var(--surface-1);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-panel);
+		display: grid;
+		gap: 0;
+		min-width: 0;
+		overflow: hidden;
+		scroll-snap-align: start;
+	}
+
+	.app-preview-card__chrome {
+		align-items: center;
+		background: var(--surface-2);
+		border-bottom: 1px solid var(--border-subtle);
+		display: flex;
+		gap: 0.35rem;
+		padding: 0.65rem 0.85rem;
+	}
+
+	.app-preview-card__chrome span {
+		background: var(--surface-3);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-pill);
+		display: block;
+		height: 0.45rem;
+		width: 0.45rem;
+	}
+
+	.app-preview-card__frame {
+		border: 0;
+		border-radius: 0;
+	}
+
+	.app-preview-card__body {
+		display: grid;
+		gap: var(--space-2);
+		padding: var(--space-4);
+	}
+
+	.app-preview-card__label {
+		color: var(--signal);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.app-preview-card__body h3 {
+		font-size: var(--text-card-title);
+	}
+
+	.app-preview-card__body p:last-child {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+	}
+
+	@media (min-width: 960px) {
+		.app-preview-grid {
+			grid-auto-columns: unset;
+			grid-auto-flow: row;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			margin-inline: 0;
+			overflow: visible;
+			padding-inline: 0;
+			scroll-snap-type: none;
+		}
+	}
+
+	@media (min-width: 1200px) {
+		.app-preview-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+</style>
