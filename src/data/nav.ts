@@ -1,6 +1,16 @@
+import { APP_LINKS } from '@/data/app-links';
+
 export type NavItem = {
 	label: string;
 	href: string;
+	external?: boolean;
+};
+
+/** App directory link — clearer public label than in-app "The Scene". */
+export const browseProfilesNavItem: NavItem = {
+	label: 'Browse Profiles',
+	href: APP_LINKS.theScene,
+	external: true
 };
 
 export const marketingNav: NavItem[] = [
@@ -24,7 +34,10 @@ export type NavGroup = {
  * (Guides / Platform / Releases / How It Works) on small screens.
  */
 export const mobileNavGroups: NavGroup[] = [
-	{ label: 'Main', items: marketingNav },
+	{
+		label: 'Main',
+		items: [marketingNav[0], browseProfilesNavItem, ...marketingNav.slice(1)]
+	},
 	{
 		label: 'More',
 		items: [

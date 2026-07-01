@@ -1,7 +1,7 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import { APP_LINKS } from '@/data/app-links';
-import { marketingNav, mobileNavGroups } from '@/data/nav';
+import { browseProfilesNavItem, marketingNav, mobileNavGroups } from '@/data/nav';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -27,6 +27,7 @@ const currentPath = Astro.url.pathname;
 							<a
 								href={item.href}
 								class:list={['site-nav__link', currentPath === item.href && 'is-active']}
+								{...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
 							>
 								{item.label}
 							</a>
@@ -70,6 +71,7 @@ const currentPath = Astro.url.pathname;
 													'site-nav__mobile-link',
 													currentPath === item.href && 'is-active'
 												]}
+												{...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
 											>
 												{item.label}
 											</a>
@@ -87,6 +89,13 @@ const currentPath = Astro.url.pathname;
 			<Button
 				href={APP_LINKS.events}
 				label="Explore Events"
+				variant="ghost"
+				external
+				class="site-header__ghost-cta"
+			/>
+			<Button
+				href={browseProfilesNavItem.href}
+				label={browseProfilesNavItem.label}
 				variant="ghost"
 				external
 				class="site-header__ghost-cta"
