@@ -218,7 +218,7 @@ export function directoryPageJsonLd(input: {
 	return collectionLandingPageJsonLd({
 		name: 'PartyLine Event Directory',
 		description: input.description,
-		url: '/events/directory',
+		url: '/events',
 		events: input.events
 	});
 }
@@ -231,16 +231,10 @@ export const PAGE_SEO = {
 		canonicalPath: '/'
 	}),
 	events: buildPageSeo({
-		title: 'Underground Events',
-		description:
-			'Discover club nights, warehouse parties and underground events across Australia. Browse live listings in the PartyLine Collective app.',
-		canonicalPath: '/events'
-	}),
-	eventsDirectory: buildPageSeo({
 		title: 'PartyLine Event Directory',
 		description:
 			'Browse upcoming underground club nights, warehouse parties, day parties and community events on PartyLine. Perth-first listings, building across Australia.',
-		canonicalPath: '/events/directory'
+		canonicalPath: '/events'
 	}),
 	artistsDjs: buildPageSeo({
 		title: 'Artists & DJs',

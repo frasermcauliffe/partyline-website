@@ -43,10 +43,10 @@ PUBLIC_APP_API_URL=https://invalid.partyline.local npm run build
 
 | Condition | Expected |
 |-----------|----------|
-| API available | PartyLine Scene Index teaser above event preview; four stats; alpha note; links to `/events/directory` and app |
+| API available | PartyLine Scene Index teaser above event preview; four stats; alpha note; links to `/events` and app |
 | API unavailable | Info callout (“Snapshot unavailable…”) or teaser omitted — **never fake counts** |
 
-### Event directory (`/events/directory`)
+### Event directory (`/events`)
 
 | Condition | Expected |
 |-----------|----------|
@@ -103,7 +103,7 @@ rg -i 'most active|top genres|most popular|market share|#1' src/lib/event-direct
 
 ## Basic SEO smoke
 
-- [ ] `/events/directory` — unique title and meta description
+- [ ] `/events` — unique title and meta description
 - [ ] One city page (e.g. Perth) — canonical URL correct
 - [ ] One genre page — canonical URL correct
 - [ ] Sitemap builds (`dist/sitemap-index.xml` after `npm run build`)

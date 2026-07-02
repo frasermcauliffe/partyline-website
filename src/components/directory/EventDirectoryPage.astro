@@ -13,7 +13,6 @@ import DirectoryHero from '@/components/directory/DirectoryHero.astro';
 import DirectoryStatsRow from '@/components/directory/DirectoryStatsRow.astro';
 import DirectoryFilterChips from '@/components/directory/DirectoryFilterChips.astro';
 import DirectorySceneSnapshot from '@/components/directory/DirectorySceneSnapshot.astro';
-import { fetchPublicEvents, fetchPublicSceneIndex } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import {
 	DIRECTORY_CITIES,
@@ -25,31 +24,38 @@ import {
 	type DirectoryGenreEntry
 } from '@/data/directory-content';
 import {
-	buildDirectoryStatsFromSceneIndex,
-	buildSceneSnapshotFromSceneIndex,
-	buildTrackedEventFormats,
 	formatDirectoryCityBadge,
-	formatDirectoryGenreBadge
+	formatDirectoryGenreBadge,
+	type DirectoryStats,
+	type SceneSnapshotCard,
+	type TrackedEventFormatsResult
 } from '@/lib/event-directory-stats';
 import { SCENE_SNAPSHOT_HEADING } from '@/lib/event-landing-data';
 import type { PublicEventPreview } from '@/lib/app-preview-types';
-import {
-	directoryPageJsonLd,
-	faqPageJsonLd,
-	organizationJsonLd,
-	PAGE_SEO,
-	websiteJsonLd
-} from '@/lib/seo';
+import type { PublicSceneIndexFetchResult } from '@/lib/public-scene-index';
+import type { PageSeo } from '@/lib/seo';
 
-const seo = PAGE_SEO.eventsDirectory;
-const [eventsResult, sceneResult] = await Promise.all([
-	fetchPublicEvents(24),
-	fetchPublicSceneIndex()
-]);
-const events = eventsResult.events;
-const stats = buildDirectoryStatsFromSceneIndex(sceneResult, eventsResult);
-const trackedFormats = buildTrackedEventFormats(sceneResult);
-const sceneSnapshot = buildSceneSnapshotFromSceneIndex(sceneResult, eventsResult);
+interface Props {
+	seo: PageSeo;
+	jsonLd: string[];
+	events: PublicEventPreview[];
+	eventsUnavailable: boolean;
+	stats: DirectoryStats;
+	trackedFormats: TrackedEventFormatsResult | null;
+	sceneSnapshot: SceneSnapshotCard[];
+	sceneResult: PublicSceneIndexFetchResult;
+}
+
+const {
+	seo,
+	jsonLd,
+	events,
+	eventsUnavailable,
+	stats,
+	trackedFormats,
+	sceneSnapshot,
+	sceneResult
+}: Props = Astro.props;
 
 function cityBadge(entry: DirectoryCityEntry, previewEvents: PublicEventPreview[]): string {
 	return formatDirectoryCityBadge(entry, previewEvents, sceneResult);
@@ -61,16 +67,6 @@ function genreBadge(
 ): string | undefined {
 	return formatDirectoryGenreBadge(entry, previewEvents, sceneResult);
 }
-
-const jsonLd = [
-	organizationJsonLd(),
-	websiteJsonLd(),
-	directoryPageJsonLd({
-		description: seo.description,
-		events: events.map((event) => ({ title: event.title, appUrl: event.appUrl }))
-	}),
-	faqPageJsonLd([...DIRECTORY_FAQ])
-];
 ---
 
 <BaseLayout
@@ -110,7 +106,7 @@ const jsonLd = [
 			) : (
 				<EmptyPreviewState
 					ctaHref={APP_LINKS.submitEvent}
-					unavailable={eventsResult.unavailable}
+					unavailable={eventsUnavailable}
 					message="No upcoming public events are in the current preview. Submit your event or explore the app for the latest listings."
 					ctaLabel="Submit Event"
 				/>

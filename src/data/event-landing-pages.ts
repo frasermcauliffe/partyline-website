@@ -469,7 +469,7 @@ export function buildLandingRelatedLinks(config: EventLandingConfig): RelatedLin
 		}
 	}
 
-	links.push({ label: 'Event directory', href: '/events/directory' });
+	links.push({ label: 'Event directory', href: '/events' });
 	links.push({
 		label: 'Submit guide',
 		href: '/guides/how-to-submit-your-event-to-partyline'
@@ -485,7 +485,7 @@ export function getLandingCanonicalPath(config: EventLandingConfig): string {
 export function getLandingBreadcrumbs(config: EventLandingConfig): { name: string; path: string }[] {
 	const crumbs = [
 		{ name: 'Home', path: '/' },
-		{ name: 'Event directory', path: '/events/directory' }
+		{ name: 'Event directory', path: '/events' }
 	];
 
 	if (config.kind === 'genre') {
