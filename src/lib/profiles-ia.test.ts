@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { APP_LINKS, profilesFilterUrl } from '@/data/app-links';
-import { browseProfilesNavItem, marketingNav } from '@/data/nav';
+import { browseProfilesNavItem, desktopNav } from '@/data/nav';
 import { PAGE_SEO } from '@/lib/seo';
 
 describe('profiles IA', () => {
@@ -8,8 +8,8 @@ describe('profiles IA', () => {
 		expect(APP_LINKS.profiles).toMatch(/\/profiles$/);
 	});
 
-	it('marketing nav Profiles links to website /profiles', () => {
-		const profilesNav = marketingNav.find((item) => item.label === 'Profiles');
+	it('desktop nav Profiles links to website /profiles', () => {
+		const profilesNav = desktopNav.find((item) => item.label === 'Profiles');
 		expect(profilesNav?.href).toBe('/profiles');
 		expect(browseProfilesNavItem.href).toBe('/profiles');
 	});

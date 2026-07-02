@@ -101,6 +101,11 @@ Same as city — genre snapshot when available, omitted when not.
 
 | Check | Expected |
 |-------|----------|
+| Desktop header nav | Events, Profiles, Artists & DJs, Organisers, Venues, Blog, About — one Profiles link only |
+| Desktop header CTA | Join PartyLine only (no Explore Events or duplicate Profiles ghost buttons) |
+| Desktop Opportunities | Not in header nav — available in footer and mobile menu |
+| Mobile menu Main | Events, Profiles, Artists & DJs, Organisers, Venues, Blog, Opportunities, About |
+| Mobile Join | Sticky header Join + Join at bottom of mobile menu |
 | Header nav Profiles | Website `/profiles` (not app direct) |
 | Footer App Profiles | `APP_LINKS.profiles` |
 | Homepage Browse profiles CTAs | App `/profiles` or website `/profiles` where appropriate |
