@@ -66,7 +66,7 @@ rg -i "the scene|/the-scene|verified|most popular|top |best |ranked|secure depos
 | API available | “Current listings snapshot” stats row; “Formats currently tracked” strip (if `by_event_type` non-empty); “Snapshot detail” cards |
 | API unavailable | Soft/computed fallback stats; **formats strip hidden**; “Snapshot detail” uses neutral preview fallback copy (no “top/most active”) |
 | Event preview | Cards from public events API only; empty state if preview unavailable |
-| Search by location map | Interactive Australia map with city clusters; click → `/events/{city}` where landing exists; fallback city cards if map fails; Events layer only (Venues/Profiles later) |
+| Search by location map | Australia-wide initial view; all configured city markers visible where possible; popup-first marker click with Browse events link; city cards always visible below map; fallback message if map fails |
 
 ### City landing (e.g. `/events/perth`)
 

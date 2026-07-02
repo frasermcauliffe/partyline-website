@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
+	AU_MAP_BOUNDS,
 	buildLocationMapMarkers,
+	buildMarkerBounds,
 	clusterDiameterForCount,
-	LOCATION_MAP_CITIES
+	displayStatusFor,
+	LOCATION_MAP_CITIES,
+	markerShortLabel,
+	resolveMapViewBounds
 } from '@/lib/location-map-data';
 import type { PublicSceneIndexFetchResult } from '@/lib/public-scene-index';
 
@@ -41,6 +46,7 @@ describe('location map data', () => {
 		const perth = markers.find((marker) => marker.id === 'perth');
 
 		expect(perth?.upcomingCount).toBe(10);
+		expect(perth?.shortLabel).toBe('10');
 	});
 
 	it('does not invent counts when scene index is unavailable', () => {
@@ -48,13 +54,49 @@ describe('location map data', () => {
 		expect(markers.every((marker) => marker.upcomingCount === null)).toBe(true);
 	});
 
+	it('uses short marker labels only', () => {
+		expect(markerShortLabel('coming', null)).toBe('SOON');
+		expect(markerShortLabel('opening', null)).toBe('OPEN');
+		expect(markerShortLabel('active', 8)).toBe('8');
+
+		const markers = buildLocationMapMarkers({ unavailable: true, sceneIndex: null }, []);
+		const joined = markers.map((marker) => marker.shortLabel).join(' ');
+
+		expect(joined).not.toContain('Coming next');
+		expect(joined).not.toContain('Active now');
+	});
+
+	it('uses full status text in displayStatus for popups and cards', () => {
+		expect(displayStatusFor('coming', null)).toBe('Coming next');
+		expect(displayStatusFor('opening', null)).toBe('Opening');
+		expect(displayStatusFor('active', 3)).toBe('3 upcoming');
+	});
+
 	it('scales cluster diameter with count', () => {
-		expect(clusterDiameterForCount(null)).toBeLessThan(clusterDiameterForCount(50));
-		expect(clusterDiameterForCount(5)).toBeLessThan(clusterDiameterForCount(200));
+		expect(clusterDiameterForCount(null, 'SOON')).toBeLessThan(clusterDiameterForCount(50, '50'));
+		expect(clusterDiameterForCount(5, '5')).toBeLessThan(clusterDiameterForCount(200, '200'));
 	});
 
 	it('covers core Australian cities with coordinates', () => {
 		expect(LOCATION_MAP_CITIES.length).toBeGreaterThanOrEqual(4);
 		expect(LOCATION_MAP_CITIES.some((city) => city.slug === 'perth')).toBe(true);
+	});
+
+	it('resolveMapViewBounds includes west and east marker extremes', () => {
+		const markers = buildLocationMapMarkers(sceneWithPerth, []);
+		const bounds = resolveMapViewBounds(markers);
+
+		expect(bounds.southWest.lng).toBeLessThanOrEqual(AU_MAP_BOUNDS.southWest.lng);
+		expect(bounds.northEast.lng).toBeGreaterThanOrEqual(
+			Math.max(...markers.map((marker) => marker.lng))
+		);
+		expect(bounds.southWest.lng).toBeLessThanOrEqual(
+			Math.min(...markers.map((marker) => marker.lng))
+		);
+	});
+
+	it('falls back to Australia bounds when no markers exist', () => {
+		expect(buildMarkerBounds([])).toBeNull();
+		expect(resolveMapViewBounds([])).toEqual(AU_MAP_BOUNDS);
 	});
 });

@@ -1,51 +1,81 @@
 import L from 'leaflet';
-import type { LocationMapMarker } from '@/lib/location-map-data';
-import { clusterDiameterForCount } from '@/lib/location-map-data';
+import type { LocationMapMarker, MapBounds } from '@/lib/location-map-data';
+import { AU_MAP_BOUNDS, clusterDiameterForCount, resolveMapViewBounds } from '@/lib/location-map-data';
 
 import 'leaflet/dist/leaflet.css';
 
-const AU_BOUNDS: L.LatLngBoundsExpression = [
-	[-44.5, 112.5],
-	[-9.5, 154.5]
-];
+const MAP_FIT_OPTIONS: L.FitBoundsOptions = {
+	padding: [40, 40],
+	maxZoom: 5
+};
+
+function toLeafletBounds(bounds: MapBounds): L.LatLngBoundsExpression {
+	return [
+		[bounds.southWest.lat, bounds.southWest.lng],
+		[bounds.northEast.lat, bounds.northEast.lng]
+	];
+}
 
 function createClusterIcon(marker: LocationMapMarker): L.DivIcon {
-	const diameter = clusterDiameterForCount(marker.upcomingCount);
-	const label =
+	const diameter = clusterDiameterForCount(marker.upcomingCount, marker.shortLabel);
+	const modifier =
 		marker.upcomingCount !== null && marker.upcomingCount > 0
-			? String(marker.upcomingCount)
-			: marker.statusLabel;
+			? 'location-map-cluster--count'
+			: marker.shortLabel === 'SOON' || marker.shortLabel === 'OPEN'
+				? 'location-map-cluster--status'
+				: 'location-map-cluster--dot';
+
+	const labelHtml =
+		modifier === 'location-map-cluster--dot'
+			? ''
+			: `<span class="location-map-cluster__label">${marker.shortLabel}</span>`;
 
 	return L.divIcon({
 		className: 'location-map-cluster-wrap',
-		html: `<span class="location-map-cluster" style="--cluster-size: ${diameter}px" role="img" aria-label="${marker.name}: ${label}"><span class="location-map-cluster__label">${label}</span></span>`,
+		html: `<span class="location-map-cluster ${modifier}" style="--cluster-size: ${diameter}px" role="img" aria-label="${marker.name}: ${marker.displayStatus}">${labelHtml}</span>`,
 		iconSize: [diameter, diameter],
 		iconAnchor: [diameter / 2, diameter / 2]
 	});
 }
 
-function bindMarkerNavigation(marker: L.Marker, data: LocationMapMarker): void {
-	const openTarget = () => {
-		if (data.external) {
-			window.open(data.href, '_blank', 'noopener,noreferrer');
-			return;
-		}
-		window.location.assign(data.href);
-	};
+function popupHtml(marker: LocationMapMarker): string {
+	const browseLabel = marker.external ? 'Browse in app' : 'Browse events';
+	const targetAttrs = marker.external ? ' target="_blank" rel="noopener noreferrer"' : '';
 
-	marker.on('click', openTarget);
-	marker.on('keypress', (event) => {
-		const keyboardEvent = event.originalEvent as KeyboardEvent;
-		if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
-			keyboardEvent.preventDefault();
-			openTarget();
-		}
+	return `
+		<div class="location-map-popup">
+			<p class="location-map-popup__city">${marker.name}</p>
+			<p class="location-map-popup__status">${marker.displayStatus}</p>
+			<a class="location-map-popup__link" href="${marker.href}"${targetAttrs}>${browseLabel} &rarr;</a>
+		</div>
+	`;
+}
+
+function bindMarkerPopup(marker: L.Marker, data: LocationMapMarker): void {
+	marker.bindPopup(popupHtml(data), {
+		className: 'location-map-popup-wrap',
+		closeButton: true,
+		autoPan: true,
+		maxWidth: 240
 	});
+
+	marker.on('click', () => {
+		marker.openPopup();
+	});
+}
+
+function prepareMapCanvas(mapCanvas: HTMLElement): void {
+	mapCanvas.hidden = false;
+	mapCanvas.style.visibility = 'hidden';
+}
+
+function revealMapCanvas(mapCanvas: HTMLElement): void {
+	mapCanvas.style.visibility = 'visible';
 }
 
 export function initEventLocationMap(root: HTMLElement): void {
 	const mapCanvas = root.querySelector<HTMLElement>('[data-location-map-canvas]');
-	const fallback = root.querySelector<HTMLElement>('[data-location-map-fallback]');
+	const failureNote = root.querySelector<HTMLElement>('[data-location-map-failure]');
 
 	if (!mapCanvas) {
 		return;
@@ -60,6 +90,8 @@ export function initEventLocationMap(root: HTMLElement): void {
 	}
 
 	try {
+		prepareMapCanvas(mapCanvas);
+
 		const map = L.map(mapCanvas, {
 			zoomControl: true,
 			scrollWheelZoom: false,
@@ -74,9 +106,8 @@ export function initEventLocationMap(root: HTMLElement): void {
 			maxZoom: 19
 		}).addTo(map);
 
-		map.fitBounds(AU_BOUNDS, { padding: [24, 24] });
-
-		const leafletMarkers: L.Marker[] = [];
+		const viewBounds = markers.length > 0 ? resolveMapViewBounds(markers) : AU_MAP_BOUNDS;
+		map.fitBounds(toLeafletBounds(viewBounds), MAP_FIT_OPTIONS);
 
 		for (const markerData of markers) {
 			const icon = createClusterIcon(markerData);
@@ -94,28 +125,26 @@ export function initEventLocationMap(root: HTMLElement): void {
 				opacity: 0.95
 			});
 
-			bindMarkerNavigation(marker, markerData);
+			bindMarkerPopup(marker, markerData);
 			marker.addTo(map);
-			leafletMarkers.push(marker);
 		}
 
-		if (leafletMarkers.length > 0) {
-			const group = L.featureGroup(leafletMarkers);
-			map.fitBounds(group.getBounds().pad(0.35), { maxZoom: 6, padding: [32, 32] });
-		}
+		map.invalidateSize();
+		map.fitBounds(toLeafletBounds(viewBounds), MAP_FIT_OPTIONS);
 
+		revealMapCanvas(mapCanvas);
 		root.classList.add('location-map--ready');
-		if (fallback) {
-			fallback.hidden = true;
+
+		if (failureNote) {
+			failureNote.hidden = true;
 		}
-
-		mapCanvas.removeAttribute('hidden');
-
-		window.setTimeout(() => map.invalidateSize(), 0);
 	} catch {
+		mapCanvas.hidden = true;
+		mapCanvas.style.visibility = 'visible';
 		root.classList.add('location-map--failed');
-		if (fallback) {
-			fallback.hidden = false;
+
+		if (failureNote) {
+			failureNote.hidden = false;
 		}
 	}
 }

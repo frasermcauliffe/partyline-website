@@ -1,6 +1,9 @@
 ---
 import PremiumCard from '@/components/ui/PremiumCard.astro';
-import { buildLocationMapMarkers, type LocationMapMarker } from '@/lib/location-map-data';
+import {
+	buildLocationMapMarkers,
+	cityCardBadge
+} from '@/lib/location-map-data';
 import { SCENE_INDEX_ALPHA_NOTE } from '@/lib/event-landing-data';
 import type { PublicEventPreview } from '@/lib/app-preview-types';
 import type { PublicSceneIndexFetchResult } from '@/lib/public-scene-index';
@@ -14,12 +17,8 @@ const { sceneResult, previewEvents }: Props = Astro.props;
 const markers = buildLocationMapMarkers(sceneResult, previewEvents);
 const markersJson = JSON.stringify(markers);
 
-function fallbackBadge(marker: LocationMapMarker): string {
-	if (marker.upcomingCount !== null && marker.upcomingCount > 0) {
-		return `${marker.upcomingCount} upcoming`;
-	}
-	return marker.statusLabel;
-}
+const MAP_HELPER_COPY =
+	'City counts come from the PartyLine Scene Index and may not represent every event in that city.';
 ---
 
 <section
@@ -32,7 +31,6 @@ function fallbackBadge(marker: LocationMapMarker): string {
 			<div
 				class="location-map__canvas"
 				data-location-map-canvas
-				hidden
 				role="application"
 				aria-label="Interactive Australia event map"
 			></div>
@@ -56,28 +54,31 @@ function fallbackBadge(marker: LocationMapMarker): string {
 			</div>
 		</div>
 
-		<div class="location-map__fallback" data-location-map-fallback hidden>
-			<p class="location-map__fallback-note">
-				Map preview unavailable — browse by city below.
-			</p>
-			<div class="location-map__fallback-grid">
-				{
-					markers.map((marker) => (
-						<PremiumCard
-							variant="preview"
-							href={marker.href}
-							external={marker.external}
-							class="location-map__fallback-card"
-						>
-							<p class="location-map__fallback-badge">{fallbackBadge(marker)}</p>
-							<h3>{marker.name}</h3>
-							<p class="location-map__fallback-link">
-								{marker.external ? 'Browse in app' : 'Browse events'} &rarr;
-							</p>
-						</PremiumCard>
-					))
-				}
-			</div>
+		<p class="location-map__failure" data-location-map-failure hidden>
+			Map preview unavailable — choose a city below to browse events.
+		</p>
+	</div>
+
+	<p class="location-map__helper">{MAP_HELPER_COPY}</p>
+
+	<div class="location-map__cards">
+		<div class="location-map__cards-grid">
+			{
+				markers.map((marker) => (
+					<PremiumCard
+						variant="preview"
+						href={marker.href}
+						external={marker.external}
+						class="location-map__city-card"
+					>
+						<p class="location-map__city-badge">{cityCardBadge(marker)}</p>
+						<h3>{marker.name}</h3>
+						<p class="location-map__city-link">
+							{marker.external ? 'Browse in app' : 'Browse events'} &rarr;
+						</p>
+					</PremiumCard>
+				))
+			}
 		</div>
 	</div>
 
@@ -86,19 +87,19 @@ function fallbackBadge(marker: LocationMapMarker): string {
 
 <noscript>
 	<div class="location-map-noscript">
-		<p class="location-map__fallback-note">Browse upcoming events by city.</p>
-		<div class="location-map__fallback-grid">
+		<p class="location-map__helper">{MAP_HELPER_COPY}</p>
+		<div class="location-map__cards-grid">
 			{
 				markers.map((marker) => (
 					<PremiumCard
 						variant="preview"
 						href={marker.href}
 						external={marker.external}
-						class="location-map__fallback-card"
+						class="location-map__city-card"
 					>
-						<p class="location-map__fallback-badge">{fallbackBadge(marker)}</p>
+						<p class="location-map__city-badge">{cityCardBadge(marker)}</p>
 						<h3>{marker.name}</h3>
-						<p class="location-map__fallback-link">
+						<p class="location-map__city-link">
 							{marker.external ? 'Browse in app' : 'Browse events'} &rarr;
 						</p>
 					</PremiumCard>
@@ -139,6 +140,11 @@ function fallbackBadge(marker: LocationMapMarker): string {
 		width: var(--cluster-size);
 	}
 
+	.location-map-cluster--dot {
+		background: var(--color-primary, #3ce861);
+		box-shadow: 0 0 0 3px rgba(60, 232, 97, 0.18);
+	}
+
 	.location-map-cluster:hover,
 	.location-map-cluster:focus-visible {
 		box-shadow: 0 0 0 6px rgba(60, 232, 97, 0.2);
@@ -147,13 +153,53 @@ function fallbackBadge(marker: LocationMapMarker): string {
 
 	.location-map-cluster__label {
 		font-family: var(--font-label, system-ui);
-		font-size: 0.72rem;
+		font-size: 0.68rem;
 		font-weight: 700;
-		letter-spacing: 0.02em;
-		line-height: 1.1;
-		padding: 0.2rem;
+		letter-spacing: 0.04em;
+		line-height: 1;
+		padding: 0.15rem;
 		text-align: center;
-		text-transform: uppercase;
+	}
+
+	.location-map-popup-wrap .leaflet-popup-content-wrapper {
+		background: #111111;
+		border: 1px solid rgba(60, 232, 97, 0.35);
+		border-radius: 12px;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+		color: #f5f5f5;
+	}
+
+	.location-map-popup-wrap .leaflet-popup-tip {
+		background: #111111;
+		border: 1px solid rgba(60, 232, 97, 0.35);
+	}
+
+	.location-map-popup-wrap .leaflet-popup-content {
+		margin: 0.85rem 1rem;
+	}
+
+	.location-map-popup__city {
+		font-size: 1rem;
+		font-weight: 700;
+		margin: 0 0 0.35rem;
+	}
+
+	.location-map-popup__status {
+		color: #b8b8b8;
+		font-size: 0.85rem;
+		margin: 0 0 0.75rem;
+	}
+
+	.location-map-popup__link {
+		color: #3ce861;
+		font-size: 0.85rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.location-map-popup__link:hover,
+	.location-map-popup__link:focus-visible {
+		text-decoration: underline;
 	}
 </style>
 
@@ -176,8 +222,8 @@ function fallbackBadge(marker: LocationMapMarker): string {
 		width: 100%;
 	}
 
-	.location-map--ready .location-map__canvas {
-		display: block;
+	.location-map--failed .location-map__canvas {
+		display: none;
 	}
 
 	.location-map__layer {
@@ -186,6 +232,7 @@ function fallbackBadge(marker: LocationMapMarker): string {
 		border-radius: var(--radius-sm);
 		bottom: var(--space-3);
 		left: var(--space-3);
+		max-width: calc(100% - 2 * var(--space-3));
 		padding: var(--space-3);
 		position: absolute;
 		z-index: 500;
@@ -229,6 +276,7 @@ function fallbackBadge(marker: LocationMapMarker): string {
 		border: 1px solid var(--border-strong);
 		border-radius: 50%;
 		display: inline-block;
+		flex-shrink: 0;
 		height: 0.65rem;
 		width: 0.65rem;
 	}
@@ -243,36 +291,37 @@ function fallbackBadge(marker: LocationMapMarker): string {
 		font-size: var(--text-meta);
 	}
 
-	.location-map__fallback {
+	.location-map__failure {
 		border-top: 1px solid var(--border-subtle);
-		padding: var(--space-5);
-	}
-
-	.location-map--failed .location-map__fallback {
-		display: block;
-	}
-
-	.location-map-noscript {
-		margin-top: var(--space-4);
-	}
-
-	.location-map__fallback-note {
 		color: var(--color-muted);
 		font-size: var(--text-small);
-		margin-bottom: var(--space-4);
+		margin: 0;
+		padding: var(--space-4) var(--space-5);
 	}
 
-	.location-map__fallback-grid {
+	.location-map__helper {
+		color: var(--color-muted-strong);
+		font-size: var(--text-small);
+		line-height: 1.55;
+		margin: var(--space-4) 0 0;
+		max-width: 42rem;
+	}
+
+	.location-map__cards {
+		margin-top: var(--space-5);
+	}
+
+	.location-map__cards-grid {
 		display: grid;
 		gap: var(--space-4);
 		grid-template-columns: 1fr;
 	}
 
-	.location-map__fallback-grid :global(.location-map__fallback-card h3) {
+	.location-map__cards-grid :global(.location-map__city-card h3) {
 		font-size: var(--text-card-title);
 	}
 
-	.location-map__fallback-badge {
+	.location-map__city-badge {
 		color: var(--signal);
 		font-family: var(--font-label);
 		font-size: var(--text-meta);
@@ -280,7 +329,7 @@ function fallbackBadge(marker: LocationMapMarker): string {
 		text-transform: uppercase;
 	}
 
-	.location-map__fallback-link {
+	.location-map__city-link {
 		color: var(--color-muted);
 		font-size: var(--text-small);
 	}
@@ -293,14 +342,18 @@ function fallbackBadge(marker: LocationMapMarker): string {
 		max-width: 42rem;
 	}
 
+	.location-map-noscript {
+		margin-top: var(--space-4);
+	}
+
 	@media (min-width: 640px) {
-		.location-map__fallback-grid {
+		.location-map__cards-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
 	@media (min-width: 1024px) {
-		.location-map__fallback-grid {
+		.location-map__cards-grid {
 			grid-template-columns: repeat(4, minmax(0, 1fr));
 		}
 	}

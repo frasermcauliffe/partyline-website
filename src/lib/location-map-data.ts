@@ -82,6 +82,17 @@ export const LOCATION_MAP_CITIES: LocationMapCityConfig[] = [
 	}
 ];
 
+/** Australia-wide bounds for map fallback [southWest, northEast]. */
+export const AU_MAP_BOUNDS = {
+	southWest: { lat: -44.5, lng: 112.5 },
+	northEast: { lat: -9.5, lng: 154.5 }
+} as const;
+
+export type MapBounds = {
+	southWest: { lat: number; lng: number };
+	northEast: { lat: number; lng: number };
+};
+
 export type LocationMapMarker = {
 	id: string;
 	name: string;
@@ -90,7 +101,11 @@ export type LocationMapMarker = {
 	href: string;
 	external: boolean;
 	upcomingCount: number | null;
-	statusLabel: string;
+	/** Short marker-face label: count, OPEN, or SOON. */
+	shortLabel: string;
+	/** Full status for popups and city cards. */
+	displayStatus: string;
+	status: LocationMapCityConfig['status'];
 };
 
 function cityHref(city: LocationMapCityConfig): { href: string; external: boolean } {
@@ -106,14 +121,80 @@ function cityHref(city: LocationMapCityConfig): { href: string; external: boolea
 	return { href: APP_LINKS.events, external: true };
 }
 
-function statusLabelFor(status: LocationMapCityConfig['status']): string {
+export function displayStatusFor(
+	status: LocationMapCityConfig['status'],
+	upcomingCount: number | null
+): string {
+	if (upcomingCount !== null && upcomingCount > 0) {
+		return `${upcomingCount} upcoming`;
+	}
+
 	if (status === 'active') {
 		return 'Active now';
 	}
+
 	if (status === 'opening') {
 		return 'Opening';
 	}
+
 	return 'Coming next';
+}
+
+export function markerShortLabel(
+	status: LocationMapCityConfig['status'],
+	upcomingCount: number | null
+): string {
+	if (upcomingCount !== null && upcomingCount > 0) {
+		return String(upcomingCount);
+	}
+
+	if (status === 'coming') {
+		return 'SOON';
+	}
+
+	return 'OPEN';
+}
+
+export function buildMarkerBounds(markers: Pick<LocationMapMarker, 'lat' | 'lng'>[]): MapBounds | null {
+	if (markers.length === 0) {
+		return null;
+	}
+
+	let minLat = markers[0].lat;
+	let maxLat = markers[0].lat;
+	let minLng = markers[0].lng;
+	let maxLng = markers[0].lng;
+
+	for (const marker of markers) {
+		minLat = Math.min(minLat, marker.lat);
+		maxLat = Math.max(maxLat, marker.lat);
+		minLng = Math.min(minLng, marker.lng);
+		maxLng = Math.max(maxLng, marker.lng);
+	}
+
+	return {
+		southWest: { lat: minLat, lng: minLng },
+		northEast: { lat: maxLat, lng: maxLng }
+	};
+}
+
+export function resolveMapViewBounds(markers: Pick<LocationMapMarker, 'lat' | 'lng'>[]): MapBounds {
+	const markerBounds = buildMarkerBounds(markers);
+
+	if (!markerBounds) {
+		return AU_MAP_BOUNDS;
+	}
+
+	return {
+		southWest: {
+			lat: Math.min(markerBounds.southWest.lat, AU_MAP_BOUNDS.southWest.lat),
+			lng: Math.min(markerBounds.southWest.lng, AU_MAP_BOUNDS.southWest.lng)
+		},
+		northEast: {
+			lat: Math.max(markerBounds.northEast.lat, AU_MAP_BOUNDS.northEast.lat),
+			lng: Math.max(markerBounds.northEast.lng, AU_MAP_BOUNDS.northEast.lng)
+		}
+	};
 }
 
 export function buildLocationMapMarkers(
@@ -146,23 +227,34 @@ export function buildLocationMapMarkers(
 			href,
 			external,
 			upcomingCount,
-			statusLabel: statusLabelFor(city.status)
+			shortLabel: markerShortLabel(city.status, upcomingCount),
+			displayStatus: displayStatusFor(city.status, upcomingCount),
+			status: city.status
 		};
 	});
 }
 
-export function clusterDiameterForCount(count: number | null): number {
-	if (count === null || count <= 0) {
-		return 36;
+export function clusterDiameterForCount(count: number | null, shortLabel: string): number {
+	if (count !== null && count > 0) {
+		if (count < 10) {
+			return 40;
+		}
+		if (count < 50) {
+			return 48;
+		}
+		if (count < 200) {
+			return 56;
+		}
+		return 64;
 	}
-	if (count < 10) {
+
+	if (shortLabel === 'SOON' || shortLabel === 'OPEN') {
 		return 40;
 	}
-	if (count < 50) {
-		return 48;
-	}
-	if (count < 200) {
-		return 56;
-	}
-	return 64;
+
+	return 16;
+}
+
+export function cityCardBadge(marker: LocationMapMarker): string {
+	return marker.displayStatus;
 }
