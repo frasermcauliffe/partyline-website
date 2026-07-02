@@ -12,17 +12,20 @@ import { APP_LINKS } from '@/data/app-links';
 				<span class="eyebrow">PartyLine Collective</span>
 				<StatusBadge status="alpha" label="Alpha" dot />
 			</p>
-			<h1>Australia&rsquo;s underground music and events network.</h1>
+			<h1>Discover events and scene profiles across underground music culture</h1>
 			<p class="lede">
-				Discover events, browse scene profiles, submit listings, send booking enquiries, and
-				connect the people behind underground culture. Perth-first, building across Australia.
+				PartyLine brings together events, artists, venues, organisers and scene suppliers in one
+				place.
 			</p>
 			<div class="button-row home-hero__ctas">
-				<Button href={APP_LINKS.events} label="Explore Events" variant="primary" external />
-				<Button href={APP_LINKS.createListing} label="Create Profile" variant="secondary" external />
-				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="secondary" external />
-				<Button href={APP_LINKS.profiles} label="Browse Profiles" variant="ghost" external />
+				<Button href="/events" label="Browse events" variant="primary" />
+				<Button href="/profiles" label="Browse profiles" variant="secondary" />
 			</div>
+			<p class="home-hero__tertiary">
+				<a href={APP_LINKS.createListing} target="_blank" rel="noopener noreferrer">
+					Create your profile &rarr;
+				</a>
+			</p>
 			<ul class="home-hero__proof" aria-label="Platform highlights">
 				{
 					HOME_PROOF_CHIPS.map((chip) => (
@@ -65,7 +68,7 @@ import { APP_LINKS } from '@/data/app-links';
 						<text x="200" y="56" text-anchor="middle">Events</text>
 						<text x="303.9" y="120" text-anchor="middle">Profiles</text>
 						<text x="303.9" y="284" text-anchor="middle">Venues</text>
-						<text x="200" y="346" text-anchor="middle">Bookings</text>
+						<text x="200" y="346" text-anchor="middle">Connect</text>
 						<text x="96.1" y="284" text-anchor="middle">Opps</text>
 						<text x="96.1" y="120" text-anchor="middle">Media</text>
 					</g>
@@ -115,7 +118,7 @@ import { APP_LINKS } from '@/data/app-links';
 
 	.home-hero h1 {
 		font-size: var(--text-display);
-		max-width: 18ch;
+		max-width: 22ch;
 	}
 
 	.home-hero .lede {
@@ -125,6 +128,23 @@ import { APP_LINKS } from '@/data/app-links';
 
 	.home-hero__ctas {
 		margin-top: var(--space-5);
+	}
+
+	.home-hero__tertiary {
+		margin: var(--space-4) 0 0;
+	}
+
+	.home-hero__tertiary a {
+		color: var(--color-muted-strong);
+		font-size: var(--text-small);
+		font-weight: var(--weight-semibold);
+		text-decoration: none;
+	}
+
+	.home-hero__tertiary a:hover,
+	.home-hero__tertiary a:focus-visible {
+		color: var(--color-primary);
+		text-decoration: underline;
 	}
 
 	.home-hero__proof {

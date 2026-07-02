@@ -2,9 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
 import SectionShell from '@/components/ui/SectionShell.astro';
-import PremiumCard from '@/components/ui/PremiumCard.astro';
 import AudienceCard from '@/components/ui/AudienceCard.astro';
-import FeatureGrid from '@/components/ui/FeatureGrid.astro';
 import FaqList from '@/components/ui/FaqList.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
 import GuideCard from '@/components/guides/GuideCard.astro';
@@ -24,10 +22,10 @@ import { getSharedPublicSceneIndex } from '@/lib/event-landing-data';
 import { APP_LINKS } from '@/data/app-links';
 import {
 	HOME_APP_PREVIEWS,
+	HOME_EVENTS_LEDE,
 	HOME_FAQ,
-	HOME_FEATURES,
 	HOME_HOW_IT_WORKS,
-	HOME_ORGANISER_BULLETS,
+	HOME_PROFILES_LEDE,
 	HOME_ROLE_CARDS,
 	HOME_SCENE_PROFILES
 } from '@/data/home-content';
@@ -51,13 +49,61 @@ const homeSceneIndexTeaser = buildHomeSceneIndexTeaser(sceneIndexResult);
 >
 	<HomeHero />
 
-	<SectionShell eyebrow="Who it's for" title="Built for the whole scene">
-		<div class="role-grid">
-			{HOME_ROLE_CARDS.map((item) => <AudienceCard {...item} />)}
-		</div>
+	<section class="home-events-block" aria-label="Find underground events">
+		<SectionShell eyebrow="Events" title="Find underground events" lede={HOME_EVENTS_LEDE}>
+			<div class="home-events-block__actions">
+				<Button href="/events" label="Browse events" variant="primary" />
+				<Button
+					href={APP_LINKS.events}
+					label="Open full calendar in app"
+					variant="secondary"
+					external
+				/>
+			</div>
+		</SectionShell>
+
+		<SceneIndexTeaser
+			stats={homeSceneIndexTeaser.stats}
+			showUnavailableCallout={homeSceneIndexTeaser.showUnavailableCallout}
+			primaryHref="/events"
+			primaryLabel="Browse events"
+			secondaryHref={APP_LINKS.events}
+			secondaryLabel="Open full calendar in app"
+		/>
+
+		<PreviewPanel
+			title="Upcoming listings"
+			lede="A snapshot of public event listings from the PartyLine app."
+			source="app"
+			ctaLabel="Browse events"
+			ctaHref="/events"
+			external={false}
+			narrow={false}
+		>
+			{
+				upcomingEventsResult.events.length > 0 ? (
+					<div class="home-events-grid">
+						{upcomingEventsResult.events.map((event) => (
+							<PublicEventPreviewCard event={event} />
+						))}
+					</div>
+				) : (
+					<EmptyPreviewState
+						ctaHref="/events"
+						unavailable={upcomingEventsResult.unavailable}
+						message="Browse the event directory on PartyLine or open the app for the full calendar."
+						ctaLabel="Browse events"
+					/>
+				)
+			}
+		</PreviewPanel>
+	</section>
+
+	<SectionShell variant="band" eyebrow="Profiles" title="Browse scene profiles" lede={HOME_PROFILES_LEDE}>
+		<SceneProfilesPanel profiles={HOME_SCENE_PROFILES} />
 	</SectionShell>
 
-	<SectionShell variant="band" eyebrow="How it works" title="How PartyLine works">
+	<SectionShell eyebrow="How it works" title="How PartyLine works">
 		<ol class="steps">
 			{
 				HOME_HOW_IT_WORKS.map((step) => (
@@ -69,111 +115,25 @@ const homeSceneIndexTeaser = buildHomeSceneIndexTeaser(sceneIndexResult);
 			}
 		</ol>
 		<p class="section-link">
-			<a href="/how-it-works">See the full PartyLine flow &rarr;</a>
+			<a href="/how-it-works">Learn how it works &rarr;</a>
 		</p>
 	</SectionShell>
 
-	<SectionShell
-		variant="feature"
-		eyebrow="Platform"
-		title="What you can do on PartyLine"
-		lede="Discovery, profiles, submissions, enquiries and opportunities — scene infrastructure, not a vague landing page."
-	>
-		<FeatureGrid items={HOME_FEATURES} columns={3} />
+	<SectionShell variant="feature" eyebrow="Who it's for" title="Built for the whole scene">
+		<div class="role-grid">
+			{HOME_ROLE_CARDS.map((item) => <AudienceCard {...item} />)}
+		</div>
 		<p class="section-link">
-			<a href="/platform">See the full platform overview &rarr;</a>
+			<a href="/platform">See everything PartyLine supports &rarr;</a>
 		</p>
 	</SectionShell>
 
 	<SectionShell
 		eyebrow="App preview"
-		title="See the platform"
-		lede="UI preview placeholders for core flows in the PartyLine app. Screenshots can replace these blocks as the marketing site evolves."
+		title="Core app flows"
+		lede="A preview of the core PartyLine app flows."
 	>
 		<AppPreviewGrid items={HOME_APP_PREVIEWS} />
-	</SectionShell>
-
-	<SceneIndexTeaser
-		stats={homeSceneIndexTeaser.stats}
-		showUnavailableCallout={homeSceneIndexTeaser.showUnavailableCallout}
-		primaryHref="/events"
-		primaryLabel="Browse event directory"
-		secondaryHref={APP_LINKS.events}
-		secondaryLabel="Open the app for the full calendar"
-	/>
-
-	<PreviewPanel
-		eyebrow="Events"
-		title="See what&rsquo;s happening next"
-		lede="A snapshot of public event listings in the PartyLine app — Perth-first, building across Australia."
-		source="app"
-		ctaLabel="Explore all events in the app"
-		ctaHref={APP_LINKS.events}
-		narrow={false}
-	>
-		{
-			upcomingEventsResult.events.length > 0 ? (
-				<div class="home-events-grid">
-					{upcomingEventsResult.events.map((event) => (
-						<PublicEventPreviewCard event={event} />
-					))}
-				</div>
-			) : (
-				<EmptyPreviewState
-					ctaHref={APP_LINKS.events}
-					unavailable={upcomingEventsResult.unavailable}
-					message="See what\u2019s happening next in the PartyLine app."
-					ctaLabel="Explore events in the app"
-				/>
-			)
-		}
-	</PreviewPanel>
-
-	<SectionShell variant="band" eyebrow="Profiles" title="Scene profiles on PartyLine">
-		<SceneProfilesPanel profiles={HOME_SCENE_PROFILES} />
-	</SectionShell>
-
-	<SectionShell
-		variant="feature"
-		eyebrow="Organisers"
-		title="For organisers building real events"
-		lede="Submit your event, find DJs, request promotion support, track interest, and connect the right people around each show."
-	>
-		<ul class="list-check">
-			{HOME_ORGANISER_BULLETS.map((item) => <li>{item}</li>)}
-		</ul>
-		<div class="button-row section-actions">
-			<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="primary" external />
-			<Button href={APP_LINKS.createListing} label="Create Organiser Profile" variant="secondary" external />
-			<Button href="/organisers" label="Organiser overview" variant="ghost" />
-		</div>
-	</SectionShell>
-
-	<SectionShell
-		eyebrow="Bookings"
-		title="Make bookings more serious with secure deposits"
-		lede="Deposits can be paid through PartyLine and held before release, giving both sides a clearer booking record and confirmation path."
-	>
-		<div class="deposit-grid">
-			<PremiumCard variant="status">
-				<h3>Held before release</h3>
-				<p>
-					For supported held-release bookings, recipient payout is released after eligibility checks
-					— not as an instant split at payment time.
-				</p>
-			</PremiumCard>
-			<PremiumCard variant="quiet">
-				<h3>Clearer booking record</h3>
-				<p>
-					Enquiries, accepted requests, deposit payment and booking confirmation stay connected inside
-					PartyLine rather than scattered across DMs.
-				</p>
-			</PremiumCard>
-		</div>
-		<div class="button-row section-actions">
-			<Button href={APP_LINKS.createListing} label="Create Profile" variant="primary" external />
-			<Button href={APP_LINKS.profiles} label="Browse Profiles" variant="secondary" external />
-		</div>
 	</SectionShell>
 
 	<SectionShell
@@ -222,22 +182,34 @@ const homeSceneIndexTeaser = buildHomeSceneIndexTeaser(sceneIndexResult);
 	<section class="home-final-cta">
 		<div class="container home-final-cta__inner">
 			<div class="home-final-cta__copy">
-				<h2>Join the underground network.</h2>
+				<h2>Start with events or profiles.</h2>
 				<p>
-					Explore events, create a profile, or submit your next night — Perth-first, building across
-					Australia.
+					Browse underground listings, explore scene profiles, or create your listing when you are
+					ready — Perth-first, building across Australia.
 				</p>
 			</div>
 			<div class="home-final-cta__actions">
-				<Button href={APP_LINKS.events} label="Explore Events" variant="primary" external />
-				<Button href={APP_LINKS.createListing} label="Create Profile" variant="secondary" external />
-				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="secondary" external />
+				<Button href="/events" label="Browse events" variant="primary" />
+				<Button href="/profiles" label="Browse profiles" variant="secondary" />
+				<Button href={APP_LINKS.createListing} label="Create your profile" variant="secondary" external />
+				<Button href={APP_LINKS.submitEvent} label="Submit event" variant="ghost" external />
 			</div>
 		</div>
 	</section>
 </BaseLayout>
 
 <style>
+	.home-events-block :global(.section-shell:first-of-type) {
+		padding-bottom: 0;
+	}
+
+	.home-events-block__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		margin-top: var(--space-5);
+	}
+
 	.role-grid {
 		display: grid;
 		gap: var(--space-4);
@@ -287,54 +259,11 @@ const homeSceneIndexTeaser = buildHomeSceneIndexTeaser(sceneIndexResult);
 		text-decoration: underline;
 	}
 
-	.section-actions {
-		margin-top: var(--space-6);
-	}
-
 	.home-events-grid {
 		align-items: stretch;
 		display: grid;
 		gap: var(--space-5);
 		grid-template-columns: 1fr;
-	}
-
-	.list-check {
-		color: var(--color-muted);
-		display: grid;
-		gap: var(--space-3);
-		line-height: 1.55;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	.list-check li {
-		padding-left: 1.35rem;
-		position: relative;
-	}
-
-	.list-check li::before {
-		color: var(--signal);
-		content: '\2713';
-		left: 0;
-		position: absolute;
-	}
-
-	.deposit-grid {
-		display: grid;
-		gap: var(--space-4);
-		grid-template-columns: 1fr;
-	}
-
-	.deposit-grid :global(.premium-card h3) {
-		font-size: var(--text-card-title);
-		margin-bottom: var(--space-2);
-	}
-
-	.deposit-grid :global(.premium-card p) {
-		color: var(--color-muted);
-		font-size: var(--text-small);
-		line-height: 1.55;
 	}
 
 	.content-block + .content-block {
@@ -415,8 +344,7 @@ const homeSceneIndexTeaser = buildHomeSceneIndexTeaser(sceneIndexResult);
 
 	@media (min-width: 640px) {
 		.home-events-grid,
-		.content-grid,
-		.deposit-grid {
+		.content-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 

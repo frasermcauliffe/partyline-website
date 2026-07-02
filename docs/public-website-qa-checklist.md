@@ -41,10 +41,23 @@ PUBLIC_APP_API_URL=https://invalid.partyline.local npm run build
 
 ### Homepage (`/`)
 
-| Condition | Expected |
-|-----------|----------|
-| API available | PartyLine Scene Index teaser above event preview; four stats; alpha note; links to `/events` and app |
-| API unavailable | Info callout (“Snapshot unavailable…”) or teaser omitted — **never fake counts** |
+| Check | Expected |
+|-------|----------|
+| Hero primary CTA | Browse events → `/events` |
+| Hero secondary CTA | Browse profiles → `/profiles` |
+| Hero tertiary link | Create your profile → app create-listing |
+| Events block order | Events header, Scene Index teaser, upcoming preview — before role cards |
+| Profiles block | Browse scene profiles section near top with About profiles + Browse live profiles CTAs |
+| App preview | Three tiles only: event discovery, profiles directory, event submission |
+| Removed sections | No homepage bookings/deposits section; no 8-card platform feature grid |
+| API available | Scene Index teaser with stats; primary Browse events → `/events`; secondary app calendar |
+| API unavailable | Info callout or teaser omitted — **never fake counts** |
+
+Homepage copy grep:
+
+```bash
+rg -i "the scene|/the-scene|verified|most popular|top |best |ranked|secure deposit|events/directory" src/pages/index.astro src/data/home-content.ts src/components/home/
+```
 
 ### Event directory (`/events`)
 

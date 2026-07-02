@@ -1,10 +1,16 @@
 import { APP_LINKS } from '@/data/app-links';
 
 export const HOME_PROOF_CHIPS = [
-	'Perth-first',
-	'Built for underground music',
-	'Events, profiles and bookings in one place'
+	'Perth-first, building across Australia',
+	'Events, profiles and discovery tools',
+	'Built for artists, organisers, venues and scene suppliers'
 ] as const;
+
+export const HOME_EVENTS_LEDE =
+	'Browse upcoming club nights, warehouses and community listings on PartyLine — Perth-first, building across Australia.';
+
+export const HOME_PROFILES_LEDE =
+	'Artists, venues, organisers, production/AV, media and performers — listed on PartyLine and searchable in the app.';
 
 export type HomeRoleCard = {
 	title: string;
@@ -20,7 +26,7 @@ export const HOME_ROLE_CARDS: HomeRoleCard[] = [
 	{
 		title: 'Artists & DJs',
 		description:
-			'Build a profile, link your events, share your sound, and receive booking enquiries from organisers and venues.',
+			'Build a profile, link your events, share your sound, and connect with organisers and venues across the scene.',
 		ctaLabel: 'Create profile',
 		ctaHref: APP_LINKS.createListing,
 		external: true,
@@ -30,7 +36,7 @@ export const HOME_ROLE_CARDS: HomeRoleCard[] = [
 	{
 		title: 'Venues & Spaces',
 		description:
-			'Show capacity, location, setup, restrictions, photos and the context people need before they enquire.',
+			'Show capacity, location, setup, restrictions, photos and the context people need before they reach out.',
 		ctaLabel: 'Add your venue',
 		ctaHref: APP_LINKS.createListing,
 		external: true,
@@ -51,11 +57,11 @@ export const HOME_ROLE_CARDS: HomeRoleCard[] = [
 		title: 'Production & AV',
 		description:
 			'Show your services, gear, packages, coverage area and the kind of nights you support.',
-		ctaLabel: 'Browse profiles',
+		ctaLabel: 'Browse live profiles',
 		ctaHref: APP_LINKS.profiles,
 		external: true,
-		learnMoreLabel: 'Platform overview',
-		learnMoreHref: '/platform'
+		learnMoreLabel: 'About profiles',
+		learnMoreHref: '/profiles'
 	},
 	{
 		title: 'Media Creators',
@@ -74,78 +80,28 @@ export const HOME_ROLE_CARDS: HomeRoleCard[] = [
 		ctaLabel: 'Create profile',
 		ctaHref: APP_LINKS.createListing,
 		external: true,
-		learnMoreLabel: 'Browse profiles',
+		learnMoreLabel: 'About profiles',
 		learnMoreHref: '/profiles'
-	},
-	{
-		title: 'Fans & Guests',
-		description:
-			'Discover what\u2019s on, save events, follow profiles and stay close to the scene as it grows.',
-		ctaLabel: 'Explore events',
-		ctaHref: APP_LINKS.events,
-		external: true,
-		learnMoreLabel: 'Events on PartyLine',
-		learnMoreHref: '/events'
 	}
 ];
 
 export const HOME_HOW_IT_WORKS = [
 	{
-		title: 'Create your scene profile',
+		title: 'Discover events',
 		description:
-			'Join for free, then create a listing, submit an event, or start exploring depending on your path.'
+			'Browse underground listings on the PartyLine website and open the app for the full calendar when you need more.'
 	},
 	{
-		title: 'Discover and connect',
+		title: 'Browse profiles',
 		description:
-			'Browse events and profiles in the PartyLine app, follow what matters, and find the people behind each night.'
+			'Find artists, venues, organisers, production crews, media and performers listed on PartyLine — searchable in the app.'
 	},
 	{
-		title: 'Enquire, book and build',
+		title: 'Create or submit when you are part of the scene',
 		description:
-			'Send booking enquiries, apply to opportunities, and use secure deposits when a booking is ready to get serious.'
+			'Create a profile, submit an event, or post opportunities when you are ready to contribute to the network.'
 	}
 ] as const;
-
-export type HomeFeature = {
-	title: string;
-	description: string;
-};
-
-export const HOME_FEATURES: HomeFeature[] = [
-	{
-		title: 'Discover underground events',
-		description: 'Club nights, warehouses, day parties and community-led listings — Perth-first, building across Australia.'
-	},
-	{
-		title: 'Browse scene profiles',
-		description: 'Artists, venues, organisers, production crews, media and performers in one connected directory.'
-	},
-	{
-		title: 'Submit events',
-		description: 'Add your night to the radar with lineups, venues, tags and linked profiles where available.'
-	},
-	{
-		title: 'Send booking enquiries',
-		description: 'Structured requests through public profiles — clearer context than a cold DM.'
-	},
-	{
-		title: 'Post or find opportunities',
-		description: 'DJs wanted, open decks, residencies and other open calls from organisers and venues.'
-	},
-	{
-		title: 'Request promotion support',
-		description: 'Organisers can flag promotion interest when submitting or editing events — reviewed manually by PartyLine.'
-	},
-	{
-		title: 'Link events to the scene',
-		description: 'Connect artists, venues, organisers and suppliers around each listing.'
-	},
-	{
-		title: 'Profiles built for socials',
-		description: 'Share a public PartyLine profile link in bios, posts and promo without rebuilding the same info everywhere.'
-	}
-];
 
 export type HomeAppPreview = {
 	title: string;
@@ -165,29 +121,9 @@ export const HOME_APP_PREVIEWS: HomeAppPreview[] = [
 		description: 'Public profiles for artists, venues, organisers and suppliers.'
 	},
 	{
-		label: 'Public profile',
-		title: 'Profile page',
-		description: 'Bio, media, linked events, socials and enquiry actions.'
-	},
-	{
 		label: 'Submit event',
 		title: 'Event submission',
 		description: 'Add listings with lineups, venues and linked profiles.'
-	},
-	{
-		label: 'Booking enquiry',
-		title: 'Structured enquiries',
-		description: 'Send booking context through a profile, not a scattered inbox thread.'
-	},
-	{
-		label: 'Secure deposit',
-		title: 'Deposit confirmation',
-		description: 'Paid deposits and booking confirmation recorded in PartyLine.'
-	},
-	{
-		label: 'Promotion interest',
-		title: 'Organiser support',
-		description: 'Flag promotion interest on submit or edit — reviewed manually.'
 	}
 ];
 
@@ -205,7 +141,7 @@ export const HOME_SCENE_PROFILES: HomeSceneProfileCard[] = [
 		type: 'Artist / DJ',
 		city: 'Perth',
 		tags: 'Techno · Hard groove · Live',
-		description: 'Public profile with linked events, media embeds and booking enquiries.'
+		description: 'Public profile with linked events, media embeds and connect-through-PartyLine actions.'
 	},
 	{
 		name: 'Example: Inner-city room',
@@ -226,7 +162,7 @@ export const HOME_SCENE_PROFILES: HomeSceneProfileCard[] = [
 		type: 'Production',
 		city: 'Perth',
 		tags: 'Lighting · Rigging · Event production',
-		description: 'Services, coverage area and past work visible to organisers booking production.'
+		description: 'Services, coverage area and past work visible to organisers looking for production.'
 	},
 	{
 		name: 'Example: Event photographer',
@@ -244,40 +180,21 @@ export const HOME_SCENE_PROFILES: HomeSceneProfileCard[] = [
 	}
 ];
 
-export const HOME_ORGANISER_BULLETS = [
-	'Submit events with lineups, venues and tags',
-	'Link artists, venues and suppliers around each show',
-	'Post DJ opportunities and review applicants',
-	'Receive booking interest through public profiles',
-	'Request promotion support when submitting or editing events',
-	'Ask about affiliate and ticket tracking support as the platform grows'
-] as const;
-
 export const HOME_FAQ = [
 	{
 		question: 'What is PartyLine?',
 		answer:
-			'PartyLine Collective is scene infrastructure for underground music and events — discovery, public profiles, opportunities, enquiries and booking tools in one place. It is Perth-first and building across Australia.'
+			'PartyLine Collective is scene infrastructure for underground music culture — events, profiles and discovery tools in one place. It is Perth-first and building across Australia.'
 	},
 	{
-		question: 'Who is it for?',
+		question: 'What can I browse?',
 		answer:
-			'Artists, DJs, venues, organisers, production crews, media, performers and fans who want a clearer way to find each other around real events.'
+			'Browse underground events on the website event directory, read about scene profiles on the profiles page, and open the PartyLine app for live profile search and the full event calendar.'
 	},
 	{
-		question: 'Is it free to join?',
+		question: 'Who can create a profile?',
 		answer:
-			'Yes. Creating an account and building a public profile is free during closed alpha. Some booking and payment flows may involve standard processing where deposits are used.'
-	},
-	{
-		question: 'How do bookings work?',
-		answer:
-			'Booking enquiries and structured requests run through public profiles in the app. When both sides are ready, deposits and confirmation can be handled inside PartyLine.'
-	},
-	{
-		question: 'How do secure deposits work?',
-		answer:
-			'Secure deposits can be paid through PartyLine and held before release, giving both sides a clearer booking record. Recipient payout is released through PartyLine\u2019s admin release process after eligibility checks — not instant at payment time for held-release bookings.'
+			'Artists, DJs, venues, organisers, production crews, media and performers can create a public listing on PartyLine. Fans can join to save events and follow profiles without publishing a listing.'
 	},
 	{
 		question: 'Can I submit an event?',
@@ -285,13 +202,8 @@ export const HOME_FAQ = [
 			'Yes. Signed-in users can submit events in the app with lineups, venues, tags and linked profiles where available.'
 	},
 	{
-		question: 'Can PartyLine help promote my event?',
+		question: 'Is PartyLine live yet?',
 		answer:
-			'Organisers can flag promotion interest when submitting or editing an event. PartyLine reviews these manually — there is no guaranteed placement or paid ranking in the current alpha.'
-	},
-	{
-		question: 'Is PartyLine only for Perth?',
-		answer:
-			'PartyLine is Perth-first today, with public listings and profiles building across Australia as more organisers, venues and artists join.'
+			'PartyLine is in closed alpha. Discovery, profiles, event submission and related workflows are live and evolving — see release notes for what is shipped today. Full booking, deposit and payment workflows are not the focus of this website preview.'
 	}
 ] as const;
