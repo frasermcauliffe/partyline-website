@@ -1,0 +1,307 @@
+---
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import { buildLocationMapMarkers, type LocationMapMarker } from '@/lib/location-map-data';
+import { SCENE_INDEX_ALPHA_NOTE } from '@/lib/event-landing-data';
+import type { PublicEventPreview } from '@/lib/app-preview-types';
+import type { PublicSceneIndexFetchResult } from '@/lib/public-scene-index';
+
+interface Props {
+	sceneResult: PublicSceneIndexFetchResult;
+	previewEvents: PublicEventPreview[];
+}
+
+const { sceneResult, previewEvents }: Props = Astro.props;
+const markers = buildLocationMapMarkers(sceneResult, previewEvents);
+const markersJson = JSON.stringify(markers);
+
+function fallbackBadge(marker: LocationMapMarker): string {
+	if (marker.upcomingCount !== null && marker.upcomingCount > 0) {
+		return `${marker.upcomingCount} upcoming`;
+	}
+	return marker.statusLabel;
+}
+---
+
+<section
+	class="location-map"
+	data-markers={markersJson}
+	aria-label="Search events by location on an interactive map of Australia"
+>
+	<div class="location-map__frame">
+		<div class="location-map__canvas-wrap">
+			<div
+				class="location-map__canvas"
+				data-location-map-canvas
+				hidden
+				role="application"
+				aria-label="Interactive Australia event map"
+			></div>
+
+			<div class="location-map__layer" aria-label="Map layers">
+				<p class="location-map__layer-label">Layer</p>
+				<ul class="location-map__layer-list">
+					<li class="location-map__layer-item location-map__layer-item--active">
+						<span class="location-map__layer-dot location-map__layer-dot--events" aria-hidden="true"></span>
+						Events
+					</li>
+					<li class="location-map__layer-item location-map__layer-item--disabled" aria-disabled="true">
+						<span class="location-map__layer-dot" aria-hidden="true"></span>
+						Venues <span class="location-map__layer-soon">(later)</span>
+					</li>
+					<li class="location-map__layer-item location-map__layer-item--disabled" aria-disabled="true">
+						<span class="location-map__layer-dot" aria-hidden="true"></span>
+						Profiles <span class="location-map__layer-soon">(later)</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="location-map__fallback" data-location-map-fallback hidden>
+			<p class="location-map__fallback-note">
+				Map preview unavailable — browse by city below.
+			</p>
+			<div class="location-map__fallback-grid">
+				{
+					markers.map((marker) => (
+						<PremiumCard
+							variant="preview"
+							href={marker.href}
+							external={marker.external}
+							class="location-map__fallback-card"
+						>
+							<p class="location-map__fallback-badge">{fallbackBadge(marker)}</p>
+							<h3>{marker.name}</h3>
+							<p class="location-map__fallback-link">
+								{marker.external ? 'Browse in app' : 'Browse events'} &rarr;
+							</p>
+						</PremiumCard>
+					))
+				}
+			</div>
+		</div>
+	</div>
+
+	<p class="location-map__alpha">{SCENE_INDEX_ALPHA_NOTE}</p>
+</section>
+
+<noscript>
+	<div class="location-map-noscript">
+		<p class="location-map__fallback-note">Browse upcoming events by city.</p>
+		<div class="location-map__fallback-grid">
+			{
+				markers.map((marker) => (
+					<PremiumCard
+						variant="preview"
+						href={marker.href}
+						external={marker.external}
+						class="location-map__fallback-card"
+					>
+						<p class="location-map__fallback-badge">{fallbackBadge(marker)}</p>
+						<h3>{marker.name}</h3>
+						<p class="location-map__fallback-link">
+							{marker.external ? 'Browse in app' : 'Browse events'} &rarr;
+						</p>
+					</PremiumCard>
+				))
+			}
+		</div>
+	</div>
+</noscript>
+
+<script>
+	import { initEventLocationMap } from '@/components/directory/event-location-map.client';
+
+	for (const root of document.querySelectorAll<HTMLElement>('.location-map[data-markers]')) {
+		initEventLocationMap(root);
+	}
+</script>
+
+<style is:global>
+	.location-map-cluster-wrap {
+		background: transparent;
+		border: 0;
+	}
+
+	.location-map-cluster {
+		align-items: center;
+		background: rgba(60, 232, 97, 0.18);
+		border: 2px solid var(--color-primary, #3ce861);
+		border-radius: 50%;
+		box-shadow: 0 0 0 4px rgba(60, 232, 97, 0.12);
+		color: var(--color-text, #f5f5f5);
+		cursor: pointer;
+		display: inline-flex;
+		height: var(--cluster-size);
+		justify-content: center;
+		transition:
+			transform 120ms ease,
+			box-shadow 120ms ease;
+		width: var(--cluster-size);
+	}
+
+	.location-map-cluster:hover,
+	.location-map-cluster:focus-visible {
+		box-shadow: 0 0 0 6px rgba(60, 232, 97, 0.2);
+		transform: scale(1.04);
+	}
+
+	.location-map-cluster__label {
+		font-family: var(--font-label, system-ui);
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		line-height: 1.1;
+		padding: 0.2rem;
+		text-align: center;
+		text-transform: uppercase;
+	}
+</style>
+
+<style>
+	.location-map__frame {
+		background: var(--surface-1);
+		border: 1px solid var(--border-strong);
+		border-radius: var(--radius-panel);
+		box-shadow: 0 0 0 1px rgba(60, 232, 97, 0.08);
+		overflow: hidden;
+	}
+
+	.location-map__canvas-wrap {
+		position: relative;
+	}
+
+	.location-map__canvas {
+		background: #0a0a0a;
+		height: clamp(18rem, 52vw, 28rem);
+		width: 100%;
+	}
+
+	.location-map--ready .location-map__canvas {
+		display: block;
+	}
+
+	.location-map__layer {
+		background: rgba(5, 5, 5, 0.82);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-sm);
+		bottom: var(--space-3);
+		left: var(--space-3);
+		padding: var(--space-3);
+		position: absolute;
+		z-index: 500;
+	}
+
+	.location-map__layer-label {
+		color: var(--color-muted);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		margin-bottom: var(--space-2);
+		text-transform: uppercase;
+	}
+
+	.location-map__layer-list {
+		display: grid;
+		gap: var(--space-2);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.location-map__layer-item {
+		align-items: center;
+		color: var(--color-muted-strong);
+		display: flex;
+		font-size: var(--text-small);
+		gap: var(--space-2);
+	}
+
+	.location-map__layer-item--active {
+		color: var(--color-text);
+		font-weight: var(--weight-semibold);
+	}
+
+	.location-map__layer-item--disabled {
+		opacity: 0.55;
+	}
+
+	.location-map__layer-dot {
+		border: 1px solid var(--border-strong);
+		border-radius: 50%;
+		display: inline-block;
+		height: 0.65rem;
+		width: 0.65rem;
+	}
+
+	.location-map__layer-dot--events {
+		background: var(--color-primary);
+		border-color: var(--color-primary);
+	}
+
+	.location-map__layer-soon {
+		color: var(--color-muted);
+		font-size: var(--text-meta);
+	}
+
+	.location-map__fallback {
+		border-top: 1px solid var(--border-subtle);
+		padding: var(--space-5);
+	}
+
+	.location-map--failed .location-map__fallback {
+		display: block;
+	}
+
+	.location-map-noscript {
+		margin-top: var(--space-4);
+	}
+
+	.location-map__fallback-note {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		margin-bottom: var(--space-4);
+	}
+
+	.location-map__fallback-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+
+	.location-map__fallback-grid :global(.location-map__fallback-card h3) {
+		font-size: var(--text-card-title);
+	}
+
+	.location-map__fallback-badge {
+		color: var(--signal);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+	}
+
+	.location-map__fallback-link {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+	}
+
+	.location-map__alpha {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+		margin-top: var(--space-4);
+		max-width: 42rem;
+	}
+
+	@media (min-width: 640px) {
+		.location-map__fallback-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.location-map__fallback-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+</style>

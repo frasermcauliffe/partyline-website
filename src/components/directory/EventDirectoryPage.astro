@@ -13,18 +13,16 @@ import DirectoryHero from '@/components/directory/DirectoryHero.astro';
 import DirectoryStatsRow from '@/components/directory/DirectoryStatsRow.astro';
 import DirectoryFilterChips from '@/components/directory/DirectoryFilterChips.astro';
 import DirectorySceneSnapshot from '@/components/directory/DirectorySceneSnapshot.astro';
+import EventLocationMap from '@/components/directory/EventLocationMap.astro';
 import { APP_LINKS } from '@/data/app-links';
 import {
-	DIRECTORY_CITIES,
 	DIRECTORY_FAQ,
 	DIRECTORY_FILTER_CHIPS,
 	DIRECTORY_GENRES,
 	DIRECTORY_SOURCING,
-	type DirectoryCityEntry,
 	type DirectoryGenreEntry
 } from '@/data/directory-content';
 import {
-	formatDirectoryCityBadge,
 	formatDirectoryGenreBadge,
 	type DirectoryStats,
 	type SceneSnapshotCard,
@@ -56,10 +54,6 @@ const {
 	sceneSnapshot,
 	sceneResult
 }: Props = Astro.props;
-
-function cityBadge(entry: DirectoryCityEntry, previewEvents: PublicEventPreview[]): string {
-	return formatDirectoryCityBadge(entry, previewEvents, sceneResult);
-}
 
 function genreBadge(
 	entry: DirectoryGenreEntry,
@@ -125,28 +119,11 @@ function genreBadge(
 
 	<SectionShell
 		variant="band"
-		eyebrow="Cities"
-		title="Browse by city"
-		lede="Perth is active now. More Australian cities are opening as organisers and profiles join."
+		eyebrow="Location"
+		title="Search by location"
+		lede="Explore underground events across Australia — click a city cluster for its event list on PartyLine."
 	>
-		<div class="directory-browse-grid">
-			{
-				DIRECTORY_CITIES.map((city) => (
-					<PremiumCard
-						variant="preview"
-						href={city.href}
-						external={city.external}
-						class="directory-browse-card"
-					>
-						<p class="directory-browse-card__badge">{cityBadge(city, events)}</p>
-						<h3>{city.name}</h3>
-						<p class="directory-browse-card__link">
-							{city.external ? 'Browse in app' : 'Browse events'} &rarr;
-						</p>
-					</PremiumCard>
-				))
-			}
-		</div>
+		<EventLocationMap sceneResult={sceneResult} previewEvents={events} />
 	</SectionShell>
 
 	<SectionShell

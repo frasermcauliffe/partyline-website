@@ -15,10 +15,12 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "astro": "^6.4.7"
+    "astro": "^6.4.7",
+    "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@types/leaflet": "^1.9.21",
     "fast-xml-parser": "^5.2.5",
     "js-yaml": "^4.1.0",
     "node-html-markdown": "^1.3.0",
