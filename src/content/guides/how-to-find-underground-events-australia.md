@@ -118,7 +118,7 @@ PartyLine is built as scene infrastructure — connection between events, profil
 Today you can use PartyLine to:
 
 - Browse **public event previews** on the [events page](/events) and fuller listings in the app
-- Explore **profiles** for [artists and DJs](/artists-djs), [venues](/venues) and [organisers](/organisers) on The Scene
+- Explore **profiles** for [artists and DJs](/artists-djs), [venues](/venues) and [organisers](/organisers) — see the [profiles overview](/profiles) and browse live listings in the PartyLine app
 - Find **opportunities and open calls** — DJs wanted, open decks, warm-ups and more on [Opportunities](/opportunities)
 - **Save events, mark going and follow profiles** where supported in the app during closed alpha
 - See how the website and app fit together on the [platform overview](/platform)

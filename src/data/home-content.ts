@@ -51,8 +51,8 @@ export const HOME_ROLE_CARDS: HomeRoleCard[] = [
 		title: 'Production & AV',
 		description:
 			'Show your services, gear, packages, coverage area and the kind of nights you support.',
-		ctaLabel: 'Browse The Scene',
-		ctaHref: APP_LINKS.theScene,
+		ctaLabel: 'Browse profiles',
+		ctaHref: APP_LINKS.profiles,
 		external: true,
 		learnMoreLabel: 'Platform overview',
 		learnMoreHref: '/platform'
@@ -74,8 +74,8 @@ export const HOME_ROLE_CARDS: HomeRoleCard[] = [
 		ctaLabel: 'Create profile',
 		ctaHref: APP_LINKS.createListing,
 		external: true,
-		learnMoreLabel: 'Browse The Scene',
-		learnMoreHref: APP_LINKS.theScene
+		learnMoreLabel: 'Browse profiles',
+		learnMoreHref: '/profiles'
 	},
 	{
 		title: 'Fans & Guests',
@@ -98,7 +98,7 @@ export const HOME_HOW_IT_WORKS = [
 	{
 		title: 'Discover and connect',
 		description:
-			'Browse events and profiles on The Scene, follow what matters, and find the people behind each night.'
+			'Browse events and profiles in the PartyLine app, follow what matters, and find the people behind each night.'
 	},
 	{
 		title: 'Enquire, book and build',
@@ -161,7 +161,7 @@ export const HOME_APP_PREVIEWS: HomeAppPreview[] = [
 	},
 	{
 		label: 'Browse profiles',
-		title: 'The Scene',
+		title: 'Profiles directory',
 		description: 'Public profiles for artists, venues, organisers and suppliers.'
 	},
 	{

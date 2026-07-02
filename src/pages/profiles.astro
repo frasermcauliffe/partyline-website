@@ -1,0 +1,273 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import PremiumCard from '@/components/ui/PremiumCard.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import {
+	PROFILES_APP_CTA,
+	PROFILES_DIRECTORY_NOTE,
+	PROFILES_HOW_IT_WORKS,
+	PROFILES_ROLE_CARDS,
+	PROFILES_WHY_IT_MATTERS
+} from '@/data/profiles-content';
+import { PAGE_SEO } from '@/lib/seo';
+
+const seo = PAGE_SEO.profiles;
+
+const relatedLinks = [
+	{ label: 'Events', href: '/events' },
+	{ label: 'Artists & DJs', href: '/artists-djs' },
+	{ label: 'Venues', href: '/venues' },
+	{ label: 'Organisers', href: '/organisers' },
+	{ label: 'How it works', href: '/how-it-works' },
+	{ label: 'Platform overview', href: '/platform' }
+];
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath}>
+	<section class="page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">Scene profiles</p>
+			<h1>Browse artists, venues, organisers and scene suppliers</h1>
+			<p class="lede">
+				Discover the people, spaces, crews, suppliers and creators behind underground events on
+				PartyLine.
+			</p>
+			<div class="button-row">
+				<Button
+					href={PROFILES_APP_CTA.browseLive}
+					label="Browse live profiles"
+					variant="primary"
+					external
+				/>
+				<Button
+					href={PROFILES_APP_CTA.createProfile}
+					label="Create your profile"
+					variant="secondary"
+					external
+				/>
+			</div>
+		</div>
+	</section>
+
+	<SectionShell eyebrow="Profile types" title="Who profiles are for">
+		<div class="role-grid">
+			{
+				PROFILES_ROLE_CARDS.map((card) => (
+					<PremiumCard variant="feature" class="role-card">
+						<h3>{card.title}</h3>
+						<p>{card.description}</p>
+						<div class="role-card__links">
+							{card.websiteHref && (
+								<a class="role-card__link" href={card.websiteHref}>
+									Learn more on PartyLine
+								</a>
+							)}
+							<a class="role-card__link role-card__link--app" href={card.appHref}>
+								{card.appLabel}
+							</a>
+						</div>
+					</PremiumCard>
+				))
+			}
+		</div>
+		<StatusCallout variant="info" title="Live directory in the app">
+			<p>{PROFILES_DIRECTORY_NOTE}</p>
+		</StatusCallout>
+	</SectionShell>
+
+	<SectionShell variant="band" eyebrow="How it works" title="How profiles work">
+		<ol class="steps-list">
+			{
+				PROFILES_HOW_IT_WORKS.map((step) => (
+					<li>
+						<h3>{step.title}</h3>
+						<p>{step.description}</p>
+					</li>
+				))
+			}
+		</ol>
+	</SectionShell>
+
+	<SectionShell eyebrow="Why it matters" title="One directory for the people behind the night">
+		<ul class="list-check">
+			{PROFILES_WHY_IT_MATTERS.map((item) => <li>{item}</li>)}
+		</ul>
+	</SectionShell>
+
+	<section class="cta-band">
+		<div class="container cta-band__inner">
+			<div class="cta-band__copy">
+				<h2>Ready to browse or create?</h2>
+				<p>
+					Open the live profiles directory in the PartyLine app, create your listing, or explore
+					upcoming events on the website.
+				</p>
+			</div>
+			<div class="cta-band__actions">
+				<Button
+					href={PROFILES_APP_CTA.browseLive}
+					label="Browse profiles"
+					variant="primary"
+					external
+				/>
+				<Button
+					href={PROFILES_APP_CTA.createProfile}
+					label="Create your profile"
+					variant="secondary"
+					external
+				/>
+				<Button href="/events" label="Browse events" variant="ghost" />
+			</div>
+		</div>
+	</section>
+
+	<SectionShell narrow>
+		<RelatedLinks title="Related" links={relatedLinks} />
+	</SectionShell>
+</BaseLayout>
+
+<style>
+	.role-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+		margin-bottom: var(--space-5);
+	}
+
+	.role-card h3 {
+		font-size: var(--text-card-title);
+		margin-bottom: var(--space-2);
+	}
+
+	.role-card p {
+		color: var(--color-muted-strong);
+		line-height: 1.6;
+		margin-bottom: var(--space-4);
+	}
+
+	.role-card__links {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+	}
+
+	.role-card__link {
+		color: var(--color-primary);
+		font-size: var(--text-small);
+		font-weight: var(--weight-semibold);
+		text-decoration: none;
+	}
+
+	.role-card__link:hover,
+	.role-card__link:focus-visible {
+		text-decoration: underline;
+	}
+
+	.role-card__link--app {
+		color: var(--color-muted-strong);
+		font-weight: var(--weight-medium);
+	}
+
+	.steps-list {
+		counter-reset: profile-step;
+		display: grid;
+		gap: var(--space-5);
+		list-style: none;
+		padding: 0;
+	}
+
+	.steps-list li {
+		border-left: 2px solid var(--color-border);
+		counter-increment: profile-step;
+		padding-left: var(--space-4);
+		position: relative;
+	}
+
+	.steps-list li::before {
+		color: var(--color-primary);
+		content: counter(profile-step, decimal-leading-zero);
+		font-family: var(--font-label);
+		font-size: var(--text-meta);
+		left: calc(-1 * var(--space-4) - 0.55rem);
+		position: absolute;
+		top: 0;
+	}
+
+	.steps-list h3 {
+		font-size: 1.1rem;
+		margin-bottom: var(--space-2);
+	}
+
+	.steps-list p {
+		color: var(--color-muted-strong);
+		line-height: 1.6;
+	}
+
+	.cta-band {
+		background: linear-gradient(
+			180deg,
+			var(--color-surface-soft) 0%,
+			rgba(60, 232, 97, 0.06) 100%
+		);
+		border-block: 1px solid var(--color-border);
+		padding-block: clamp(2.5rem, 7vw, 4rem);
+	}
+
+	.cta-band__inner {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+		text-align: center;
+	}
+
+	.cta-band__copy {
+		display: grid;
+		gap: var(--space-3);
+		max-width: 38rem;
+	}
+
+	.cta-band h2 {
+		font-size: clamp(1.5rem, 4vw, 2rem);
+	}
+
+	.cta-band__copy p {
+		color: var(--color-muted-strong);
+		line-height: 1.6;
+	}
+
+	.cta-band__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: center;
+	}
+
+	@media (min-width: 640px) {
+		.role-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.role-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 768px) {
+		.cta-band__inner {
+			flex-direction: row;
+			justify-content: space-between;
+			text-align: left;
+		}
+
+		.cta-band__actions {
+			flex-shrink: 0;
+			justify-content: flex-end;
+		}
+	}
+</style>

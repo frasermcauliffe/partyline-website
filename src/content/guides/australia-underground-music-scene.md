@@ -113,7 +113,7 @@ PartyLine is **scene infrastructure** — connection between events, people and 
 Today, PartyLine supports:
 
 - **Public event discovery** — previews on the [events page](/events) and fuller listings in the app
-- **Profiles and listings** on The Scene — artists, venues, organisers and related roles where published
+- **Profiles and listings** in the PartyLine profiles directory — artists, venues, organisers and related roles where published
 - **Opportunities and open calls** — DJs wanted, open decks, warm-ups and more on [Opportunities](/opportunities)
 - **Saved events, going status and following profiles** where supported during closed alpha
 

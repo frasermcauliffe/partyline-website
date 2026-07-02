@@ -1,20 +1,18 @@
-import { APP_LINKS } from '@/data/app-links';
-
 export type NavItem = {
 	label: string;
 	href: string;
 	external?: boolean;
 };
 
-/** App directory link — clearer public label than in-app "The Scene". */
+/** Website profiles explainer — live directory is in the app. */
 export const browseProfilesNavItem: NavItem = {
-	label: 'Browse Profiles',
-	href: APP_LINKS.theScene,
-	external: true
+	label: 'Profiles',
+	href: '/profiles'
 };
 
 export const marketingNav: NavItem[] = [
 	{ label: 'Events', href: '/events' },
+	browseProfilesNavItem,
 	{ label: 'Blog', href: '/blog' },
 	{ label: 'Artists & DJs', href: '/artists-djs' },
 	{ label: 'Organisers', href: '/organisers' },
@@ -36,7 +34,7 @@ export type NavGroup = {
 export const mobileNavGroups: NavGroup[] = [
 	{
 		label: 'Main',
-		items: [marketingNav[0], browseProfilesNavItem, ...marketingNav.slice(1)]
+		items: [...marketingNav]
 	},
 	{
 		label: 'More',
@@ -51,6 +49,7 @@ export const mobileNavGroups: NavGroup[] = [
 
 export const footerPlatformLinks: NavItem[] = [
 	{ label: 'Events', href: '/events' },
+	{ label: 'Profiles', href: '/profiles' },
 	{ label: 'Blog', href: '/blog' },
 	{ label: 'Guides', href: '/guides' },
 	{ label: 'How It Works', href: '/how-it-works' },

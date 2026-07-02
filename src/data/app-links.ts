@@ -16,7 +16,10 @@ export const APP_LINKS = {
 	/** Marketing sign-up intent — opens create-account mode on `/join`. */
 	joinSignup: `${APP_URL}/join?mode=signup`,
 	events: `${APP_URL}/events`,
-	theScene: `${APP_URL}/the-scene`,
+	/** Live searchable profiles directory in the PartyLine app. */
+	profiles: `${APP_URL}/profiles`,
+	/** @deprecated Use APP_LINKS.profiles — app /the-scene redirects to /profiles. */
+	theScene: `${APP_URL}/profiles`,
 	opportunities: `${APP_URL}/opportunities`,
 	submitEvent: `${APP_URL}/submit-event`,
 	createListing: `${APP_URL}/create-listing`,
@@ -43,4 +46,8 @@ export function profileUrl(slug: string): string {
 
 export function opportunityUrl(slug: string): string {
 	return `${APP_URL}/opportunities/${slug}`;
+}
+
+export function profilesFilterUrl(type: string): string {
+	return `${APP_URL}/profiles?type=${encodeURIComponent(type)}`;
 }

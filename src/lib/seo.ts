@@ -236,10 +236,16 @@ export const PAGE_SEO = {
 			'Browse upcoming underground club nights, warehouse parties, day parties and community events on PartyLine. Perth-first listings, building across Australia.',
 		canonicalPath: '/events'
 	}),
+	profiles: buildPageSeo({
+		title: 'Scene Profiles',
+		description:
+			'Learn how PartyLine scene profiles work for artists, venues, organisers, production, media and performers — then browse the live profiles directory in the app.',
+		canonicalPath: '/profiles'
+	}),
 	artistsDjs: buildPageSeo({
 		title: 'Artists & DJs',
 		description:
-			'Create your Artist or DJ profile on PartyLine for Australia-wide discovery — show your sound, apply to opportunities, and receive enquiries through The Scene.',
+			'Create your Artist or DJ profile on PartyLine for Australia-wide discovery — show your sound, apply to opportunities, and receive enquiries through the profiles directory.',
 		canonicalPath: '/artists-djs'
 	}),
 	organisers: buildPageSeo({

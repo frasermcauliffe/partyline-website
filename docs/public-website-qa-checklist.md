@@ -72,6 +72,34 @@ Same as city — genre snapshot when available, omitted when not.
 | API available | Platform-wide snapshot strip (UTC week — **not** “this weekend only” stats) |
 | API unavailable | Strip omitted; weekend honesty FAQ/callout unchanged |
 
+## Profiles surfaces
+
+### Website profiles landing (`/profiles`)
+
+| Check | Expected |
+|-------|----------|
+| Page loads | Lightweight explainer — hero, role cards, how it works, why it matters, CTA band |
+| No API grid | No live profile preview cards, fake counts, or placeholder directory listings |
+| Browse live profiles CTA | Links to `APP_LINKS.profiles` (app `/profiles`) |
+| Create profile CTA | Links to `APP_LINKS.createListing` |
+| Role cards | Artists/venues/organisers link to website role pages + app `?type=` filters where applicable |
+
+### Nav and footer
+
+| Check | Expected |
+|-------|----------|
+| Header nav Profiles | Website `/profiles` (not app direct) |
+| Footer App Profiles | `APP_LINKS.profiles` |
+| Homepage Browse profiles CTAs | App `/profiles` or website `/profiles` where appropriate |
+
+Copy grep (no active route branding):
+
+```bash
+rg "The Scene|/the-scene|APP_LINKS\.theScene" src docs README.md
+```
+
+**Expected:** Only deprecated alias in `app-links.ts` and editorial blog headings — no active nav/footer/homepage route links to `/the-scene`.
+
 ## Copy guardrails
 
 **Use:**
