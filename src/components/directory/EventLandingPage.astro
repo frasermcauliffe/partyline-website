@@ -13,7 +13,7 @@ import type { EventLandingConfig } from '@/data/event-landing-pages';
 import { buildLandingRelatedLinks } from '@/data/event-landing-pages';
 import { PREVIEW_NOTE, SCENE_SNAPSHOT_HEADING, WEEKEND_PREVIEW_NOTE } from '@/lib/event-landing-data';
 import type { PublicEventPreview } from '@/lib/app-preview-types';
-import type { LandingSceneStats } from '@/lib/event-directory-stats';
+import type { GlobalSceneStats, LandingSceneStats } from '@/lib/event-directory-stats';
 import { formatSceneIndexGeneratedAt } from '@/lib/public-scene-index';
 import { buildPageSeo, type PageSeo } from '@/lib/seo';
 
@@ -25,14 +25,26 @@ interface Props {
 	canonicalPath: string;
 	jsonLd: string[];
 	sceneStats?: LandingSceneStats | null;
+	globalSceneStats?: GlobalSceneStats | null;
 }
 
-const { page, events, unavailable, seo, canonicalPath, jsonLd, sceneStats = null }: Props =
-	Astro.props;
+const {
+	page,
+	events,
+	unavailable,
+	seo,
+	canonicalPath,
+	jsonLd,
+	sceneStats = null,
+	globalSceneStats = null
+}: Props = Astro.props;
 
 const relatedLinks = buildLandingRelatedLinks(page);
 const previewNote = page.kind === 'date' ? WEEKEND_PREVIEW_NOTE : PREVIEW_NOTE;
 const sceneUpdated = sceneStats ? formatSceneIndexGeneratedAt(sceneStats.generatedAt) : null;
+const globalSceneUpdated = globalSceneStats
+	? formatSceneIndexGeneratedAt(globalSceneStats.generatedAt)
+	: null;
 ---
 
 <BaseLayout
@@ -84,6 +96,26 @@ const sceneUpdated = sceneStats ? formatSceneIndexGeneratedAt(sceneStats.generat
 					<p class="landing-scene-stats__meta">
 						Upcoming and live listings currently tracked by PartyLine.
 						{sceneUpdated ? ` Updated ${sceneUpdated}.` : ''}
+					</p>
+				</div>
+			</SectionShell>
+		)
+	}
+
+	{
+		page.kind === 'date' && globalSceneStats && (
+			<SectionShell variant="inset" eyebrow={SCENE_SNAPSHOT_HEADING} title="Platform-wide snapshot">
+				<div class="landing-scene-stats">
+					<p class="landing-scene-stats__value">
+						{globalSceneStats.thisWeekCount} listings this week on PartyLine
+					</p>
+					<p class="landing-scene-stats__meta">
+						{globalSceneStats.activeCount} active listings currently tracked by PartyLine across the
+						network — a platform-wide current-week snapshot (UTC), not filtered to this weekend only.
+						{globalSceneUpdated ? ` Updated ${globalSceneUpdated}.` : ''}
+					</p>
+					<p class="landing-scene-stats__meta">
+						Open the app for weekend filtering and the full calendar. Public preview below.
 					</p>
 				</div>
 			</SectionShell>

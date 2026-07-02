@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-	buildDirectoryStats,
 	buildDirectoryStatsFromSceneIndex,
+	buildGlobalSceneStats,
+	buildHomeSceneIndexTeaser,
 	buildSceneSnapshotFromSceneIndex
 } from '@/lib/event-directory-stats';
 import {
@@ -199,5 +200,66 @@ describe('preview fallback stats', () => {
 
 		expect(stats.mode).toBe('computed');
 		expect(stats.items[0]?.label).toBe('Upcoming in preview');
+	});
+});
+
+function sceneIndexFetchResult(overrides: Record<string, unknown> = {}) {
+	return {
+		sceneIndex: parsePublicSceneIndexStats(validSceneIndexPayload(overrides)),
+		unavailable: false
+	};
+}
+
+describe('buildHomeSceneIndexTeaser', () => {
+	it('builds snapshot stats with approved labels and copy', () => {
+		const result = buildHomeSceneIndexTeaser(sceneIndexFetchResult());
+
+		expect(result.showUnavailableCallout).toBe(false);
+		expect(result.stats?.mode).toBe('snapshot');
+		expect(result.stats?.items.map((item) => item.label)).toEqual([
+			'Active listings',
+			'This week',
+			'Live now',
+			'Verified listings'
+		]);
+		expect(result.stats?.items.map((item) => item.value)).toEqual(['12', '5', '2', '3']);
+		expect(result.stats?.note).toContain('PartyLine listings snapshot');
+		expect(result.stats?.note).toContain('Currently tracked by PartyLine');
+		expect(result.stats?.note).toContain('Open the app for the full calendar');
+		expect(result.stats?.note).toContain('Public preview below');
+		expect(result.stats?.note).toMatch(/Updated /);
+		expect(result.stats?.note).not.toMatch(/top|best|most popular|ranked|#1|market share/i);
+	});
+
+	it('shows unavailable callout flag when scene index is down', () => {
+		const result = buildHomeSceneIndexTeaser({ sceneIndex: null, unavailable: true });
+
+		expect(result.stats).toBeNull();
+		expect(result.showUnavailableCallout).toBe(true);
+	});
+
+	it('omits teaser when scene index is missing without unavailable flag', () => {
+		const result = buildHomeSceneIndexTeaser({ sceneIndex: null, unavailable: false });
+
+		expect(result.stats).toBeNull();
+		expect(result.showUnavailableCallout).toBe(false);
+	});
+});
+
+describe('buildGlobalSceneStats', () => {
+	it('returns platform-wide counts when scene index is available', () => {
+		const stats = buildGlobalSceneStats(sceneIndexFetchResult());
+
+		expect(stats).toEqual({
+			activeCount: 12,
+			thisWeekCount: 5,
+			generatedAt: '2026-06-15T12:00:00.000Z',
+			unavailable: false
+		});
+	});
+
+	it('returns null when scene index is unavailable', () => {
+		expect(buildGlobalSceneStats({ sceneIndex: null, unavailable: true })).toBeNull();
+		expect(buildGlobalSceneStats({ sceneIndex: null, unavailable: false })).toBeNull();
 	});
 });

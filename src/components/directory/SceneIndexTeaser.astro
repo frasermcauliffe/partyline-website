@@ -1,0 +1,76 @@
+---
+import Button from '@/components/ui/Button.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import DirectoryStatsRow from '@/components/directory/DirectoryStatsRow.astro';
+import type { DirectoryStats } from '@/lib/event-directory-stats';
+import {
+	SCENE_INDEX_ALPHA_NOTE,
+	SCENE_INDEX_TEASER_TITLE,
+	SCENE_INDEX_UNAVAILABLE_COPY,
+	SCENE_SNAPSHOT_HEADING
+} from '@/lib/event-landing-data';
+
+interface Props {
+	stats?: DirectoryStats | null;
+	showUnavailableCallout?: boolean;
+	primaryHref: string;
+	primaryLabel: string;
+	secondaryHref: string;
+	secondaryLabel: string;
+	secondaryExternal?: boolean;
+	showAlphaNote?: boolean;
+}
+
+const {
+	stats = null,
+	showUnavailableCallout = false,
+	primaryHref,
+	primaryLabel,
+	secondaryHref,
+	secondaryLabel,
+	secondaryExternal = true,
+	showAlphaNote = true
+}: Props = Astro.props;
+---
+
+{
+	stats ? (
+		<SectionShell variant="inset" eyebrow={SCENE_SNAPSHOT_HEADING} title={SCENE_INDEX_TEASER_TITLE}>
+			<DirectoryStatsRow stats={stats} />
+			{showAlphaNote && <p class="scene-index-teaser__alpha">{SCENE_INDEX_ALPHA_NOTE}</p>}
+			<div class="scene-index-teaser__actions">
+				<Button href={primaryHref} label={primaryLabel} variant="primary" />
+				<Button
+					href={secondaryHref}
+					label={secondaryLabel}
+					variant="secondary"
+					external={secondaryExternal}
+				/>
+			</div>
+		</SectionShell>
+	) : showUnavailableCallout ? (
+		<SectionShell variant="inset" eyebrow={SCENE_SNAPSHOT_HEADING} title={SCENE_INDEX_TEASER_TITLE}>
+			<StatusCallout variant="info" title="Snapshot unavailable">
+				<p>{SCENE_INDEX_UNAVAILABLE_COPY}</p>
+			</StatusCallout>
+		</SectionShell>
+	) : null
+}
+
+<style>
+	.scene-index-teaser__alpha {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+		margin: 0;
+		max-width: 42rem;
+	}
+
+	.scene-index-teaser__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		margin-top: var(--space-5);
+	}
+</style>

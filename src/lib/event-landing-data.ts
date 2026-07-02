@@ -27,3 +27,11 @@ export const SCENE_SNAPSHOT_HEADING = 'PartyLine listings snapshot';
 
 export const SCENE_SNAPSHOT_LEDE =
 	'Upcoming and live listings currently tracked by PartyLine. Open the app for the full calendar.';
+
+export const SCENE_INDEX_TEASER_TITLE = 'PartyLine Scene Index';
+
+export const SCENE_INDEX_ALPHA_NOTE =
+	'PartyLine Scene Index is in early alpha — aggregate listing counts only, not a complete map of every event in a city.';
+
+export const SCENE_INDEX_UNAVAILABLE_COPY =
+	'Listing snapshot unavailable at build time. Open PartyLine for current events and the full calendar.';

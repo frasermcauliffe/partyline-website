@@ -8,7 +8,7 @@ import {
 	type CityLandingConfig
 } from '@/data/event-landing-pages';
 import { getSharedPublicEvents, getSharedPublicSceneIndex } from '@/lib/event-landing-data';
-import { buildLandingSceneStats, filterEventsByCity } from '@/lib/event-directory-stats';
+import { buildGlobalSceneStats, buildLandingSceneStats, filterEventsByCity } from '@/lib/event-directory-stats';
 import {
 	breadcrumbJsonLd,
 	buildPageSeo,
@@ -42,6 +42,9 @@ export async function getStaticPaths() {
 					})
 				: null;
 
+		const globalSceneStats =
+			page.kind === 'date' ? buildGlobalSceneStats(sceneResult) : null;
+
 		const canonicalPath = getLandingCanonicalPath(page);
 		const seo = buildPageSeo({
 			title: page.seoTitle,
@@ -56,6 +59,7 @@ export async function getStaticPaths() {
 				events: filteredEvents,
 				unavailable,
 				sceneStats,
+				globalSceneStats,
 				seo,
 				canonicalPath,
 				jsonLd: [
@@ -78,7 +82,7 @@ export async function getStaticPaths() {
 	});
 }
 
-const { page, events, unavailable, sceneStats, seo, canonicalPath, jsonLd } = Astro.props;
+const { page, events, unavailable, sceneStats, globalSceneStats, seo, canonicalPath, jsonLd } = Astro.props;
 ---
 
 <EventLandingPage
@@ -86,6 +90,7 @@ const { page, events, unavailable, sceneStats, seo, canonicalPath, jsonLd } = As
 	{events}
 	{unavailable}
 	{sceneStats}
+	{globalSceneStats}
 	{seo}
 	{canonicalPath}
 	{jsonLd}

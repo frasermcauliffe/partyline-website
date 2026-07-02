@@ -320,6 +320,67 @@ export function buildSceneSnapshotFromSceneIndex(
 	return buildSceneSnapshot(eventsResult.events, eventsResult.unavailable || sceneResult.unavailable);
 }
 
+export type HomeSceneIndexTeaserResult = {
+	stats: DirectoryStats | null;
+	showUnavailableCallout: boolean;
+};
+
+export function buildHomeSceneIndexTeaser(
+	sceneResult: PublicSceneIndexFetchResult
+): HomeSceneIndexTeaserResult {
+	if (sceneResult.sceneIndex && !sceneResult.unavailable) {
+		const sceneIndex = sceneResult.sceneIndex;
+		const updated = formatSceneIndexGeneratedAt(sceneIndex.generated_at);
+		const updatedCopy = updated ? ` Updated ${updated}.` : '';
+
+		return {
+			stats: {
+				mode: 'snapshot',
+				items: [
+					{ label: 'Active listings', value: String(sceneIndex.active_event_count) },
+					{ label: 'This week', value: String(sceneIndex.events_this_week) },
+					{ label: 'Live now', value: String(sceneIndex.live_now_event_count) },
+					{
+						label: 'Verified listings',
+						value: String(sceneIndex.verified_upcoming_event_count)
+					}
+				],
+				note: `${SCENE_SNAPSHOT_HEADING}.${updatedCopy} Currently tracked by PartyLine. Open the app for the full calendar. Public preview below.`
+			},
+			showUnavailableCallout: false
+		};
+	}
+
+	return {
+		stats: null,
+		showUnavailableCallout: sceneResult.unavailable
+	};
+}
+
+export type GlobalSceneStats = {
+	activeCount: number;
+	thisWeekCount: number;
+	generatedAt: string | null;
+	unavailable: boolean;
+};
+
+export function buildGlobalSceneStats(
+	sceneResult: PublicSceneIndexFetchResult
+): GlobalSceneStats | null {
+	if (sceneResult.unavailable || !sceneResult.sceneIndex) {
+		return null;
+	}
+
+	const sceneIndex = sceneResult.sceneIndex;
+
+	return {
+		activeCount: sceneIndex.active_event_count,
+		thisWeekCount: sceneIndex.events_this_week,
+		generatedAt: sceneIndex.generated_at,
+		unavailable: false
+	};
+}
+
 export type LandingSceneStats = {
 	kind: 'city' | 'genre';
 	label: string;
