@@ -165,18 +165,20 @@ type DirectoryEventItem = {
 	appUrl: string;
 };
 
-export function directoryPageJsonLd(input: {
+export function collectionLandingPageJsonLd(input: {
+	name: string;
 	description: string;
+	url: string;
 	events: DirectoryEventItem[];
 }): string {
-	const { description, events } = input;
+	const { name, description, url, events } = input;
 
 	return JSON.stringify({
 		'@context': 'https://schema.org',
 		'@type': 'CollectionPage',
-		name: 'PartyLine Event Directory',
+		name,
 		description,
-		url: absoluteUrl('/events/directory'),
+		url: absoluteUrl(url),
 		isPartOf: {
 			'@type': 'WebSite',
 			name: SITE.name,
@@ -193,6 +195,31 @@ export function directoryPageJsonLd(input: {
 				}))
 			}
 		})
+	});
+}
+
+export function breadcrumbJsonLd(items: { name: string; path: string }[]): string {
+	return JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: items.map((item, index) => ({
+			'@type': 'ListItem',
+			position: index + 1,
+			name: item.name,
+			item: absoluteUrl(item.path)
+		}))
+	});
+}
+
+export function directoryPageJsonLd(input: {
+	description: string;
+	events: DirectoryEventItem[];
+}): string {
+	return collectionLandingPageJsonLd({
+		name: 'PartyLine Event Directory',
+		description: input.description,
+		url: '/events/directory',
+		events: input.events
 	});
 }
 
