@@ -8,6 +8,7 @@ import FaqList from '@/components/ui/FaqList.astro';
 import PreviewPanel from '@/components/previews/PreviewPanel.astro';
 import PublicEventPreviewCard from '@/components/previews/PublicEventPreviewCard.astro';
 import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
+import DirectoryFormatsStrip from '@/components/directory/DirectoryFormatsStrip.astro';
 import DirectoryHero from '@/components/directory/DirectoryHero.astro';
 import DirectoryStatsRow from '@/components/directory/DirectoryStatsRow.astro';
 import DirectoryFilterChips from '@/components/directory/DirectoryFilterChips.astro';
@@ -26,6 +27,7 @@ import {
 import {
 	buildDirectoryStatsFromSceneIndex,
 	buildSceneSnapshotFromSceneIndex,
+	buildTrackedEventFormats,
 	formatDirectoryCityBadge,
 	formatDirectoryGenreBadge
 } from '@/lib/event-directory-stats';
@@ -46,6 +48,7 @@ const [eventsResult, sceneResult] = await Promise.all([
 ]);
 const events = eventsResult.events;
 const stats = buildDirectoryStatsFromSceneIndex(sceneResult, eventsResult);
+const trackedFormats = buildTrackedEventFormats(sceneResult);
 const sceneSnapshot = buildSceneSnapshotFromSceneIndex(sceneResult, eventsResult);
 
 function cityBadge(entry: DirectoryCityEntry, previewEvents: PublicEventPreview[]): string {
@@ -81,6 +84,8 @@ const jsonLd = [
 	<SectionShell variant="inset" eyebrow={SCENE_SNAPSHOT_HEADING} title="Current listings snapshot">
 		<DirectoryStatsRow stats={stats} />
 	</SectionShell>
+
+	{trackedFormats && <DirectoryFormatsStrip formatsResult={trackedFormats} />}
 
 	<SectionShell eyebrow="Quick filters" title="Browse upcoming events">
 		<DirectoryFilterChips chips={DIRECTORY_FILTER_CHIPS} />
@@ -176,7 +181,7 @@ const jsonLd = [
 		</div>
 	</SectionShell>
 
-	<SectionShell variant="feature" eyebrow={SCENE_SNAPSHOT_HEADING} title="Listings snapshot">
+	<SectionShell variant="feature" eyebrow={SCENE_SNAPSHOT_HEADING} title="Snapshot detail">
 		<DirectorySceneSnapshot cards={sceneSnapshot} />
 	</SectionShell>
 

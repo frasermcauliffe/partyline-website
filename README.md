@@ -43,6 +43,8 @@ npm run preview  # preview production build
 npm run import:wordpress   # migrate WordPress XML → Markdown
 ```
 
+**QA:** See [docs/public-website-qa-checklist.md](docs/public-website-qa-checklist.md) for pre-launch checks including Scene Index fallback builds.
+
 ## Pages
 
 | Route | Purpose |

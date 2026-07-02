@@ -8,7 +8,8 @@ import {
 } from '@/lib/public-scene-index';
 import {
 	SCENE_SNAPSHOT_HEADING,
-	SCENE_SNAPSHOT_LEDE
+	SCENE_SNAPSHOT_LEDE,
+	SCENE_SNAPSHOT_PREVIEW_NOTE
 } from '@/lib/event-landing-data';
 
 export function normalizeCity(city: string): string {
@@ -194,9 +195,10 @@ export function buildSceneSnapshot(
 	if (events.length === 0 || unavailable) {
 		return [
 			{
-				title: 'Most active city',
+				title: 'City focus (preview)',
 				value: 'Perth-first',
-				description: 'Perth listings lead today as the network grows across Australia.'
+				description:
+					'In the current public preview sample, Perth-first listings appear as the network grows across Australia.'
 			},
 			{
 				title: 'This weekend',
@@ -204,9 +206,10 @@ export function buildSceneSnapshot(
 				description: 'Open PartyLine for date filters including this weekend and next 7 days.'
 			},
 			{
-				title: 'Genres on the line',
+				title: 'Genres in preview',
 				value: 'Growing',
-				description: 'Underground genres appear as organisers submit and tag their events.'
+				description:
+					'In the current public preview sample, underground genres appear as organisers submit and tag their events.'
 			},
 			{
 				title: 'Submissions',
@@ -220,16 +223,16 @@ export function buildSceneSnapshot(
 	const genres = topGenres(events, 3);
 	const genreSummary =
 		genres.length > 0
-			? genres.map((entry) => entry.genre).join(', ')
-			: 'Tagging expands as listings grow';
+			? `In the current public preview sample: ${genres.map((entry) => entry.genre).join(', ')}.`
+			: 'In the current public preview sample, tagging expands as listings grow.';
 
 	return [
 		{
-			title: 'Most active city (preview)',
+			title: 'City focus (preview)',
 			value: activeCity?.city ?? 'Perth',
 			description: activeCity
-				? `${activeCity.count} upcoming event${activeCity.count === 1 ? '' : 's'} in the current public preview.`
-				: 'Perth-first listings lead as more cities join.'
+				? `In the current public preview sample, ${activeCity.count} upcoming event${activeCity.count === 1 ? '' : 's'} in ${activeCity.city}.`
+				: 'In the current public preview sample, Perth-first listings appear as more cities join.'
 		},
 		{
 			title: 'This weekend',
@@ -237,7 +240,7 @@ export function buildSceneSnapshot(
 			description: 'Use date filters in the app for this weekend, tonight and the next 7 days.'
 		},
 		{
-			title: 'Top genres (preview)',
+			title: 'Genres in preview',
 			value: genres[0]?.genre ?? 'Mixed',
 			description: genreSummary
 		},
@@ -253,7 +256,7 @@ function buildSnapshotNote(sceneIndex: PublicSceneIndexStats): string {
 	const updated = formatSceneIndexGeneratedAt(sceneIndex.generated_at);
 	const updatedCopy = updated ? ` Updated ${updated}.` : '';
 
-	return `${SCENE_SNAPSHOT_HEADING}.${updatedCopy} ${SCENE_SNAPSHOT_LEDE} Public preview below — sample of upcoming listings.`;
+	return `${SCENE_SNAPSHOT_HEADING}.${updatedCopy} ${SCENE_SNAPSHOT_LEDE} ${SCENE_SNAPSHOT_PREVIEW_NOTE} — sample of upcoming listings.`;
 }
 
 export function buildDirectoryStatsFromSceneIndex(
@@ -320,6 +323,44 @@ export function buildSceneSnapshotFromSceneIndex(
 	return buildSceneSnapshot(eventsResult.events, eventsResult.unavailable || sceneResult.unavailable);
 }
 
+export type TrackedEventFormat = {
+	eventType: string;
+	listingCount: number;
+};
+
+export type TrackedEventFormatsResult = {
+	formats: TrackedEventFormat[];
+	generatedAt: string | null;
+};
+
+const TRACKED_EVENT_FORMATS_LIMIT = 5;
+
+export function buildTrackedEventFormats(
+	sceneResult: PublicSceneIndexFetchResult
+): TrackedEventFormatsResult | null {
+	if (sceneResult.unavailable || !sceneResult.sceneIndex) {
+		return null;
+	}
+
+	const formats = sceneResult.sceneIndex.by_event_type
+		.filter((entry) => entry.event_type.trim() && entry.upcoming_count > 0)
+		.sort((a, b) => b.upcoming_count - a.upcoming_count)
+		.slice(0, TRACKED_EVENT_FORMATS_LIMIT)
+		.map((entry) => ({
+			eventType: entry.event_type.trim(),
+			listingCount: entry.upcoming_count
+		}));
+
+	if (formats.length === 0) {
+		return null;
+	}
+
+	return {
+		formats,
+		generatedAt: sceneResult.sceneIndex.generated_at
+	};
+}
+
 export type HomeSceneIndexTeaserResult = {
 	stats: DirectoryStats | null;
 	showUnavailableCallout: boolean;
@@ -345,7 +386,7 @@ export function buildHomeSceneIndexTeaser(
 						value: String(sceneIndex.verified_upcoming_event_count)
 					}
 				],
-				note: `${SCENE_SNAPSHOT_HEADING}.${updatedCopy} Currently tracked by PartyLine. Open the app for the full calendar. Public preview below.`
+				note: `${SCENE_SNAPSHOT_HEADING}.${updatedCopy} Currently tracked by PartyLine. Open the app for the full calendar. ${SCENE_SNAPSHOT_PREVIEW_NOTE}.`
 			},
 			showUnavailableCallout: false
 		};

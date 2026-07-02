@@ -1,0 +1,75 @@
+---
+import SectionShell from '@/components/ui/SectionShell.astro';
+import type { TrackedEventFormatsResult } from '@/lib/event-directory-stats';
+import {
+	SCENE_FORMATS_HEADING,
+	SCENE_FORMATS_LEDE,
+	SCENE_SNAPSHOT_HEADING
+} from '@/lib/event-landing-data';
+import { formatSceneIndexGeneratedAt } from '@/lib/public-scene-index';
+
+interface Props {
+	formatsResult: TrackedEventFormatsResult;
+}
+
+const { formatsResult }: Props = Astro.props;
+const updated = formatSceneIndexGeneratedAt(formatsResult.generatedAt);
+---
+
+<SectionShell variant="inset" eyebrow={SCENE_SNAPSHOT_HEADING} title={SCENE_FORMATS_HEADING}>
+	<p class="directory-formats__lede">{SCENE_FORMATS_LEDE}</p>
+	<ul class="directory-formats__list" aria-label="Listing formats currently tracked">
+		{
+			formatsResult.formats.map((format) => (
+				<li class="directory-formats__chip">
+					<span class="directory-formats__type">{format.eventType}</span>
+					<span class="directory-formats__count" aria-hidden="true">&middot;</span>
+					<span class="directory-formats__count">
+						{format.listingCount} listing{format.listingCount === 1 ? '' : 's'}
+					</span>
+				</li>
+			))
+		}
+	</ul>
+	{updated && <p class="directory-formats__meta">Updated {updated}.</p>}
+</SectionShell>
+
+<style>
+	.directory-formats__lede {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+		margin: 0;
+		max-width: 42rem;
+	}
+
+	.directory-formats__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+		list-style: none;
+		margin: var(--space-5) 0 0;
+		padding: 0;
+	}
+
+	.directory-formats__chip {
+		background: var(--surface-1);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-pill, 999px);
+		color: var(--color-muted-strong);
+		font-size: var(--text-small);
+		line-height: 1.4;
+		padding: var(--space-2) var(--space-4);
+	}
+
+	.directory-formats__type {
+		color: var(--color-text, inherit);
+		font-weight: var(--weight-semibold);
+	}
+
+	.directory-formats__meta {
+		color: var(--color-muted);
+		font-size: var(--text-meta);
+		margin: var(--space-4) 0 0;
+	}
+</style>

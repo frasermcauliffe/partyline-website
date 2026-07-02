@@ -3,7 +3,9 @@ import {
 	buildDirectoryStatsFromSceneIndex,
 	buildGlobalSceneStats,
 	buildHomeSceneIndexTeaser,
-	buildSceneSnapshotFromSceneIndex
+	buildSceneSnapshot,
+	buildSceneSnapshotFromSceneIndex,
+	buildTrackedEventFormats
 } from '@/lib/event-directory-stats';
 import {
 	containsForbiddenPublicSceneIndexKeys,
@@ -261,5 +263,110 @@ describe('buildGlobalSceneStats', () => {
 	it('returns null when scene index is unavailable', () => {
 		expect(buildGlobalSceneStats({ sceneIndex: null, unavailable: true })).toBeNull();
 		expect(buildGlobalSceneStats({ sceneIndex: null, unavailable: false })).toBeNull();
+	});
+});
+
+const RANKING_COPY_PATTERN = /top formats|most popular|most active|market share|#1|\branked\b|\btop\b|\bbest\b/i;
+
+function samplePreviewEvent(overrides: Partial<{
+	id: string;
+	slug: string;
+	title: string;
+	city: string;
+	genres: string[];
+}> = {}) {
+	return {
+		id: '1',
+		slug: 'event',
+		title: 'Event',
+		heroImageUrl: null,
+		date: 'Sat',
+		time: '8pm',
+		city: 'Perth',
+		venue: 'Venue',
+		genres: ['techno'],
+		appUrl: 'https://example.com/events/event',
+		...overrides
+	};
+}
+
+describe('buildTrackedEventFormats', () => {
+	it('returns up to five formats sorted by upcoming count', () => {
+		const result = buildTrackedEventFormats(
+			sceneIndexFetchResult({
+				by_event_type: [
+					{ event_type: 'Club Night', upcoming_count: 12 },
+					{ event_type: 'Day Party', upcoming_count: 4 },
+					{ event_type: 'Festival', upcoming_count: 9 },
+					{ event_type: 'Open Decks', upcoming_count: 2 },
+					{ event_type: 'Warehouse', upcoming_count: 7 },
+					{ event_type: 'Boat Party', upcoming_count: 1 }
+				]
+			})
+		);
+
+		expect(result?.formats).toHaveLength(5);
+		expect(result?.formats.map((entry) => entry.eventType)).toEqual([
+			'Club Night',
+			'Festival',
+			'Warehouse',
+			'Day Party',
+			'Open Decks'
+		]);
+		expect(result?.formats[0]).toEqual({ eventType: 'Club Night', listingCount: 12 });
+	});
+
+	it('returns null when unavailable or empty', () => {
+		expect(buildTrackedEventFormats({ sceneIndex: null, unavailable: true })).toBeNull();
+		expect(
+			buildTrackedEventFormats(
+				sceneIndexFetchResult({
+					by_event_type: [
+						{ event_type: '', upcoming_count: 3 },
+						{ event_type: 'Club Night', upcoming_count: 0 }
+					]
+				})
+			)
+		).toBeNull();
+	});
+
+	it('avoids ranking copy in format labels', () => {
+		const result = buildTrackedEventFormats(sceneIndexFetchResult());
+		const joined = result?.formats.map((entry) => entry.eventType).join(' ') ?? '';
+
+		expect(joined).not.toMatch(RANKING_COPY_PATTERN);
+	});
+});
+
+describe('buildSceneSnapshot fallback copy', () => {
+	it('uses neutral preview labels when scene index is unavailable', () => {
+		const cards = buildSceneSnapshot([], true);
+		const joined = cards.map((card) => `${card.title} ${card.description}`).join(' ');
+
+		expect(cards.map((card) => card.title)).toEqual([
+			'City focus (preview)',
+			'This weekend',
+			'Genres in preview',
+			'Submissions'
+		]);
+		expect(joined).toContain('In the current public preview sample');
+		expect(joined).not.toMatch(RANKING_COPY_PATTERN);
+	});
+
+	it('uses neutral preview labels when derived from preview events', () => {
+		const cards = buildSceneSnapshot(
+			[
+				samplePreviewEvent(),
+				samplePreviewEvent({ id: '2', slug: 'event-2', city: 'Perth', genres: ['house'] }),
+				samplePreviewEvent({ id: '3', slug: 'event-3', city: 'Fremantle', genres: ['techno'] })
+			],
+			false
+		);
+		const joined = cards.map((card) => `${card.title} ${card.description}`).join(' ');
+
+		expect(cards[0]?.title).toBe('City focus (preview)');
+		expect(cards[2]?.title).toBe('Genres in preview');
+		expect(joined).toContain('In the current public preview sample');
+		expect(joined).not.toMatch(RANKING_COPY_PATTERN);
 	});
 });

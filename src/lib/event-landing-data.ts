@@ -20,6 +20,8 @@ export function getSharedPublicSceneIndex(): Promise<PublicSceneIndexFetchResult
 export const PREVIEW_NOTE =
 	'Public preview below — sample of upcoming listings. Open the app for the full calendar.';
 
+export const SCENE_SNAPSHOT_PREVIEW_NOTE = 'Public preview below';
+
 export const WEEKEND_PREVIEW_NOTE =
 	'General upcoming preview only — the public API does not include ISO dates yet. For an accurate this-weekend filter, open the PartyLine app.';
 
@@ -35,3 +37,8 @@ export const SCENE_INDEX_ALPHA_NOTE =
 
 export const SCENE_INDEX_UNAVAILABLE_COPY =
 	'Listing snapshot unavailable at build time. Open PartyLine for current events and the full calendar.';
+
+export const SCENE_FORMATS_HEADING = 'Formats currently tracked';
+
+export const SCENE_FORMATS_LEDE =
+	'A snapshot of listing formats currently active on PartyLine.';
