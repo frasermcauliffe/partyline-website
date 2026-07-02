@@ -59,3 +59,11 @@ export type PublicOpportunitiesFetchResult = {
 	opportunities: PublicOpportunityPreview[];
 	unavailable: boolean;
 };
+
+export type {
+	PublicSceneIndexCityStat,
+	PublicSceneIndexEventTypeStat,
+	PublicSceneIndexFetchResult,
+	PublicSceneIndexGenreStat,
+	PublicSceneIndexStats
+} from '@/lib/public-scene-index';

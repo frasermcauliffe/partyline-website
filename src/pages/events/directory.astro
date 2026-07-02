@@ -12,7 +12,7 @@ import DirectoryHero from '@/components/directory/DirectoryHero.astro';
 import DirectoryStatsRow from '@/components/directory/DirectoryStatsRow.astro';
 import DirectoryFilterChips from '@/components/directory/DirectoryFilterChips.astro';
 import DirectorySceneSnapshot from '@/components/directory/DirectorySceneSnapshot.astro';
-import { fetchPublicEvents } from '@/lib/app-api';
+import { fetchPublicEvents, fetchPublicSceneIndex } from '@/lib/app-api';
 import { APP_LINKS } from '@/data/app-links';
 import {
 	DIRECTORY_CITIES,
@@ -24,11 +24,12 @@ import {
 	type DirectoryGenreEntry
 } from '@/data/directory-content';
 import {
-	buildDirectoryStats,
-	buildSceneSnapshot,
-	countEventsMatchingCity,
-	countEventsMatchingGenres
+	buildDirectoryStatsFromSceneIndex,
+	buildSceneSnapshotFromSceneIndex,
+	formatDirectoryCityBadge,
+	formatDirectoryGenreBadge
 } from '@/lib/event-directory-stats';
+import { SCENE_SNAPSHOT_HEADING } from '@/lib/event-landing-data';
 import type { PublicEventPreview } from '@/lib/app-preview-types';
 import {
 	directoryPageJsonLd,
@@ -39,37 +40,23 @@ import {
 } from '@/lib/seo';
 
 const seo = PAGE_SEO.eventsDirectory;
-const eventsResult = await fetchPublicEvents(24);
+const [eventsResult, sceneResult] = await Promise.all([
+	fetchPublicEvents(24),
+	fetchPublicSceneIndex()
+]);
 const events = eventsResult.events;
-const stats = buildDirectoryStats(events, eventsResult.unavailable);
-const sceneSnapshot = buildSceneSnapshot(events, eventsResult.unavailable);
+const stats = buildDirectoryStatsFromSceneIndex(sceneResult, eventsResult);
+const sceneSnapshot = buildSceneSnapshotFromSceneIndex(sceneResult, eventsResult);
 
 function cityBadge(entry: DirectoryCityEntry, previewEvents: PublicEventPreview[]): string {
-	if (entry.match) {
-		const count = countEventsMatchingCity(previewEvents, entry.match);
-		if (count > 0) {
-			return `${count} in preview`;
-		}
-	}
-
-	if (entry.status === 'active') {
-		return 'Active now';
-	}
-
-	if (entry.status === 'opening') {
-		return 'Opening';
-	}
-
-	return 'Coming next';
+	return formatDirectoryCityBadge(entry, previewEvents, sceneResult);
 }
 
-function genreBadge(entry: DirectoryGenreEntry, previewEvents: PublicEventPreview[]): string | undefined {
-	if (!entry.matchers?.length) {
-		return undefined;
-	}
-
-	const count = countEventsMatchingGenres(previewEvents, entry.matchers);
-	return count > 0 ? `${count} in preview` : undefined;
+function genreBadge(
+	entry: DirectoryGenreEntry,
+	previewEvents: PublicEventPreview[]
+): string | undefined {
+	return formatDirectoryGenreBadge(entry, previewEvents, sceneResult);
 }
 
 const jsonLd = [
@@ -91,7 +78,7 @@ const jsonLd = [
 >
 	<DirectoryHero />
 
-	<SectionShell variant="inset" eyebrow="Preview stats" title="Current public listings snapshot">
+	<SectionShell variant="inset" eyebrow={SCENE_SNAPSHOT_HEADING} title="Current listings snapshot">
 		<DirectoryStatsRow stats={stats} />
 	</SectionShell>
 
@@ -102,7 +89,7 @@ const jsonLd = [
 	<PreviewPanel
 		eyebrow="Directory"
 		title="Upcoming events"
-		lede="Public event previews from the PartyLine app — Perth-first, building across Australia. Open the app for posters, lineups, filters and full details."
+		lede="Public preview below — sample of upcoming listings from the PartyLine app. Perth-first, building across Australia. Open the app for posters, lineups, filters and full details."
 		source="app"
 		ctaLabel="Explore all events in the app"
 		ctaHref={APP_LINKS.events}
@@ -152,7 +139,9 @@ const jsonLd = [
 					>
 						<p class="directory-browse-card__badge">{cityBadge(city, events)}</p>
 						<h3>{city.name}</h3>
-						<p class="directory-browse-card__link">Browse in app &rarr;</p>
+						<p class="directory-browse-card__link">
+							{city.external ? 'Browse in app' : 'Browse events'} &rarr;
+						</p>
 					</PremiumCard>
 				))
 			}
@@ -162,7 +151,7 @@ const jsonLd = [
 	<SectionShell
 		eyebrow="Genres"
 		title="Browse by genre"
-		lede="Genre filters in the app are still expanding. These links open the closest match in PartyLine today."
+		lede="Genre landing pages link to the closest app filters. More tags are added as organisers submit events."
 	>
 		<div class="directory-browse-grid directory-browse-grid--genres">
 			{
@@ -177,7 +166,9 @@ const jsonLd = [
 						>
 							{badge && <p class="directory-browse-card__badge">{badge}</p>}
 							<h3>{genre.name}</h3>
-							<p class="directory-browse-card__link">Browse in app &rarr;</p>
+							<p class="directory-browse-card__link">
+								{genre.external ? 'Browse in app' : 'Browse events'} &rarr;
+							</p>
 						</PremiumCard>
 					);
 				})
@@ -185,7 +176,7 @@ const jsonLd = [
 		</div>
 	</SectionShell>
 
-	<SectionShell variant="feature" eyebrow="Snapshot" title="Scene snapshot">
+	<SectionShell variant="feature" eyebrow={SCENE_SNAPSHOT_HEADING} title="Listings snapshot">
 		<DirectorySceneSnapshot cards={sceneSnapshot} />
 	</SectionShell>
 

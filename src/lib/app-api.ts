@@ -1,4 +1,5 @@
 import { APP_URL } from '@/data/app-links';
+import { parsePublicSceneIndexStats } from '@/lib/public-scene-index';
 import type {
 	PublicEventPreview,
 	PublicEventsFetchResult,
@@ -6,7 +7,8 @@ import type {
 	PublicListingsFetchResult,
 	PublicListingType,
 	PublicOpportunityPreview,
-	PublicOpportunitiesFetchResult
+	PublicOpportunitiesFetchResult,
+	PublicSceneIndexFetchResult
 } from '@/lib/app-preview-types';
 
 const FETCH_TIMEOUT_MS = 10_000;
@@ -186,5 +188,38 @@ export async function fetchPublicOpportunities(
 		return { opportunities, unavailable: false };
 	} catch {
 		return { opportunities: [], unavailable: true };
+	}
+}
+
+export async function fetchPublicSceneIndex(): Promise<PublicSceneIndexFetchResult> {
+	const baseUrl = getAppApiBaseUrl();
+	const url = `${baseUrl}/api/public/scene-index`;
+
+	try {
+		const response = await fetch(url, {
+			headers: { Accept: 'application/json' },
+			signal: AbortSignal.timeout(FETCH_TIMEOUT_MS)
+		});
+
+		if (!response.ok) {
+			return { sceneIndex: null, unavailable: true };
+		}
+
+		const payload: unknown = await response.json();
+
+		if (!payload || typeof payload !== 'object') {
+			return { sceneIndex: null, unavailable: true };
+		}
+
+		const sceneIndexValue = (payload as { sceneIndex?: unknown }).sceneIndex;
+		const parsed = parsePublicSceneIndexStats(sceneIndexValue);
+
+		if (!parsed) {
+			return { sceneIndex: null, unavailable: true };
+		}
+
+		return { sceneIndex: parsed, unavailable: false };
+	} catch {
+		return { sceneIndex: null, unavailable: true };
 	}
 }

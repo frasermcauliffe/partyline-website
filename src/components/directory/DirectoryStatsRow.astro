@@ -13,7 +13,7 @@ const { stats }: Props = Astro.props;
 		{
 			stats.items.map((item) => (
 				<li class="directory-stats__item">
-					{stats.mode === 'computed' && item.value ? (
+					{stats.mode === 'computed' || stats.mode === 'snapshot' ? (
 						<>
 							<p class="directory-stats__value">{item.value}</p>
 							<p class="directory-stats__label">{item.label}</p>

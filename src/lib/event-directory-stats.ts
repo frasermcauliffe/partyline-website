@@ -1,4 +1,15 @@
-import type { PublicEventPreview } from '@/lib/app-preview-types';
+import type { PublicEventPreview, PublicEventsFetchResult } from '@/lib/app-preview-types';
+import {
+	formatSceneIndexGeneratedAt,
+	resolveCitySceneCounts,
+	resolveGenreSceneCounts,
+	type PublicSceneIndexFetchResult,
+	type PublicSceneIndexStats
+} from '@/lib/public-scene-index';
+import {
+	SCENE_SNAPSHOT_HEADING,
+	SCENE_SNAPSHOT_LEDE
+} from '@/lib/event-landing-data';
 
 export function normalizeCity(city: string): string {
 	return city.trim().toLowerCase();
@@ -87,12 +98,43 @@ export function countEventsMatchingGenres(
 	events: PublicEventPreview[],
 	matchers: string[]
 ): number {
+	return filterEventsByGenres(events, matchers).length;
+}
+
+export function filterEventsByCity(
+	events: PublicEventPreview[],
+	matcher: (normalizedCity: string) => boolean
+): PublicEventPreview[] {
+	return events.filter((event) => matcher(normalizeCity(event.city)));
+}
+
+export function filterEventsByGenres(
+	events: PublicEventPreview[],
+	matchers: string[]
+): PublicEventPreview[] {
 	return events.filter((event) =>
 		event.genres.some((genre) => {
 			const normalized = genre.toLowerCase();
 			return matchers.some((matcher) => normalized.includes(matcher));
 		})
-	).length;
+	);
+}
+
+export function filterEventsByGenreConfig(
+	events: PublicEventPreview[],
+	matchGenres: string[],
+	matchEventType?: (eventType: string | undefined) => boolean
+): PublicEventPreview[] {
+	return events.filter((event) => {
+		const genreMatch = event.genres.some((genre) => {
+			const normalized = genre.toLowerCase();
+			return matchGenres.some((matcher) => normalized.includes(matcher));
+		});
+
+		const typeMatch = matchEventType?.(event.eventType) ?? false;
+
+		return genreMatch || typeMatch;
+	});
 }
 
 export type DirectoryStatItem = {
@@ -101,7 +143,7 @@ export type DirectoryStatItem = {
 };
 
 export type DirectoryStats = {
-	mode: 'computed' | 'soft';
+	mode: 'computed' | 'soft' | 'snapshot';
 	items: DirectoryStatItem[];
 	note?: string;
 };
@@ -205,4 +247,179 @@ export function buildSceneSnapshot(
 			description: 'Organiser submissions, admin-added listings and partner events feed the directory.'
 		}
 	];
+}
+
+function buildSnapshotNote(sceneIndex: PublicSceneIndexStats): string {
+	const updated = formatSceneIndexGeneratedAt(sceneIndex.generated_at);
+	const updatedCopy = updated ? ` Updated ${updated}.` : '';
+
+	return `${SCENE_SNAPSHOT_HEADING}.${updatedCopy} ${SCENE_SNAPSHOT_LEDE} Public preview below — sample of upcoming listings.`;
+}
+
+export function buildDirectoryStatsFromSceneIndex(
+	sceneResult: PublicSceneIndexFetchResult,
+	eventsResult: PublicEventsFetchResult
+): DirectoryStats {
+	if (sceneResult.sceneIndex && !sceneResult.unavailable) {
+		const sceneIndex = sceneResult.sceneIndex;
+
+		return {
+			mode: 'snapshot',
+			items: [
+				{ label: 'Active listings', value: String(sceneIndex.active_event_count) },
+				{ label: 'Live now', value: String(sceneIndex.live_now_event_count) },
+				{ label: 'This week', value: String(sceneIndex.events_this_week) },
+				{
+					label: 'Verified listings',
+					value: String(sceneIndex.verified_upcoming_event_count)
+				}
+			],
+			note: buildSnapshotNote(sceneIndex)
+		};
+	}
+
+	return buildDirectoryStats(eventsResult.events, eventsResult.unavailable || sceneResult.unavailable);
+}
+
+export function buildSceneSnapshotFromSceneIndex(
+	sceneResult: PublicSceneIndexFetchResult,
+	eventsResult: PublicEventsFetchResult
+): SceneSnapshotCard[] {
+	if (sceneResult.sceneIndex && !sceneResult.unavailable) {
+		const sceneIndex = sceneResult.sceneIndex;
+		const updated = formatSceneIndexGeneratedAt(sceneIndex.generated_at);
+		const updatedSuffix = updated ? ` Updated ${updated}.` : '';
+
+		return [
+			{
+				title: 'Active listings',
+				value: String(sceneIndex.active_event_count),
+				description: `${SCENE_SNAPSHOT_HEADING}.${updatedSuffix} Upcoming and live listings currently tracked by PartyLine.`
+			},
+			{
+				title: 'This week',
+				value: String(sceneIndex.events_this_week),
+				description:
+					'Published listings with a start time in the current UTC week window.'
+			},
+			{
+				title: 'This month',
+				value: String(sceneIndex.events_this_month),
+				description:
+					'Published listings with a start time in the current UTC month window.'
+			},
+			{
+				title: 'Verified listings',
+				value: String(sceneIndex.verified_upcoming_event_count),
+				description:
+					'Active listings verified by PartyLine. Verification is editorial — not a popularity ranking.'
+			}
+		];
+	}
+
+	return buildSceneSnapshot(eventsResult.events, eventsResult.unavailable || sceneResult.unavailable);
+}
+
+export type LandingSceneStats = {
+	kind: 'city' | 'genre';
+	label: string;
+	upcomingCount: number;
+	thisWeekCount: number | null;
+	generatedAt: string | null;
+	unavailable: boolean;
+};
+
+export function buildLandingSceneStats(input: {
+	kind: 'city' | 'genre';
+	label: string;
+	sceneResult: PublicSceneIndexFetchResult;
+	matchCity?: (normalizedCity: string) => boolean;
+	matchGenres?: string[];
+}): LandingSceneStats | null {
+	if (input.sceneResult.unavailable || !input.sceneResult.sceneIndex) {
+		return null;
+	}
+
+	const sceneIndex = input.sceneResult.sceneIndex;
+
+	if (input.kind === 'city' && input.matchCity) {
+		const counts = resolveCitySceneCounts(sceneIndex.by_city, input.matchCity);
+
+		return {
+			kind: 'city',
+			label: input.label,
+			upcomingCount: counts.upcomingCount,
+			thisWeekCount: counts.thisWeekCount,
+			generatedAt: sceneIndex.generated_at,
+			unavailable: false
+		};
+	}
+
+	if (input.kind === 'genre' && input.matchGenres) {
+		const counts = resolveGenreSceneCounts(sceneIndex.by_genre, input.matchGenres);
+
+		return {
+			kind: 'genre',
+			label: input.label,
+			upcomingCount: counts.upcomingCount,
+			thisWeekCount: null,
+			generatedAt: sceneIndex.generated_at,
+			unavailable: false
+		};
+	}
+
+	return null;
+}
+
+export function formatDirectoryCityBadge(
+	entry: {
+		match?: (normalizedCity: string) => boolean;
+		status: 'active' | 'opening' | 'coming';
+	},
+	previewEvents: PublicEventPreview[],
+	sceneResult: PublicSceneIndexFetchResult
+): string {
+	if (entry.match && sceneResult.sceneIndex && !sceneResult.unavailable) {
+		const counts = resolveCitySceneCounts(sceneResult.sceneIndex.by_city, entry.match);
+		if (counts.upcomingCount > 0) {
+			return `${counts.upcomingCount} upcoming`;
+		}
+	}
+
+	if (entry.match) {
+		const previewCount = countEventsMatchingCity(previewEvents, entry.match);
+		if (previewCount > 0) {
+			return `${previewCount} in preview`;
+		}
+	}
+
+	if (entry.status === 'active') {
+		return 'Active now';
+	}
+
+	if (entry.status === 'opening') {
+		return 'Opening';
+	}
+
+	return 'Coming next';
+}
+
+export function formatDirectoryGenreBadge(
+	entry: { matchers?: string[] },
+	previewEvents: PublicEventPreview[],
+	sceneResult: PublicSceneIndexFetchResult
+): string | undefined {
+	if (entry.matchers?.length && sceneResult.sceneIndex && !sceneResult.unavailable) {
+		const counts = resolveGenreSceneCounts(sceneResult.sceneIndex.by_genre, entry.matchers);
+		if (counts.upcomingCount > 0) {
+			return `${counts.upcomingCount} upcoming`;
+		}
+	}
+
+	if (!entry.matchers?.length) {
+		return undefined;
+	}
+
+	const previewCount = countEventsMatchingGenres(previewEvents, entry.matchers);
+	return previewCount > 0 ? `${previewCount} in preview` : undefined;
 }

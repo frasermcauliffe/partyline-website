@@ -1,0 +1,246 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import SectionShell from '@/components/ui/SectionShell.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import FaqList from '@/components/ui/FaqList.astro';
+import StatusCallout from '@/components/ui/StatusCallout.astro';
+import PreviewPanel from '@/components/previews/PreviewPanel.astro';
+import PublicEventPreviewCard from '@/components/previews/PublicEventPreviewCard.astro';
+import EmptyPreviewState from '@/components/previews/EmptyPreviewState.astro';
+import { APP_LINKS } from '@/data/app-links';
+import type { EventLandingConfig } from '@/data/event-landing-pages';
+import { buildLandingRelatedLinks } from '@/data/event-landing-pages';
+import { PREVIEW_NOTE, SCENE_SNAPSHOT_HEADING, WEEKEND_PREVIEW_NOTE } from '@/lib/event-landing-data';
+import type { PublicEventPreview } from '@/lib/app-preview-types';
+import type { LandingSceneStats } from '@/lib/event-directory-stats';
+import { formatSceneIndexGeneratedAt } from '@/lib/public-scene-index';
+import { buildPageSeo, type PageSeo } from '@/lib/seo';
+
+interface Props {
+	page: EventLandingConfig;
+	events: PublicEventPreview[];
+	unavailable: boolean;
+	seo: PageSeo;
+	canonicalPath: string;
+	jsonLd: string[];
+	sceneStats?: LandingSceneStats | null;
+}
+
+const { page, events, unavailable, seo, canonicalPath, jsonLd, sceneStats = null }: Props =
+	Astro.props;
+
+const relatedLinks = buildLandingRelatedLinks(page);
+const previewNote = page.kind === 'date' ? WEEKEND_PREVIEW_NOTE : PREVIEW_NOTE;
+const sceneUpdated = sceneStats ? formatSceneIndexGeneratedAt(sceneStats.generatedAt) : null;
+---
+
+<BaseLayout
+	title={seo.title}
+	description={seo.description}
+	canonicalPath={canonicalPath}
+	jsonLd={jsonLd}
+>
+	<section class="landing-hero page-hero page-hero--accent">
+		<div class="container">
+			<p class="eyebrow">
+				{
+					page.kind === 'city'
+						? `${page.h1.replace(' Underground Events', '')} · Events`
+						: page.kind === 'genre'
+							? 'Genre · Events'
+							: 'Dates · Events'
+				}
+			</p>
+			<h1>{page.h1}</h1>
+			<p class="lede">{page.heroLede}</p>
+			<div class="button-row">
+				<Button
+					href={page.primaryCtaHref}
+					label={page.primaryCtaLabel}
+					variant="primary"
+					external
+				/>
+				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="secondary" external />
+			</div>
+		</div>
+	</section>
+
+	{
+		sceneStats && (page.kind === 'city' || page.kind === 'genre') && (
+			<SectionShell variant="inset" eyebrow={SCENE_SNAPSHOT_HEADING} title="Listings snapshot">
+				<div class="landing-scene-stats">
+					<p class="landing-scene-stats__value">
+						{sceneStats.upcomingCount} upcoming and live
+						{sceneStats.kind === 'city' ? ` in ${sceneStats.label}` : ` ${sceneStats.label} listings`}
+					</p>
+					{
+						sceneStats.kind === 'city' && sceneStats.thisWeekCount !== null && (
+							<p class="landing-scene-stats__meta">
+								{sceneStats.thisWeekCount} starting this week on PartyLine.
+							</p>
+						)
+					}
+					<p class="landing-scene-stats__meta">
+						Upcoming and live listings currently tracked by PartyLine.
+						{sceneUpdated ? ` Updated ${sceneUpdated}.` : ''}
+					</p>
+				</div>
+			</SectionShell>
+		)
+	}
+
+	<PreviewPanel
+		eyebrow="Preview"
+		title={page.previewTitle}
+		lede={previewNote}
+		source="app"
+		ctaLabel={page.primaryCtaLabel}
+		ctaHref={page.primaryCtaHref}
+		narrow={false}
+	>
+		{
+			events.length > 0 ? (
+				<div class="landing-events-grid">
+					{events.map((event) => (
+						<PublicEventPreviewCard event={event} />
+					))}
+				</div>
+			) : (
+				<EmptyPreviewState
+					ctaHref={page.primaryCtaHref}
+					unavailable={unavailable}
+					message={page.emptyMessage}
+					ctaLabel={page.primaryCtaLabel}
+				/>
+			)
+		}
+	</PreviewPanel>
+
+	{
+		page.kind === 'date' && (
+			<SectionShell variant="band" narrow>
+				<StatusCallout variant="info" title="Use the app for weekend filtering">
+					<p>{page.contextBody}</p>
+				</StatusCallout>
+			</SectionShell>
+		)
+	}
+
+	{
+		page.kind !== 'date' && (
+			<SectionShell title={page.contextTitle} lede={page.contextBody} />
+		)
+	}
+
+	<SectionShell variant="editorial" eyebrow="Explore more" title="Related links">
+		<RelatedLinks title="Related" links={relatedLinks} layout="inline" />
+	</SectionShell>
+
+	<section class="landing-submit-cta">
+		<div class="container landing-submit-cta__inner">
+			<div class="landing-submit-cta__copy">
+				<h2>Hosting something?</h2>
+				<p>Submit your event or create a profile — Perth-first, building across Australia.</p>
+			</div>
+			<div class="landing-submit-cta__actions">
+				<Button href={APP_LINKS.submitEvent} label="Submit Event" variant="primary" external />
+				<Button href={APP_LINKS.createListing} label="Create Profile" variant="secondary" external />
+			</div>
+		</div>
+	</section>
+
+	<SectionShell eyebrow="FAQ" title="Questions">
+		<FaqList items={[...page.faq]} />
+	</SectionShell>
+</BaseLayout>
+
+<style>
+	.landing-events-grid {
+		align-items: stretch;
+		display: grid;
+		gap: var(--space-5);
+		grid-template-columns: 1fr;
+	}
+
+	.landing-scene-stats {
+		display: grid;
+		gap: var(--space-2);
+		max-width: 42rem;
+	}
+
+	.landing-scene-stats__value {
+		font-family: var(--font-display);
+		font-size: var(--text-card-title);
+		font-weight: var(--weight-bold);
+		line-height: 1.3;
+	}
+
+	.landing-scene-stats__meta {
+		color: var(--color-muted);
+		font-size: var(--text-small);
+		line-height: 1.55;
+		margin: 0;
+	}
+
+	.landing-submit-cta {
+		background: var(--surface-1);
+		border-block: 1px solid var(--border-subtle);
+		padding-block: clamp(2rem, 6vw, 3rem);
+	}
+
+	.landing-submit-cta__inner {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		text-align: center;
+	}
+
+	.landing-submit-cta__copy {
+		display: grid;
+		gap: var(--space-3);
+		max-width: 36rem;
+	}
+
+	.landing-submit-cta__copy h2 {
+		font-size: var(--text-h3);
+	}
+
+	.landing-submit-cta__copy p {
+		color: var(--color-muted);
+		line-height: 1.6;
+	}
+
+	.landing-submit-cta__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: center;
+	}
+
+	@media (min-width: 640px) {
+		.landing-events-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 768px) {
+		.landing-submit-cta__inner {
+			flex-direction: row;
+			justify-content: space-between;
+			text-align: left;
+		}
+
+		.landing-submit-cta__actions {
+			flex-shrink: 0;
+			justify-content: flex-end;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.landing-events-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+</style>

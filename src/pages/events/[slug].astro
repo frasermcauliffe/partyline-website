@@ -1,0 +1,92 @@
+---
+import EventLandingPage from '@/components/directory/EventLandingPage.astro';
+import {
+	CITY_LANDING_PAGES,
+	DATE_LANDING_PAGES,
+	getLandingBreadcrumbs,
+	getLandingCanonicalPath,
+	type CityLandingConfig
+} from '@/data/event-landing-pages';
+import { getSharedPublicEvents, getSharedPublicSceneIndex } from '@/lib/event-landing-data';
+import { buildLandingSceneStats, filterEventsByCity } from '@/lib/event-directory-stats';
+import {
+	breadcrumbJsonLd,
+	buildPageSeo,
+	collectionLandingPageJsonLd,
+	faqPageJsonLd,
+	organizationJsonLd,
+	websiteJsonLd
+} from '@/lib/seo';
+
+export async function getStaticPaths() {
+	const [eventsResult, sceneResult] = await Promise.all([
+		getSharedPublicEvents(),
+		getSharedPublicSceneIndex()
+	]);
+	const { events, unavailable } = eventsResult;
+	const pages = [...CITY_LANDING_PAGES, ...DATE_LANDING_PAGES];
+
+	return pages.map((page) => {
+		const filteredEvents =
+			page.kind === 'city'
+				? filterEventsByCity(events, (page as CityLandingConfig).matchCity)
+				: events;
+
+		const sceneStats =
+			page.kind === 'city'
+				? buildLandingSceneStats({
+						kind: 'city',
+						label: page.h1.replace(' Underground Events', ''),
+						sceneResult,
+						matchCity: (page as CityLandingConfig).matchCity
+					})
+				: null;
+
+		const canonicalPath = getLandingCanonicalPath(page);
+		const seo = buildPageSeo({
+			title: page.seoTitle,
+			description: page.seoDescription,
+			canonicalPath
+		});
+
+		return {
+			params: { slug: page.slug },
+			props: {
+				page,
+				events: filteredEvents,
+				unavailable,
+				sceneStats,
+				seo,
+				canonicalPath,
+				jsonLd: [
+					organizationJsonLd(),
+					websiteJsonLd(),
+					collectionLandingPageJsonLd({
+						name: page.h1,
+						description: page.seoDescription,
+						url: canonicalPath,
+						events: filteredEvents.map((event) => ({
+							title: event.title,
+							appUrl: event.appUrl
+						}))
+					}),
+					faqPageJsonLd([...page.faq]),
+					breadcrumbJsonLd(getLandingBreadcrumbs(page))
+				]
+			}
+		};
+	});
+}
+
+const { page, events, unavailable, sceneStats, seo, canonicalPath, jsonLd } = Astro.props;
+---
+
+<EventLandingPage
+	{page}
+	{events}
+	{unavailable}
+	{sceneStats}
+	{seo}
+	{canonicalPath}
+	{jsonLd}
+/>
