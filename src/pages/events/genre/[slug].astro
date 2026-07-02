@@ -1,12 +1,12 @@
 ---
-import EventLandingPage from '@/components/directory/EventLandingPage.astro';
+import EventLandingPage from '../../../components/directory/EventLandingPage.astro';
 import {
 	GENRE_LANDING_PAGES,
 	getLandingBreadcrumbs,
 	getLandingCanonicalPath
-} from '@/data/event-landing-pages';
-import { getSharedPublicEvents, getSharedPublicSceneIndex } from '@/lib/event-landing-data';
-import { buildLandingSceneStats, filterEventsByGenreConfig } from '@/lib/event-directory-stats';
+} from '../../../data/event-landing-pages';
+import { getSharedPublicEvents, getSharedPublicSceneIndex } from '../../../lib/event-landing-data';
+import { buildLandingSceneStats, filterEventsByGenreConfig } from '../../../lib/event-directory-stats';
 import {
 	breadcrumbJsonLd,
 	buildPageSeo,
@@ -14,7 +14,7 @@ import {
 	faqPageJsonLd,
 	organizationJsonLd,
 	websiteJsonLd
-} from '@/lib/seo';
+} from '../../../lib/seo';
 
 export async function getStaticPaths() {
 	const [eventsResult, sceneResult] = await Promise.all([
